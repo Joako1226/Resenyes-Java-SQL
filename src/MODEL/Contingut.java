@@ -4,10 +4,77 @@
  */
 package MODEL;
 
+import java.awt.image.BufferedImage;
+import java.time.LocalTime;
+
 /**
  *
  * @author Rger Trulls
  */
 public class Contingut {
-    
+
+    private int id;
+    private String titol;
+    private String descripcio;
+    private LocalTime durada;
+    private int classificacio;
+    private BufferedImage imatge;
+
+    public Contingut(int id, String titol, String descripcio, LocalTime durada, int classificacio, BufferedImage imatge) {
+        this.id = id;
+        this.titol = titol;
+        this.descripcio = descripcio;
+        this.durada = durada;
+        this.classificacio = classificacio;
+        this.imatge = imatge;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitol() {
+        return titol;
+    }
+
+    public void setTitol(String titol) {
+        this.titol = titol;
+    }
+
+    public String getDescripcio() {
+        return descripcio;
+    }
+
+    public void setDescripcio(String descripcio) {
+        this.descripcio = descripcio;
+    }
+
+    public LocalTime getDurada() {
+        return durada;
+    }
+
+    public void setDurada(LocalTime durada) {
+        this.durada = durada;
+    }
+
+    public int getClassificacio() {
+        return classificacio;
+    }
+
+    public void setClassificacio(int classificacio) {
+        this.classificacio = classificacio;
+    }
+
+    public BufferedImage getImatge() {
+        return imatge;
+    }
+
+    public void setImatge(BufferedImage imatge) {
+        this.imatge = imatge;
+    }
+
 }
