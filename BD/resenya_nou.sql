@@ -44,6 +44,7 @@ CREATE TABLE resenya (
     descripcio VARCHAR(280),
     nota DECIMAL(3,1),
     spoiler BOOLEAN,
+    data_resenya DATE,
     PRIMARY KEY (id_usuari, id_pelicula),
     FOREIGN KEY (id_usuari) REFERENCES usuari(nom_usuari),
     FOREIGN KEY (id_pelicula) REFERENCES contingut(id)
