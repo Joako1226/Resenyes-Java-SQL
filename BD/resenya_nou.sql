@@ -27,7 +27,8 @@ CREATE TABLE contingut (
     descripcio VARCHAR(255),
     duracio TIME,
     tipus ENUM('Serie', 'Pelicula', 'Videojoc'),
-    classificacio INT
+    classificacio INT,
+    imatge MEDIUMBLOB
 
 );
 CREATE TABLE genere_contingut (
@@ -44,11 +45,14 @@ CREATE TABLE resenya (
     descripcio VARCHAR(280),
     nota DECIMAL(3,1),
     spoiler BOOLEAN,
+    data_resenya DATE,
     PRIMARY KEY (id_usuari, id_pelicula),
     FOREIGN KEY (id_usuari) REFERENCES usuari(nom_usuari),
     FOREIGN KEY (id_pelicula) REFERENCES contingut(id)
 );
 
+INSERT INTO contingut (titol,descripcio,duracio,tipus,classificacio,imatge) VALUES(
+'CLub de la lucha', 'aaaaaaaaaaaaaaaaa', '02:42:15', 'Pelicula', 18, load_file('C:\Users\Rger Trulls\Desktop\Fotos\fondos\leopard.jpg') );
 INSERT INTO genere (nom) VALUES 
 ('Acció'),
 ('Drama'),
@@ -59,3 +63,4 @@ INSERT INTO genere (nom) VALUES
 
 SELECT id, nom FROM genere;
 show tables;
+Select * from contingut;
