@@ -16,12 +16,14 @@ import java.time.format.DateTimeFormatter;
  * @author Rger Trulls
  */
 public class GestioLog {
+    public static String rutaFitxerLog;
+
     public static void CrearLog() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String diaactual = LocalDate.now().format(format);
         String directori = "src/LOG/";
         String rutaCompleta = directori + diaactual + ".log";
-        Main.rutaFitxerLog = rutaCompleta;
+        rutaFitxerLog = rutaCompleta;
         Crear(rutaCompleta);
     }
 
@@ -47,7 +49,7 @@ public class GestioLog {
     }
 
     public static void EscriureLog(String s) {
-        Escriure(Main.rutaFitxerLog, s);
+        Escriure(rutaFitxerLog, s);
     }
 
 
