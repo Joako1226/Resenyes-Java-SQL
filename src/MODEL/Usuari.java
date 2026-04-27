@@ -5,6 +5,8 @@
 package MODEL;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -12,23 +14,32 @@ import java.time.LocalDate;
  */
 public class Usuari {
 
-    private String nomUsuari;
+    private String nom_usuari;
     private String nom;
     private String contrasenya;
-    private LocalDate dataNeixament;
+    private Date data_naixament;
     private int punts;
 
-    private enum estat {
+    private enum tipus_ban {
         active, warned, soft_ban, hard_ban
-    }
-    private LocalDate data_ban;
+    };
+    private LocalDateTime data_ban;
 
-    public String getNomUsuari() {
-        return nomUsuari;
+    public Usuari(String nom_usuari, String nom, String contrasenya, Date data_naixament, int punts, LocalDateTime data_ban) {
+        this.nom_usuari = nom_usuari;
+        this.nom = nom;
+        this.contrasenya = contrasenya;
+        this.data_naixament = data_naixament;
+        this.punts = punts;
+        this.data_ban = data_ban;
     }
 
-    public void setNomUsuari(String nomUsuari) {
-        this.nomUsuari = nomUsuari;
+    public String getNom_usuari() {
+        return nom_usuari;
+    }
+
+    public void setNom_usuari(String nom_usuari) {
+        this.nom_usuari = nom_usuari;
     }
 
     public String getNom() {
@@ -47,12 +58,12 @@ public class Usuari {
         this.contrasenya = contrasenya;
     }
 
-    public LocalDate getDataNeixament() {
-        return dataNeixament;
+    public Date getData_naixament() {
+        return data_naixament;
     }
 
-    public void setDataNeixament(LocalDate dataNeixament) {
-        this.dataNeixament = dataNeixament;
+    public void setData_naixament(Date data_naixament) {
+        this.data_naixament = data_naixament;
     }
 
     public int getPunts() {
@@ -63,20 +74,11 @@ public class Usuari {
         this.punts = punts;
     }
 
-    public LocalDate getData_ban() {
+    public LocalDateTime getData_ban() {
         return data_ban;
     }
 
-    public void setData_ban(LocalDate data_ban) {
-        this.data_ban = data_ban;
-    }
-
-    public Usuari(String nomUsuari, String nom, String contrasenya, LocalDate dataNeixament, int punts, LocalDate data_ban) {
-        this.nomUsuari = nomUsuari;
-        this.nom = nom;
-        this.contrasenya = contrasenya;
-        this.dataNeixament = dataNeixament;
-        this.punts = punts;
+    public void setData_ban(LocalDateTime data_ban) {
         this.data_ban = data_ban;
     }
 
