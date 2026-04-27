@@ -17,13 +17,13 @@ public class frmLogin extends javax.swing.JFrame {
      */
     public frmLogin() {
         initComponents();
-        cambiaImatge();
+        /*cambiaImatge();*/
     }
     
-    private void cambiaImatge() {
+    /*private void cambiaImatge() {
         imgLogo.setIcon(new javax.swing.ImageIcon(
-        getClass().getResource("/VIEW/logoCriticFy128p_alternative.png")));
-    }
+        getClass().getResource("logoCriticFy128p_alternative.png")));
+    }*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -116,6 +116,15 @@ public class frmLogin extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
+        frmRegister register = new frmRegister();
+        register.setVisible(true);
+        register.setLocationRelativeTo(this);
+        register.toFront();
+        this.dispose();
+        frmLogin login = new frmLogin();
+        login.setLocationRelativeTo(this);
+        login.setFocusable(false);
+        
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
