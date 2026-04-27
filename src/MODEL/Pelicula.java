@@ -17,7 +17,7 @@ public class Pelicula extends Contingut{
     private String director;
     
 
-    public Pelicula(LocalTime duracio, String director, int id, String titol, String descripcio, int classificacio, BufferedImage imatge) {
+    public Pelicula(LocalTime duracio, String director, int id, String titol, String descripcio, int classificacio, byte [] imatge) {
         super(id, titol, descripcio, classificacio, imatge);
         this.duracio = duracio;
         this.director = director;

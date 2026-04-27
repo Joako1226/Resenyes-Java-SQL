@@ -14,7 +14,7 @@ public class Serie extends Contingut{
     private int capitols;
     private int temporada;
 
-    public Serie(int capitols, int temporada, int id, String titol, String descripcio, int classificacio, BufferedImage imatge) {
+    public Serie(int capitols, int temporada, int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         super(id, titol, descripcio, classificacio, imatge);
         this.capitols = capitols;
         this.temporada = temporada;
