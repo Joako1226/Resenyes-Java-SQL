@@ -25,11 +25,26 @@ CREATE TABLE contingut (
     id INT PRIMARY KEY AUTO_INCREMENT,
     titol VARCHAR(50) NOT NULL,
     descripcio VARCHAR(255),
-    duracio TIME,
-    tipus ENUM('Serie', 'Pelicula', 'Videojoc'),
     classificacio INT,
     imatge MEDIUMBLOB
 
+);
+CREATE TABLE serie (
+	idSerie INT PRIMARY KEY,
+    capitols INT,
+    temporada INT,
+    FOREIGN KEY (idSerie) REFERENCES contingut(id)
+);
+CREATE TABLE videojoc (
+	idJoc INT PRIMARY KEY,
+    preu DECIMAL (5,2),
+    FOREIGN KEY (idJoc) REFERENCES contingut(id)
+);
+CREATE TABLE pelicula (
+	idPelicula INT PRIMARY KEY,
+    duracio TIME,
+    director VARCHAR(125),
+    FOREIGN KEY (idPelicula) REFERENCES contingut(id)
 );
 CREATE TABLE genere_contingut (
 	idGenere INT,
@@ -51,8 +66,8 @@ CREATE TABLE resenya (
     FOREIGN KEY (id_pelicula) REFERENCES contingut(id)
 );
 
-INSERT INTO contingut (titol,descripcio,duracio,tipus,classificacio,imatge) VALUES(
-'CLub de la lucha', 'aaaaaaaaaaaaaaaaa', '02:42:15', 'Pelicula', 18, load_file('C:\Users\Rger Trulls\Desktop\Fotos\fondos\leopard.jpg') );
+INSERT INTO contingut (titol,descripcio,classificacio,imatge) VALUES(
+'CLub de la lucha', 'aaaaaaaaaaaaaaaaa', 18, load_file('C:\Users\Rger Trulls\Desktop\Fotos\fondos\leopard.jpg') );
 INSERT INTO genere (nom) VALUES 
 ('Acció'),
 ('Drama'),

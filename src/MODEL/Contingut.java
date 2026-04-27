@@ -16,15 +16,13 @@ public class Contingut {
     private int id;
     private String titol;
     private String descripcio;
-    private LocalTime durada;
     private int classificacio;
     private BufferedImage imatge;
 
-    public Contingut(int id, String titol, String descripcio, LocalTime durada, int classificacio, BufferedImage imatge) {
+    public Contingut(int id, String titol, String descripcio, int classificacio, BufferedImage imatge) {
         this.id = id;
         this.titol = titol;
         this.descripcio = descripcio;
-        this.durada = durada;
         this.classificacio = classificacio;
         this.imatge = imatge;
     }
@@ -51,14 +49,6 @@ public class Contingut {
 
     public void setDescripcio(String descripcio) {
         this.descripcio = descripcio;
-    }
-
-    public LocalTime getDurada() {
-        return durada;
-    }
-
-    public void setDurada(LocalTime durada) {
-        this.durada = durada;
     }
 
     public int getClassificacio() {
