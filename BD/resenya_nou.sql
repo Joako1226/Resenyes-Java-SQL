@@ -56,14 +56,14 @@ CREATE TABLE genere_contingut (
 
 CREATE TABLE resenya (
     id_usuari VARCHAR(20),
-    id_pelicula INT,
+    id_contingut INT,
     descripcio VARCHAR(280),
     nota DECIMAL(3,1),
     spoiler BOOLEAN,
     data_resenya DATE,
-    PRIMARY KEY (id_usuari, id_pelicula),
+    PRIMARY KEY (id_usuari, id_contingut),
     FOREIGN KEY (id_usuari) REFERENCES usuari(nom_usuari),
-    FOREIGN KEY (id_pelicula) REFERENCES contingut(id)
+    FOREIGN KEY (id_contingut) REFERENCES contingut(id)
 );
 
 INSERT INTO contingut (titol,descripcio,classificacio,imatge) VALUES(
