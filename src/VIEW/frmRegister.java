@@ -207,6 +207,14 @@ public class frmRegister extends javax.swing.JFrame {
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
         // TODO add your handling code here:
+        frmLogin login = new frmLogin();
+        login.setVisible(true);
+        login.setLocationRelativeTo(this);
+        login.toFront();
+        this.dispose();
+        frmRegister register = new frmRegister();
+        register.setLocationRelativeTo(this);
+        register.setFocusable(false);
         
     }//GEN-LAST:event_btnConfirmActionPerformed
 
