@@ -17,9 +17,9 @@ public class Contingut {
     private String titol;
     private String descripcio;
     private int classificacio;
-    private BufferedImage imatge;
+    private byte [] imatge;
 
-    public Contingut(int id, String titol, String descripcio, int classificacio, BufferedImage imatge) {
+    public Contingut(int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         this.id = id;
         this.titol = titol;
         this.descripcio = descripcio;
@@ -59,11 +59,11 @@ public class Contingut {
         this.classificacio = classificacio;
     }
 
-    public BufferedImage getImatge() {
+    public byte[] getImatge() {
         return imatge;
     }
 
-    public void setImatge(BufferedImage imatge) {
+    public void setImatge(byte[] imatge) {
         this.imatge = imatge;
     }
 
