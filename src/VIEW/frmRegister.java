@@ -65,6 +65,11 @@ public class frmRegister extends javax.swing.JFrame {
         imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         imgLogo.setMaximumSize(new java.awt.Dimension(50, 50));
         imgLogo.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgLogo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgLogoMousePressed(evt);
+            }
+        });
 
         txtUsername.setBackground(new java.awt.Color(153, 153, 255));
         txtUsername.setForeground(new java.awt.Color(0, 0, 0));
@@ -240,6 +245,18 @@ public class frmRegister extends javax.swing.JFrame {
         txtNaixement.setText(null);
         txtPassword.setText(null);
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void imgLogoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgLogoMousePressed
+        // TODO add your handling code here:
+        frmLogin login = new frmLogin();
+        login.setVisible(true);
+        login.setLocationRelativeTo(this);
+        login.toFront();
+        this.dispose();
+        frmRegister register = new frmRegister();
+        register.setLocationRelativeTo(this);
+        register.setFocusable(false);
+    }//GEN-LAST:event_imgLogoMousePressed
 
     /**
      * @param args the command line arguments

@@ -64,7 +64,7 @@ public class gestioSQL {
 
         } catch (SQLException e) {
             System.err.println("Error en fer l'insert: " + e.getMessage());
-            throw e; 
+            throw e;
         }
     }
 
@@ -106,5 +106,39 @@ public class gestioSQL {
         } catch (SQLException e) {
             System.err.println("Error de SQL: " + e.getMessage());
         }
+    }
+
+    public static Usuari login(String userIntent, String passIntent) {
+        String sql = "SELECT nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin FROM usuari WHERE nom_usuari = ? AND contrasenya = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, userIntent);
+            ps.setString(2, passIntent);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String nom = rs.getString("nom");
+
+                    java.sql.Date sqlDate = rs.getDate("data_naixement");
+                    LocalDate dataN = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+
+                    int punts = rs.getInt("punts");
+
+                    String estatStr = rs.getString("estat");
+                    Usuari.TipusBan estat = (estatStr != null) ? Usuari.TipusBan.valueOf(estatStr) : null;
+
+                    java.sql.Timestamp sqlTime = rs.getTimestamp("data_ban");
+                    LocalDateTime dataB = (sqlTime != null) ? sqlTime.toLocalDateTime() : null;
+
+                    boolean esAdmin = rs.getBoolean("admin");
+
+                    return new Usuari(userIntent, nom, passIntent, dataN, punts, estat, dataB, esAdmin);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

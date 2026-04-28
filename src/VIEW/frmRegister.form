@@ -122,6 +122,9 @@
           <Dimension value="[50, 50]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgLogoMousePressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtUsername">
       <Properties>

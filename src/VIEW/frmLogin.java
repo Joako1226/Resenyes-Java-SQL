@@ -4,6 +4,10 @@
  */
 package VIEW;
 
+import DADES.gestioSQL;
+import MODEL.Usuari;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Joaquin
@@ -35,10 +39,10 @@ public class frmLogin extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         imgLogo = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtUsuari = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
         btnLogin = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txtContrassenya = new javax.swing.JPasswordField();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -50,10 +54,10 @@ public class frmLogin extends javax.swing.JFrame {
         imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
         imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jTextField3.setText("Username");
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        txtUsuari.setText("Username");
+        txtUsuari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                txtUsuariActionPerformed(evt);
             }
         });
 
@@ -71,7 +75,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField1.setToolTipText("password");
+        txtContrassenya.setToolTipText("password");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,13 +86,13 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtContrassenya, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(240, 240, 240))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(imgLogo)
@@ -100,9 +104,9 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(imgLogo)
                 .addGap(31, 31, 31)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtContrassenya, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
@@ -128,12 +132,32 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:String userText = txtUsuari.getText();
+        String passText = txtContrassenya.getText();
+        String userText = txtUsuari.getText();
+
+// Intentem fer login
+        Usuari u = gestioSQL.login(userText, passText);
+
+        if (u != null) {
+            if (u.isAdmin()) {
+                // És administrador: Obrir panell de control
+               /* FrmAdmin fAdmin = new FrmAdmin(u);
+                fAdmin.setVisible(true);*/
+            } else {
+                // És usuari normal: Obrir aplicació estàndard
+                frmContingutPagina fUser = new frmContingutPagina();
+                fUser.setVisible(true);
+            }
+            this.dispose(); // Tanquem la finestra de login
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuari o contrasenya incorrectes");
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void txtUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_txtUsuariActionPerformed
 
     /**
      * @param args the command line arguments
@@ -165,7 +189,7 @@ public class frmLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnRegister;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JPasswordField txtContrassenya;
+    private javax.swing.JTextField txtUsuari;
     // End of variables declaration//GEN-END:variables
 }
