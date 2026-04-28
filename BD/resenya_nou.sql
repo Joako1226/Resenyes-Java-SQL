@@ -18,7 +18,8 @@ CREATE TABLE usuari (
     data_naixement DATE,
     punts INT,
     estat ENUM('active', 'warned', 'soft_ban', 'hard_ban'),
-    data_ban DATETIME
+    data_ban DATETIME,
+    admin BOOLEAN
 );
 
 CREATE TABLE contingut (
@@ -75,6 +76,9 @@ INSERT INTO genere (nom) VALUES
 ('Thriller'),
 ('RPG'),
 ('Aventura');
+INSERT INTO usuari (nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin) VALUES 
+("rtrulls", "roger", "1234", "2007-03-29", 0, null, null,true),
+("joaquin", "joaquin", "1234", "2006-12-26", 0, null, null,true);
 
 SELECT id, nom FROM genere;
 show tables;

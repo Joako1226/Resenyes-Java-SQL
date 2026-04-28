@@ -4,6 +4,13 @@
  */
 package VIEW;
 
+import DADES.*;
+import CONTROLLER.*;
+import MODEL.Usuari;
+import static java.lang.String.format;
+import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 /**
  *
  * @author Rger Trulls
@@ -206,7 +213,15 @@ public class frmRegister extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
-        // TODO add your handling code here:
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        Usuari nouUsuari = new Usuari(txtUsername.getText(),txtName.getText(),txtPassword.getText(),LocalDate.parse(txtNaixement.getText(), format), 0, null, null, false);
+        try {
+            gestioSQL.insertUsuari(nouUsuari);
+        } catch (SQLException ex) {
+            System.getLogger(frmRegister.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        gestioSQL.carregarUsuari();
         frmLogin login = new frmLogin();
         login.setVisible(true);
         login.setLocationRelativeTo(this);
