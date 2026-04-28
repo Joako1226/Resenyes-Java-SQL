@@ -1,34 +1,107 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DADES;
-import CONTROLLER.Main;
+
+import MODEL.Contingut;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-/**
- *
- * @author Joaquin
- */
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Connexio {
-    public Connection connectar() {
 
-    Connection con = null;
+    private static Connection con = null;
 
-    String url = Main.url;
-    String user = Main.user;
-    String password = Main.password;
+    public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
+    public static String user = "root"; 
+    public static String password = "joaquin100";
 
-    try {
-        con = DriverManager.getConnection(url, user, password);
-        System.out.println("Connexió OK");
-    } catch (SQLException e) {
-        System.out.println("No s'ha pogut establir la Connexio");
-        e.printStackTrace();
+ 
+    private String SQL_INSERTAR =
+        "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
+
+    private String SQL_CONSULTA = "SELECT * FROM contingut";
+
+
+    public static Connection connectar() {
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            System.out.println("Connexió OK");
+        } catch (SQLException e) {
+            System.out.println("Error de connexió");
+            e.printStackTrace();
+        }
+        return con;
+    }
+    
+    public boolean connectarCon() {
+        try {
+           
+            con = DriverManager.getConnection(url, user, password);
+            System.out.println("Connexió OK");
+            return con != null;
+        } catch (SQLException e) {
+            System.out.println("Error de connexió");
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    return con;
-}
+   
+    public void AgregarImg(Contingut contingut) {
+
+        try {
+            if (con == null) connectar();
+
+            PreparedStatement ps = con.prepareStatement(SQL_INSERTAR);
+
+            ps.setString(1, contingut.getTitol());
+            ps.setString(2, contingut.getDescripcio());
+            ps.setInt(3, contingut.getClassificacio());
+            ps.setBytes(4, contingut.getImatge());
+
+            ps.executeUpdate();
+
+            System.out.println("Insert OK");
+
+            ps.close();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+   
+    public ArrayList<Contingut> CarregarImg() {
+
+        ArrayList<Contingut> lista = new ArrayList<>();
+
+        try {
+            if (con == null) connectar();
+
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL_CONSULTA);
+
+            while (rs.next()) {
+                Contingut c = new Contingut();
+
+                c.setId(rs.getInt("id"));
+                c.setTitol(rs.getString("titol"));
+                c.setDescripcio(rs.getString("descripcio"));
+                c.setClassificacio(rs.getInt("classificacio"));
+                c.setImatge(rs.getBytes("imatge"));
+
+                lista.add(c);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
 }

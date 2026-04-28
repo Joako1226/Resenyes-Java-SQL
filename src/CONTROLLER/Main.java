@@ -7,8 +7,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import DADES.Connexio;
+<<<<<<< HEAD
 import MODEL.Usuari;
 import VIEW.frmLogin;
+=======
+import VIEW.frmContingutPagina;
+>>>>>>> 2fa6461a0ae4bdd02c19e75a736c003a6aaaad59
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +55,9 @@ public class Main {
         } else {
             System.out.println("Error: connexio null");
         }
+        frmContingutPagina fContingut = new frmContingutPagina();
+        fContingut.setVisible(true);
     }
+        
     
 }
