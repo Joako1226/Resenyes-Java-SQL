@@ -26,6 +26,8 @@ public class Contingut {
         this.classificacio = classificacio;
         this.imatge = imatge;
     }
+    public Contingut() {
+    }
 
     public int getId() {
         return id;

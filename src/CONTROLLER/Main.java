@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import DADES.Connexio;
+import VIEW.frmContingutPagina;
 import java.sql.Statement;
 import java.sql.ResultSet;
 /**
@@ -40,6 +41,9 @@ public class Main {
         } else {
             System.out.println("Error: connexio null");
         }
+        frmContingutPagina fContingut = new frmContingutPagina();
+        fContingut.setVisible(true);
     }
+        
     
 }
