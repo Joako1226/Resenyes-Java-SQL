@@ -32,7 +32,7 @@ import java.util.Date;
 public class gestioSQL {
 
     public static void insertUsuari(Usuari usuari) throws SQLException {
-        String sql = "INSERT INTO usuari (nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuari (nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin) VALUES (?, ?, ?, ?, ?, ?, ?,false)";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -40,7 +40,6 @@ public class gestioSQL {
             ps.setString(2, usuari.getNom());
             ps.setString(3, usuari.getContrasenya());
 
-            // 2. Convertir LocalDate a java.sql.Date
             if (usuari.getData_naixament() != null) {
                 ps.setDate(4, java.sql.Date.valueOf(usuari.getData_naixament()));
             } else {
@@ -49,26 +48,23 @@ public class gestioSQL {
 
             ps.setInt(5, usuari.getPunts());
 
-            // 3. Convertir l'Enum a String perquè MySQL l'entengui
             if (usuari.getEstat() != null) {
                 ps.setString(6, usuari.getEstat().name());
             } else {
                 ps.setNull(6, java.sql.Types.VARCHAR);
             }
 
-            // 4. Convertir LocalDateTime a java.sql.Timestamp
             if (usuari.getData_ban() != null) {
                 ps.setTimestamp(7, java.sql.Timestamp.valueOf(usuari.getData_ban()));
             } else {
                 ps.setNull(7, java.sql.Types.TIMESTAMP);
             }
 
-            // Executar la sentència
             ps.executeUpdate();
 
         } catch (SQLException e) {
             System.err.println("Error en fer l'insert: " + e.getMessage());
-            throw e; // Tornem a llançar l'excepció per gestionar-la a la UI si cal
+            throw e; 
         }
     }
 
