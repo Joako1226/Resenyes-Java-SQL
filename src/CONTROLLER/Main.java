@@ -7,11 +7,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import DADES.Connexio;
+import DADES.GestioLog;
 import MODEL.Usuari;
 import VIEW.frmLogin;
 import VIEW.frmContingutPagina;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 /**
@@ -23,6 +25,9 @@ public class Main {
     public static String user = "root";
     public static String password = "joaquin100";
     
+    public static DateTimeFormatter logs = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    public static String mod = LocalDateTime.now().format(logs);
+
     public static ArrayList<Usuari>usuaris = new ArrayList();
     
     
@@ -32,7 +37,7 @@ public class Main {
     public static void main(String[] args) {
        Connexio ccc = new Connexio();
         Connection conn = ccc.connectar();
-
+        GestioLog.CrearLog();
         frmLogin Login = new frmLogin();
         Login.setVisible(true);
         

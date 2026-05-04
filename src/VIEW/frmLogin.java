@@ -4,6 +4,9 @@
  */
 package VIEW;
 
+import CONTROLLER.Main;
+import static CONTROLLER.Main.mod;
+import DADES.GestioLog;
 import DADES.gestioSQL;
 import MODEL.Usuari;
 import javax.swing.JOptionPane;
@@ -142,19 +145,24 @@ public class frmLogin extends javax.swing.JFrame {
         if (u != null) {
             if (u.isAdmin()) {
                 // És administrador: Obrir panell de control
-               /* FrmAdmin fAdmin = new FrmAdmin(u);
-                fAdmin.setVisible(true);*/
-            } else {
-                // És usuari normal: Obrir aplicació estàndard
                 frmContingutPagina fUser = new frmContingutPagina();
                 fUser.setVisible(true);
+                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
+
+            } else {
+                // És usuari normal: Obrir aplicació estàndard
+                /* FrmAdmin fAdmin = new FrmAdmin(u);
+                fAdmin.setVisible(true);*/
+                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
+
             }
             this.dispose(); // Tanquem la finestra de login
         } else {
             JOptionPane.showMessageDialog(this, "Usuari o contrasenya incorrectes");
         }
+        
     }//GEN-LAST:event_btnLoginActionPerformed
-
+    //EscriureLog();
     private void txtUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuariActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuariActionPerformed
