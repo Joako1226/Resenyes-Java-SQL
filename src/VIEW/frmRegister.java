@@ -6,6 +6,7 @@ package VIEW;
 
 import DADES.*;
 import CONTROLLER.*;
+import static CONTROLLER.Main.mod;
 import MODEL.Usuari;
 import static java.lang.String.format;
 import java.sql.SQLException;
@@ -223,6 +224,8 @@ public class frmRegister extends javax.swing.JFrame {
         Usuari nouUsuari = new Usuari(txtUsername.getText(),txtName.getText(),txtPassword.getText(),LocalDate.parse(txtNaixement.getText(), format), 0, null, null, false);
         try {
             gestioSQL.insertUsuari(nouUsuari);
+            GestioLog.EscriureLog(mod + ":\t" + " Usuari " + nouUsuari.getNom_usuari() + "\t\registrat");
+
         } catch (SQLException ex) {
             System.getLogger(frmRegister.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }

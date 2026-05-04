@@ -151,8 +151,8 @@ public class frmLogin extends javax.swing.JFrame {
 
             } else {
                 // És usuari normal: Obrir aplicació estàndard
-                /* FrmAdmin fAdmin = new FrmAdmin(u);
-                fAdmin.setVisible(true);*/
+                frmMainClient fClient = new frmMainClient();
+                fClient.setVisible(true);
                 GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
 
             }
