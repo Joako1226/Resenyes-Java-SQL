@@ -8,7 +8,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import DADES.Connexio;
 import DADES.GestioLog;
+import MODEL.Contingut;
+import MODEL.Genere;
+import MODEL.Pelicula;
+import MODEL.Resenya;
+import MODEL.Serie;
 import MODEL.Usuari;
+import MODEL.Videojoc;
 import VIEW.frmLogin;
 import VIEW.frmContingutPagina;
 import java.sql.Statement;
@@ -21,7 +27,7 @@ import java.util.ArrayList;
  * @author Joaquin
  */
 public class Main {
-    public static String url = "jdbc:mysql://192.168.90.249:3306/resenyesBD";
+    public static String url = "jdbc:mysql://192.168.90.216:3306/resenyesBD";
     public static String user = "root";
     public static String password = "joaquin100";
     
@@ -29,7 +35,12 @@ public class Main {
     public static String mod = LocalDateTime.now().format(logs);
 
     public static ArrayList<Usuari>usuaris = new ArrayList();
-    
+    public static ArrayList<Contingut>continguts = new ArrayList();
+    public static ArrayList<Pelicula>pelicules = new ArrayList();
+    public static ArrayList<Serie>series = new ArrayList();
+    public static ArrayList<Videojoc>videojocs = new ArrayList();
+    public static ArrayList<Genere>generes = new ArrayList();
+    public static ArrayList<Resenya>resenyes = new ArrayList();    
     
     /**
      * @param args the command line arguments

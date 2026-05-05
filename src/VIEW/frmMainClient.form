@@ -25,14 +25,21 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="rdoVideojocs" min="-2" pref="98" max="-2" attributes="0"/>
+                                  <Component id="rdoSerie" min="-2" pref="98" max="-2" attributes="0"/>
+                                  <Component id="rdoPelicula" alignment="0" min="-2" pref="98" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="263" max="32767" attributes="0"/>
+                              <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
-                                  <Component id="chkSerie" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="chkVideojoc" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtBuscar" alignment="0" min="-2" pref="71" max="-2" attributes="0"/>
                                   <Component id="lblBuscar" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                               </Group>
@@ -46,11 +53,6 @@
                                       <Component id="lblGenere" min="-2" pref="47" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="chkPelicula" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="297" max="32767" attributes="0"/>
-                              <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -85,19 +87,21 @@
                   </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="chkPelicula" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cmbGenere" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="rdoPelicula" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="rdoSerie" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="rdoVideojocs" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="chkSerie" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="chkVideojoc" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
               <Component id="lblBuscar" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="txtBuscar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="112" max="32767" attributes="0"/>
+              <EmptySpace pref="111" max="32767" attributes="0"/>
               <Component id="lblComentari" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
@@ -125,27 +129,12 @@
       </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbGenere">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbGenereActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="chkPelicula">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Pelicula"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkPeliculaActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="chkSerie">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Serie"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="chkVideojoc">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Videojoc"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtBuscar">
       <Events>
@@ -191,6 +180,21 @@
     <Component class="javax.swing.JLabel" name="lblComentari">
       <Properties>
         <Property name="text" type="java.lang.String" value="Comentari"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="rdoPelicula">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Pelicula"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="rdoSerie">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Serie"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="rdoVideojocs">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Videojocs"/>
       </Properties>
     </Component>
   </SubComponents>

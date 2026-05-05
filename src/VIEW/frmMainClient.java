@@ -4,6 +4,15 @@
  */
 package VIEW;
 
+import static CONTROLLER.Main.password;
+import static CONTROLLER.Main.url;
+import static CONTROLLER.Main.user;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.ButtonGroup;
 
 /**
@@ -11,7 +20,7 @@ import javax.swing.ButtonGroup;
  * @author Rger Trulls
  */
 public class frmMainClient extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmMainClient.class.getName());
     private ButtonGroup chkOpciocontingut = new ButtonGroup();
 
@@ -20,14 +29,118 @@ public class frmMainClient extends javax.swing.JFrame {
      */
     public frmMainClient() {
         initComponents();
-        chkOpciocontingut.add(chkSerie);
-        chkOpciocontingut.add(chkPelicula);
-        chkOpciocontingut.add(chkVideojoc);
+        chkOpciocontingut.add(rdoSerie);
+        chkOpciocontingut.add(rdoPelicula);
+        chkOpciocontingut.add(rdoVideojocs);
         
+        rdoSerie.setActionCommand("SERIE");
+        rdoPelicula.setActionCommand("PELICULA");
+        rdoVideojocs.setActionCommand("VIDEOJOC");
         
+        rdoSerie.addActionListener(e -> actualitzarInterficieSegonsTipus());
+        rdoPelicula.addActionListener(e -> actualitzarInterficieSegonsTipus());
+        rdoVideojocs.addActionListener(e -> actualitzarInterficieSegonsTipus());
         
+        actualitzarInterficieSegonsTipus();
+
     }
-    
+
+    public void omplirComboGeneresContingut() {
+        String sql = "SELECT DISTINCT g.nom FROM genere g "
+                + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                + "ORDER BY g.nom ASC";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            cmbGenere.removeAllItems();
+            while (rs.next()) {
+                cmbGenere.addItem(rs.getString("nom"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void omplirComboGeneresVideojocs() {
+        String sql = "SELECT DISTINCT g.nom FROM genere g "
+                + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                + "INNER JOIN videojoc v ON gc.idContingut = v.idJoc "
+                + "ORDER BY g.nom ASC";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            cmbGenere.removeAllItems();
+            while (rs.next()) {
+                cmbGenere.addItem(rs.getString("nom"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void omplirComboGeneresSeries() {
+        String sql = "SELECT DISTINCT g.nom FROM genere g "
+                + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                + "INNER JOIN serie s ON gc.idContingut = s.idSerie "
+                + "ORDER BY g.nom ASC";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            cmbGenere.removeAllItems();
+            while (rs.next()) {
+                cmbGenere.addItem(rs.getString("nom"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void omplirComboGeneresPelicules() {
+        String sql = "SELECT DISTINCT g.nom FROM genere g "
+                + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                + "INNER JOIN pelicula p ON gc.idContingut = p.idPelicula "
+                + "ORDER BY g.nom ASC";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            cmbGenere.removeAllItems();
+            while (rs.next()) {
+                cmbGenere.addItem(rs.getString("nom"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualitzarInterficieSegonsTipus() {
+        if (chkOpciocontingut.getSelection() == null) {
+            return;
+        }
+        String seleccio = chkOpciocontingut.getSelection().getActionCommand();
+
+        switch (seleccio) {
+            case "VIDEOJOC":
+                omplirComboGeneresVideojocs();
+
+                break;
+
+            case "PELICULA":
+                omplirComboGeneresPelicules();
+
+                break;
+
+            case "SERIE":
+                omplirComboGeneresSeries();
+                break;
+            default:
+                omplirComboGeneresContingut();
+                break;
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,9 +153,6 @@ public class frmMainClient extends javax.swing.JFrame {
 
         imgLogo = new javax.swing.JLabel();
         cmbGenere = new javax.swing.JComboBox<>();
-        chkPelicula = new javax.swing.JCheckBox();
-        chkSerie = new javax.swing.JCheckBox();
-        chkVideojoc = new javax.swing.JCheckBox();
         txtBuscar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtComentari = new javax.swing.JTextArea();
@@ -50,6 +160,9 @@ public class frmMainClient extends javax.swing.JFrame {
         lblBuscar = new javax.swing.JLabel();
         lblGenere = new javax.swing.JLabel();
         lblComentari = new javax.swing.JLabel();
+        rdoPelicula = new javax.swing.JRadioButton();
+        rdoSerie = new javax.swing.JRadioButton();
+        rdoVideojocs = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,16 +176,11 @@ public class frmMainClient extends javax.swing.JFrame {
             }
         });
 
-        chkPelicula.setText("Pelicula");
-        chkPelicula.addActionListener(new java.awt.event.ActionListener() {
+        cmbGenere.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkPeliculaActionPerformed(evt);
+                cmbGenereActionPerformed(evt);
             }
         });
-
-        chkSerie.setText("Serie");
-
-        chkVideojoc.setText("Videojoc");
 
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,6 +202,12 @@ public class frmMainClient extends javax.swing.JFrame {
 
         lblComentari.setText("Comentari");
 
+        rdoPelicula.setText("Pelicula");
+
+        rdoSerie.setText("Serie");
+
+        rdoVideojocs.setText("Videojocs");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,10 +218,15 @@ public class frmMainClient extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(rdoVideojocs, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(rdoSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(rdoPelicula, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 263, Short.MAX_VALUE)
+                                .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(chkSerie)
-                                    .addComponent(chkVideojoc)
                                     .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,11 +235,7 @@ public class frmMainClient extends javax.swing.JFrame {
                                         .addComponent(lblRating))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(233, 233, 233)
-                                        .addComponent(lblGenere, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(chkPelicula)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
-                                .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(lblGenere, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(144, 144, 144)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,18 +258,19 @@ public class frmMainClient extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(lblGenere)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkPelicula)
-                    .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(chkSerie)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(chkVideojoc)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(rdoPelicula)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rdoSerie)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rdoVideojocs)))
                 .addGap(45, 45, 45)
                 .addComponent(lblBuscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                 .addComponent(lblComentari)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -176,17 +292,14 @@ public class frmMainClient extends javax.swing.JFrame {
         register.setFocusable(false);
     }//GEN-LAST:event_imgLogoMousePressed
 
-    private void chkPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkPeliculaActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_chkPeliculaActionPerformed
-
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
-        if (chkOpciocontingut.equals(chkPelicula)){
-            
-        }
+        
     }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void cmbGenereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbGenereActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbGenereActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,9 +327,6 @@ public class frmMainClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox chkPelicula;
-    private javax.swing.JCheckBox chkSerie;
-    private javax.swing.JCheckBox chkVideojoc;
     private javax.swing.JComboBox<String> cmbGenere;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JScrollPane jScrollPane1;
@@ -224,6 +334,9 @@ public class frmMainClient extends javax.swing.JFrame {
     private javax.swing.JLabel lblComentari;
     private javax.swing.JLabel lblGenere;
     private javax.swing.JLabel lblRating;
+    private javax.swing.JRadioButton rdoPelicula;
+    private javax.swing.JRadioButton rdoSerie;
+    private javax.swing.JRadioButton rdoVideojocs;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextArea txtComentari;
     // End of variables declaration//GEN-END:variables
