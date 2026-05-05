@@ -57,6 +57,10 @@ public class frmContingutPagina extends javax.swing.JFrame {
         btnTipus.add(btnSerie);
         btnTipus.add(btnPelicula);
         btnTipus.add(btnVideojoc);
+        btnPelicula.setActionCommand("PELICULA");
+        btnSerie.setActionCommand("SERIE");
+        btnVideojoc.setActionCommand("VIDEOJOC");
+
         carregarContinguts();
         ompleComboGenere();
 
@@ -126,6 +130,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }
 
     private void ompleComboGenere() {
+        limpiarCombo();
         mConnexio = new Connexio();
         ArrayList<Genere> arrayGeneres = new ArrayList<Genere>();
         if (mConnexio != null) {
@@ -134,7 +139,10 @@ public class frmContingutPagina extends javax.swing.JFrame {
                 mConnexio = new Connexio();
                 Connection conn = mConnexio.connectar();
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT id, nom FROM genere");
+                String sql;
+                String tipus = btnTipus.getSelection().getActionCommand();
+
+                ResultSet rs = stmt.executeQuery(tipusSeleccionat());
                 while (rs.next()) {
                     Genere genere = new Genere(
                             rs.getInt("id"),
@@ -155,10 +163,40 @@ public class frmContingutPagina extends javax.swing.JFrame {
 
     }
 
-    private void limpiarCombo() {
-        for (int i = cmbGenere.getItemCount() - 1; i >= 0; i--) {
-            cmbGenere.remove(i);
+    private String tipusSeleccionat() {
+
+        if (btnTipus.getSelection() == null) {
+            return "SELECT id, nom FROM genere ORDER BY nom ASC";
         }
+
+        String seleccio = btnTipus.getSelection().getActionCommand();
+
+        switch (seleccio) {
+            case "PELICULA":
+                return "SELECT DISTINCT g.id, g.nom FROM genere g "
+                        + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                        + "INNER JOIN serie s ON gc.idContingut = s.idSerie "
+                        + "ORDER BY g.nom ASC";
+
+            case "SERIE":
+                return "SELECT DISTINCT g.id, g.nom FROM genere g "
+                        + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                        + "INNER JOIN serie s ON gc.idContingut = s.idSerie "
+                        + "ORDER BY g.nom ASC";
+
+            case "VIDEOJOC":
+                return "SELECT DISTINCT g.id, g.nom FROM genere g "
+                        + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
+                        + "INNER JOIN videojoc v ON gc.idContingut = v.idJoc "
+                        + "ORDER BY g.nom ASC";
+
+            default:
+                return "SELECT id, nom FROM genere ORDER BY nom ASC";
+        }
+    }
+
+    private void limpiarCombo() {
+        cmbGenere.removeAllItems();
     }
 
     /**
@@ -250,8 +288,18 @@ public class frmContingutPagina extends javax.swing.JFrame {
 
         btnSerie.setText("Serie");
         btnSerie.setToolTipText("");
+        btnSerie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSerieActionPerformed(evt);
+            }
+        });
 
         btnVideojoc.setText("Videojoc");
+        btnVideojoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVideojocActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Genere");
 
@@ -394,13 +442,21 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTitolActionPerformed
 
     private void btnPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPeliculaActionPerformed
-        // TODO add your handling code here:
+        ompleComboGenere();
     }//GEN-LAST:event_btnPeliculaActionPerformed
 
     private void cmbGenereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbGenereActionPerformed
 
 
     }//GEN-LAST:event_cmbGenereActionPerformed
+
+    private void btnSerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSerieActionPerformed
+        ompleComboGenere();
+    }//GEN-LAST:event_btnSerieActionPerformed
+
+    private void btnVideojocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVideojocActionPerformed
+        ompleComboGenere();
+    }//GEN-LAST:event_btnVideojocActionPerformed
 
     /**
      * @param args the command line arguments
