@@ -68,5 +68,7 @@ public class Contingut {
     public void setImatge(byte[] imatge) {
         this.imatge = imatge;
     }
+    
+    
 
 }

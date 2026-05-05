@@ -150,6 +150,8 @@ public class frmLogin extends javax.swing.JFrame {
                 GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
 
             } else {
+                frmContingutPagina fUser = new frmContingutPagina();
+                fUser.setVisible(true);
                 // És usuari normal: Obrir aplicació estàndard
                 /* FrmAdmin fAdmin = new FrmAdmin(u);
                 fAdmin.setVisible(true);*/

@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * @author Joaquin
  */
 public class Main {
-    public static String url = "jdbc:mysql://192.168.90.249:3306/resenyesBD";
+    public static String url = "jdbc:mysql://192.168.90.216:3306/resenyesBD";
     public static String user = "root";
     public static String password = "joaquin100";
     

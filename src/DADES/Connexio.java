@@ -18,8 +18,7 @@ public class Connexio {
     public static String password = "joaquin100";
 
  
-    private String SQL_INSERTAR =
-        "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
+    private String SQL_INSERTAR = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
 
     private String SQL_CONSULTA = "SELECT * FROM contingut";
 
