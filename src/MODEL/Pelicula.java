@@ -11,13 +11,16 @@ import java.time.LocalTime;
  *
  * @author Rger Trulls
  */
-public class Pelicula extends Contingut{
-    
+public class Pelicula extends Contingut {
+
     private LocalTime duracio;
     private String director;
-    
 
-    public Pelicula(LocalTime duracio, String director, int id, String titol, String descripcio, int classificacio, byte [] imatge) {
+    public Pelicula() {
+
+    }
+
+    public Pelicula(LocalTime duracio, String director, int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         super(id, titol, descripcio, classificacio, imatge);
         this.duracio = duracio;
         this.director = director;
@@ -38,5 +41,5 @@ public class Pelicula extends Contingut{
     public void setDirector(String director) {
         this.director = director;
     }
-    
+
 }

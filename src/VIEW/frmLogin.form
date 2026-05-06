@@ -14,9 +14,6 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-      <Color blue="0" green="0" red="0" type="rgb"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -44,10 +41,10 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="txtUsuari" min="-2" pref="314" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="btnRegister" min="-2" pref="84" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btnRegister" min="-2" pref="136" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btnLogin" min="-2" pref="57" max="-2" attributes="0"/>
+                                  <Component id="btnLogin" min="-2" pref="141" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtContrassenya" min="-2" pref="314" max="-2" attributes="0"/>
                           </Group>

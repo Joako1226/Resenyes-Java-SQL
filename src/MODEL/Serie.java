@@ -10,10 +10,15 @@ import java.awt.image.BufferedImage;
  *
  * @author Rger Trulls
  */
-public class Serie extends Contingut{
+public class Serie extends Contingut {
+
     private int capitols;
     private int temporada;
 
+    public Serie() {
+    }
+
+    ;
     public Serie(int capitols, int temporada, int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         super(id, titol, descripcio, classificacio, imatge);
         this.capitols = capitols;
@@ -35,5 +40,5 @@ public class Serie extends Contingut{
     public void setTemporada(int temporada) {
         this.temporada = temporada;
     }
-    
+
 }
