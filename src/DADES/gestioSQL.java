@@ -6,10 +6,15 @@ package DADES;
 
 import CONTROLLER.Main;
 import static CONTROLLER.Main.password;
+import static CONTROLLER.Main.pelicules;
+import static CONTROLLER.Main.series;
 import static CONTROLLER.Main.url;
 import static CONTROLLER.Main.user;
 import static CONTROLLER.Main.usuaris;
+import MODEL.Pelicula;
+import MODEL.Serie;
 import MODEL.Usuari;
+import MODEL.Videojoc;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +28,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -140,5 +146,286 @@ public class gestioSQL {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public ArrayList<Pelicula> CarregarPelicules() {
+        ArrayList<Pelicula> llista = new ArrayList<>();
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
+                + "FROM contingut c "
+                + "INNER JOIN pelicula p ON c.id = p.idPelicula";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titol = rs.getString("titol");
+                String descripcio = rs.getString("descripcio");
+                int classificacio = rs.getInt("classificacio");
+                byte[] imatge = rs.getBytes("imatge");
+                String director = rs.getString("director");
+
+                java.sql.Time sqlTime = rs.getTime("duracio");
+                java.time.LocalTime duracio = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
+
+                Pelicula p = new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+                llista.add(p);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al carregar pel·lícules: " + e.getMessage());
+            return null;
+        }
+        return llista;
+    }
+
+    public static void BuscarPelicules(String cadena) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
+                + "FROM contingut c "
+                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
+                + "WHERE c.titol LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + cadena + "%");
+
+            pelicules.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    String director = rs.getString("director");
+
+                    java.sql.Time sqlTime = rs.getTime("duracio");
+                    java.time.LocalTime duracio = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
+
+                    Pelicula p = new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+                    pelicules.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Pelicules: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void BuscarPeliculesPerGenere(String nomGenere) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
+                + "FROM contingut c "
+                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
+                + "INNER JOIN genere_contingut gc ON c.id = gc.idContingut "
+                + "INNER JOIN genere g ON gc.idGenere = g.id "
+                + "WHERE g.nom = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nomGenere);
+            pelicules.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    String director = rs.getString("director");
+
+                    java.sql.Time sqlTime = rs.getTime("duracio");
+                    java.time.LocalTime duracio = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
+
+                    Pelicula p = new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+                    pelicules.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar per Gènere: " + e.getMessage());
+            throw e;
+        }
+    }
+    
+    public ArrayList<Serie> CarregarSeries() {
+        ArrayList<Serie> llista = new ArrayList<>();
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titol = rs.getString("titol");
+                String descripcio = rs.getString("descripcio");
+                int classificacio = rs.getInt("classificacio");
+                byte[] imatge = rs.getBytes("imatge");
+                int capitols = rs.getInt("capitols");
+                int temporada = rs.getInt("temporada");
+                Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                series.add(s);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al carregar pel·lícules: " + e.getMessage());
+            return null;
+        }
+        return llista;
+    }
+
+    public static void BuscarSerie(String cadena) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "WHERE c.titol LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + cadena + "%");
+
+            series.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    int capitols = rs.getInt("capitols");
+                    int temporada = rs.getInt("temporada");
+                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                    series.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Pelicules: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void BuscarSeriePerGenere(String nomGenere) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "INNER JOIN genere_contingut gc ON c.id = gc.idContingut "
+                + "INNER JOIN genere g ON gc.idGenere = g.id "
+                + "WHERE g.nom = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nomGenere);
+            series.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    int capitols = rs.getInt("capitols");
+                    int temporada = rs.getInt("temporada");
+
+                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                    series.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar per Gènere: " + e.getMessage());
+            throw e;
+        }
+    }
+   
+    public ArrayList<Videojoc> CarregarVideojocs() {
+        ArrayList<Videojoc> llista = new ArrayList<>();
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String titol = rs.getString("titol");
+                String descripcio = rs.getString("descripcio");
+                int classificacio = rs.getInt("classificacio");
+                byte[] imatge = rs.getBytes("imatge");
+                int capitols = rs.getInt("capitols");
+                int temporada = rs.getInt("temporada");
+                Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                series.add(s);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al carregar pel·lícules: " + e.getMessage());
+            return null;
+        }
+        return llista;
+    }
+
+    public static void BuscarVideojoc(String cadena) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "WHERE c.titol LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + cadena + "%");
+
+            series.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    int capitols = rs.getInt("capitols");
+                    int temporada = rs.getInt("temporada");
+                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                    series.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Pelicules: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void BuscarVideojocPerGenere(String nomGenere) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "INNER JOIN genere_contingut gc ON c.id = gc.idContingut "
+                + "INNER JOIN genere g ON gc.idGenere = g.id "
+                + "WHERE g.nom = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nomGenere);
+            series.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    int capitols = rs.getInt("capitols");
+                    int temporada = rs.getInt("temporada");
+
+                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
+                    series.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar per Gènere: " + e.getMessage());
+            throw e;
+        }
     }
 }
