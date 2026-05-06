@@ -9,7 +9,9 @@ import static CONTROLLER.Main.mod;
 import DADES.GestioLog;
 import DADES.gestioSQL;
 import MODEL.Usuari;
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -23,7 +25,14 @@ public class frmLogin extends javax.swing.JFrame {
      * Creates new form frmLogin
      */
     public frmLogin() {
+        try{
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         initComponents();
+        
         /*cambiaImatge();*/
     }
     
@@ -52,7 +61,6 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel1.setText("LOGIN");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(0, 0, 0));
 
         imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
         imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -92,9 +100,9 @@ public class frmLogin extends javax.swing.JFrame {
                             .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(txtContrassenya, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(240, 240, 240))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()

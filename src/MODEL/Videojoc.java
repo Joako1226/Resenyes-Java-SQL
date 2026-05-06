@@ -10,8 +10,13 @@ import java.awt.image.BufferedImage;
  *
  * @author Rger Trulls
  */
-public class Videojoc extends Contingut{
+public class Videojoc extends Contingut {
+
     private double preu;
+
+    public Videojoc() {
+      
+    }
 
     public Videojoc(double preu, int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         super(id, titol, descripcio, classificacio, imatge);
@@ -25,6 +30,4 @@ public class Videojoc extends Contingut{
     public void setPreu(double preu) {
         this.preu = preu;
     }
-    
-    
 }

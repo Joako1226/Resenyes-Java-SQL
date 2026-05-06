@@ -18,6 +18,7 @@ public class Contingut {
     private String descripcio;
     private int classificacio;
     private byte [] imatge;
+    
 
     public Contingut(int id, String titol, String descripcio, int classificacio, byte[] imatge) {
         this.id = id;

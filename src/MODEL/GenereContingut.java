@@ -13,6 +13,8 @@ public class GenereContingut {
     private int idGenere;
     private int idContingut;
 
+    public GenereContingut(){
+    }
     public GenereContingut(int idGenere, int idContingut) {
         this.idGenere = idGenere;
         this.idContingut = idContingut;
