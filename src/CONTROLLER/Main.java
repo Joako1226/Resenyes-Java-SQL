@@ -17,17 +17,19 @@ import MODEL.Usuari;
 import MODEL.Videojoc;
 import VIEW.frmLogin;
 import VIEW.frmContingutPagina;
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javax.swing.UIManager;
 /**
  *
  * @author Joaquin
  */
 public class Main {
-    public static String url = "jdbc:mysql://192.168.90.216:3306/resenyesBD";
+    public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
     public static String user = "root";
     public static String password = "joaquin100";
     
@@ -46,6 +48,15 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        try{
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        
        Connexio ccc = new Connexio();
         Connection conn = ccc.connectar();
         GestioLog.CrearLog();

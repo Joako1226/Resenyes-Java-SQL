@@ -25,12 +25,7 @@ public class frmLogin extends javax.swing.JFrame {
      * Creates new form frmLogin
      */
     public frmLogin() {
-        try{
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        
         initComponents();
         
         /*cambiaImatge();*/
