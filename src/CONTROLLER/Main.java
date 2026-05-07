@@ -13,11 +13,14 @@ import MODEL.Genere;
 import MODEL.Pelicula;
 import MODEL.Resenya;
 import MODEL.Serie;
+import static MODEL.Style.temaClar;
+import static MODEL.Style.temaFosc;
 import MODEL.Usuari;
 import MODEL.Videojoc;
 import VIEW.frmLogin;
 import VIEW.frmContingutPagina;
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
@@ -49,12 +52,11 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        try{
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+         try {
+        UIManager.setLookAndFeel(new FlatDarkLaf());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
         
         
        Connexio ccc = new Connexio();

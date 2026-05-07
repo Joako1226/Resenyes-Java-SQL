@@ -114,6 +114,72 @@ public class gestioSQL {
         }
     }
 
+    public static Usuari carregarUsuariPerNom(String nomUsuari) {
+
+        String sql = "SELECT nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin " + "FROM usuari WHERE nom_usuari = ?";
+
+        try (
+                Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nomUsuari);
+
+            try (ResultSet rs = ps.executeQuery()) {
+             
+                if (rs.next()) {
+
+                    String nom_usuari = rs.getString("nom_usuari");
+                    String nom = rs.getString("nom");
+                    String contrasenya = rs.getString("contrasenya");
+
+                    java.sql.Date sqlDate = rs.getDate("data_naixement");
+                    LocalDate data_naixement
+                            = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+
+                    int punts = rs.getInt("punts");
+
+                    String estatString = rs.getString("estat");
+                    Usuari.TipusBan estat = null;
+
+                    if (estatString != null) {
+                        try {
+                            estat = Usuari.TipusBan.valueOf(estatString);
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Valor d'estat desconegut: " + estatString);
+                        }
+                    }
+
+                    java.sql.Timestamp sqlTimestamp = rs.getTimestamp("data_ban");
+
+                    LocalDateTime data_ban
+                            = (sqlTimestamp != null)
+                                    ? sqlTimestamp.toLocalDateTime()
+                                    : null;
+
+                    boolean admin = rs.getBoolean("admin");
+
+                    Usuari u = new Usuari(
+                            nom_usuari,
+                            nom,
+                            contrasenya,
+                            data_naixement,
+                            punts,
+                            estat,
+                            data_ban,
+                            admin
+                    );
+
+                    System.out.println("Usuari carregat: " + nom_usuari);
+
+                    return u;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error de SQL: " + e.getMessage());
+        }
+
+        return null;
+    }
+
     public static Usuari login(String userIntent, String passIntent) {
         String sql = "SELECT nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin FROM usuari WHERE nom_usuari = ? AND contrasenya = ?";
 
@@ -147,7 +213,7 @@ public class gestioSQL {
         }
         return null;
     }
-    
+
     public ArrayList<Pelicula> CarregarPelicules() {
         ArrayList<Pelicula> llista = new ArrayList<>();
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
@@ -246,7 +312,7 @@ public class gestioSQL {
             throw e;
         }
     }
-    
+
     public ArrayList<Serie> CarregarSeries() {
         ArrayList<Serie> llista = new ArrayList<>();
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
@@ -337,7 +403,7 @@ public class gestioSQL {
             throw e;
         }
     }
-   
+
     public ArrayList<Videojoc> CarregarVideojocs() {
         ArrayList<Videojoc> llista = new ArrayList<>();
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
