@@ -4,6 +4,7 @@
  */
 package VIEW;
 
+import static DADES.GestioLog.EscriureLog;
 import DADES.gestioSQL;
 import static DADES.gestioSQL.carregarUsuari;
 import static DADES.gestioSQL.carregarUsuariPerNom;
@@ -361,6 +362,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 try {
                     insertUsuari(u);
                     JOptionPane.showMessageDialog(this, "Creat l'usuari " + u.getNom_usuari());
+                     EscriureLog("S'ha Creat l'usuari: " + u.getNom_usuari());
 
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Parametres incorrectes o usuari ja existent");
@@ -372,6 +374,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 try {
                     modificarUsuari(u);
                     JOptionPane.showMessageDialog(this, "Modificat l'usuari " + u.getNom_usuari());
+                    EscriureLog("S'ha modificat l'usuari: " + u.getNom_usuari());
 
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Parametres incorrectes");
