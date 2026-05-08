@@ -11,6 +11,7 @@ import static CONTROLLER.Main.series;
 import static CONTROLLER.Main.url;
 import static CONTROLLER.Main.user;
 import static CONTROLLER.Main.usuaris;
+import static CONTROLLER.Main.videojocs;
 import MODEL.Pelicula;
 import MODEL.Serie;
 import MODEL.Usuari;
@@ -408,7 +409,7 @@ public class gestioSQL {
         ArrayList<Videojoc> llista = new ArrayList<>();
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
                 + "FROM contingut c "
-                + "INNER JOIN serie s ON c.id = s.idSerie";
+                + "INNER JOIN videojoc v ON c.id = v.idJoc";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
@@ -418,10 +419,9 @@ public class gestioSQL {
                 String descripcio = rs.getString("descripcio");
                 int classificacio = rs.getInt("classificacio");
                 byte[] imatge = rs.getBytes("imatge");
-                int capitols = rs.getInt("capitols");
-                int temporada = rs.getInt("temporada");
-                Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
-                series.add(s);
+                double preu = rs.getDouble("preu");
+                Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
+                videojocs.add(v);
             }
 
         } catch (SQLException e) {
@@ -432,16 +432,16 @@ public class gestioSQL {
     }
 
     public static void BuscarVideojoc(String cadena) throws SQLException {
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
                 + "FROM contingut c "
-                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "INNER JOIN videojoc v ON c.id = v.idJoc "
                 + "WHERE c.titol LIKE ?";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, "%" + cadena + "%");
 
-            series.clear();
+            videojocs.clear();
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -450,22 +450,21 @@ public class gestioSQL {
                     String descripcio = rs.getString("descripcio");
                     int classificacio = rs.getInt("classificacio");
                     byte[] imatge = rs.getBytes("imatge");
-                    int capitols = rs.getInt("capitols");
-                    int temporada = rs.getInt("temporada");
-                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
-                    series.add(s);
+                    double preu = rs.getDouble("preu");
+                    Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
+                    videojocs.add(v);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error a Buscar Pelicules: " + e.getMessage());
+            System.err.println("Error a Buscar Videojocs: " + e.getMessage());
             throw e;
         }
     }
 
     public static void BuscarVideojocPerGenere(String nomGenere) throws SQLException {
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
                 + "FROM contingut c "
-                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "INNER JOIN videojoc v ON c.id = v.idJoc "
                 + "INNER JOIN genere_contingut gc ON c.id = gc.idContingut "
                 + "INNER JOIN genere g ON gc.idGenere = g.id "
                 + "WHERE g.nom = ?";
@@ -473,7 +472,7 @@ public class gestioSQL {
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, nomGenere);
-            series.clear();
+            videojocs.clear();
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -482,11 +481,9 @@ public class gestioSQL {
                     String descripcio = rs.getString("descripcio");
                     int classificacio = rs.getInt("classificacio");
                     byte[] imatge = rs.getBytes("imatge");
-                    int capitols = rs.getInt("capitols");
-                    int temporada = rs.getInt("temporada");
-
-                    Serie s = new Serie(capitols, temporada, id, titol, descripcio, classificacio, imatge);
-                    series.add(s);
+                double preu = rs.getDouble("preu");
+                Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
+                videojocs.add(v);
                 }
             }
         } catch (SQLException e) {

@@ -9,12 +9,14 @@ import static CONTROLLER.Main.pelicules;
 import static CONTROLLER.Main.series;
 import static CONTROLLER.Main.url;
 import static CONTROLLER.Main.user;
+import static CONTROLLER.Main.videojocs;
 import DADES.Connexio;
 import DADES.gestioSQL;
 import MODEL.Contingut;
 import MODEL.Pelicula;
 import MODEL.RenderImg;
 import MODEL.Serie;
+import MODEL.Videojoc;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -234,6 +236,86 @@ public class frmMainClient extends javax.swing.JFrame {
         }
     }
 
+    private void carregarVideojocs() {
+        limpiar();
+        String[] columnes = {"ID", "Títol", "Descripció", "Class.", "Imatge", "Tipus", "Preu"};
+        mModelTaula.setColumnIdentifiers(columnes);
+        tblContinguts.setDefaultRenderer(Object.class, new RenderImg());
+
+        ArrayList<Videojoc> llistaVideojoc = new ArrayList();
+        Videojoc mVideojoc;
+
+        if (mConnexio.connectarCon()) {
+
+            mModelTaula.setRowCount(0);
+
+            Object[] Dades = new Object[8];
+
+            llistaVideojoc = gestioSQL.CarregarVideojocs();
+
+            if (llistaVideojoc != null) {
+                for (int i = llistaVideojoc.size() - 1; i >= 0; i--) {
+
+                    mVideojoc = llistaVideojoc.get(i);
+
+                    Dades[0] = String.valueOf(mVideojoc.getId());
+                    Dades[1] = mVideojoc.getTitol();
+                    Dades[2] = mVideojoc.getDescripcio();
+                    Dades[3] = mVideojoc.getClassificacio();
+
+                    try {
+                        byte[] imatge = mVideojoc.getImatge();
+                        if (imatge != null) {
+                            InputStream inputStream = new ByteArrayInputStream(imatge);
+                            BufferedImage bufferedImage = ImageIO.read(inputStream);
+                            ImageIcon mIcon = new ImageIcon(
+                                    bufferedImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)
+                            );
+                            Dades[4] = new JLabel(mIcon);
+                        } else {
+                            throw new Exception("Sense imatge");
+                        }
+                    } catch (Exception e) {
+                        JLabel placeholder = new JLabel("");
+                        placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
+                        Dades[4] = placeholder;
+                    }
+
+                    Dades[5] = "Videojoc";
+                    Dades[6] = mVideojoc.getPreu();
+
+                    mModelTaula.addRow(Dades);
+                }
+
+                tblContinguts.setModel(mModelTaula);
+                tblContinguts.setRowHeight(60);
+
+                tblContinguts.getColumnModel().getColumn(0).setPreferredWidth(40);
+                tblContinguts.getColumnModel().getColumn(1).setPreferredWidth(150);
+                tblContinguts.getColumnModel().getColumn(2).setPreferredWidth(150);
+                //tblContinguts.getColumnModel().getColumn(7).setPreferredWidth(80);
+            }
+        }
+    }
+
+    private void refrescarTaulaVideojoc() {
+        limpiar();
+
+        Object[] fila = new Object[8];
+
+        for (Videojoc v : videojocs) {
+            fila[0] = v.getId();
+            fila[1] = v.getTitol();
+            fila[2] = v.getDescripcio();
+            fila[3] = v.getClassificacio();
+            fila[4] = generarLabelImatge(v.getImatge());
+            fila[5] = "Videojoc";
+            fila[6] = v.getPreu();
+
+            mModelTaula.addRow(fila);
+        }
+    }
+
     private JLabel generarLabelImatge(byte[] imatgeBytes) {
         try {
             if (imatgeBytes != null && imatgeBytes.length > 0) {
@@ -379,6 +461,8 @@ public class frmMainClient extends javax.swing.JFrame {
         rdoVideojocs = new javax.swing.JRadioButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblContinguts = new javax.swing.JTable();
+        sldValoracio = new javax.swing.JSlider();
+        lblPuntuacio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -443,6 +527,11 @@ public class frmMainClient extends javax.swing.JFrame {
         });
 
         rdoVideojocs.setText("Videojocs");
+        rdoVideojocs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdoVideojocsActionPerformed(evt);
+            }
+        });
 
         tblContinguts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -457,6 +546,15 @@ public class frmMainClient extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tblContinguts);
 
+        sldValoracio.setMaximum(1000);
+        sldValoracio.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                sldValoracioMouseDragged(evt);
+            }
+        });
+
+        lblPuntuacio.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -464,28 +562,33 @@ public class frmMainClient extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(rdoVideojocs, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(rdoSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(rdoPelicula, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblGenere, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(rdoVideojocs, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rdoSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rdoPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblComentari))
+                    .addComponent(lblComentari)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPuntuacio, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
+                        .addGap(143, 143, 143)
                         .addComponent(lblRating)
-                        .addContainerGap(249, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(114, 114, 114)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(64, 64, 64))))
         );
@@ -494,32 +597,37 @@ public class frmMainClient extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 24, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rdoPelicula)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblGenere)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbGenere, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(rdoPelicula)
+                .addGap(18, 18, 18)
                 .addComponent(rdoSerie)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(rdoVideojocs)
-                .addGap(45, 45, 45)
-                .addComponent(lblBuscar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPuntuacio))
                 .addGap(18, 18, 18)
                 .addComponent(lblComentari)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(lblRating)
                 .addGap(57, 57, 57)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         pack();
@@ -555,7 +663,11 @@ public class frmMainClient extends javax.swing.JFrame {
                 } else if (rdoSerie.isSelected()) {
                     gestioSQL.BuscarSeriePerGenere(genereSeleccionat);
                     refrescarTaulaSeries();
-                }            } catch (SQLException ex) {
+                } else if (rdoVideojocs.isSelected()) {
+                    gestioSQL.BuscarVideojocPerGenere(genereSeleccionat);
+                    refrescarTaulaVideojoc();
+                }
+            } catch (SQLException ex) {
                 System.err.println("Error al filtrar: " + ex.getMessage());
             }
         }
@@ -583,6 +695,9 @@ public class frmMainClient extends javax.swing.JFrame {
             } else if (rdoSerie.isSelected()) {
                 gestioSQL.BuscarSerie(txtBuscar.getText());
                 refrescarTaulaSeries();
+            } else if (rdoVideojocs.isSelected()) {
+                gestioSQL.BuscarVideojoc(txtBuscar.getText());
+                refrescarTaulaVideojoc();
             }
         } catch (SQLException ex) {
             System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -594,6 +709,20 @@ public class frmMainClient extends javax.swing.JFrame {
         tblContinguts.setVisible(false);
         carregarSeries();
     }//GEN-LAST:event_rdoSerieActionPerformed
+
+    private void rdoVideojocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoVideojocsActionPerformed
+        // TODO add your handling code here:
+        tblContinguts.setVisible(false);
+        carregarVideojocs();
+
+    }//GEN-LAST:event_rdoVideojocsActionPerformed
+
+    private void sldValoracioMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldValoracioMouseDragged
+        // TODO add your handling code here:
+        int valor = sldValoracio.getValue();
+
+        lblPuntuacio.setText(String.valueOf(valor/10));
+    }//GEN-LAST:event_sldValoracioMouseDragged
 
     /**
      * @param args the command line arguments
@@ -628,10 +757,12 @@ public class frmMainClient extends javax.swing.JFrame {
     private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblComentari;
     private javax.swing.JLabel lblGenere;
+    private javax.swing.JLabel lblPuntuacio;
     private javax.swing.JLabel lblRating;
     private javax.swing.JRadioButton rdoPelicula;
     private javax.swing.JRadioButton rdoSerie;
     private javax.swing.JRadioButton rdoVideojocs;
+    private javax.swing.JSlider sldValoracio;
     private javax.swing.JTable tblContinguts;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextArea txtComentari;

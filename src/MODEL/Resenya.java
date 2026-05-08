@@ -13,15 +13,15 @@ import java.time.LocalDate;
 public class Resenya {
 
     private String usuari;
-    private int idPelicula;
+    private int idContingut;
     private String descripcio;
     private double nota;
     private boolean spoiler;
     private LocalDate dataResenya;
 
-    public Resenya(String usuari, int idPelicula, String descripcio, double nota, boolean spoiler, LocalDate dataResenya) {
+    public Resenya(String usuari, int idContingut, String descripcio, double nota, boolean spoiler, LocalDate dataResenya) {
         this.usuari = usuari;
-        this.idPelicula = idPelicula;
+        this.idContingut = idContingut;
         this.descripcio = descripcio;
         this.nota = nota;
         this.spoiler = spoiler;
@@ -36,12 +36,12 @@ public class Resenya {
         this.usuari = usuari;
     }
 
-    public int getIdPelicula() {
-        return idPelicula;
+    public int getIdContingut() {
+        return idContingut;
     }
 
-    public void setIdPelicula(int idPelicula) {
-        this.idPelicula = idPelicula;
+    public void setIdContingut(int idCOntingut) {
+        this.idContingut = idCOntingut;
     }
 
     public String getDescripcio() {
