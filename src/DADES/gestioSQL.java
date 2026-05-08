@@ -75,24 +75,71 @@ public class gestioSQL {
         }
     }
 
-    public static void carregarUsuari() {
-        usuaris.clear();
+    public static void modificarUsuari(Usuari usuari) throws SQLException {
+        String sql = "UPDATE usuari SET nom_usuari = ?, nom = ?, contrasenya = ?, data_naixement = ?, punts = ?, estat = ?, data_ban = ?, admin = ? WHERE nom_usuari = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, usuari.getNom_usuari());
+            ps.setString(2, usuari.getNom());
+            ps.setString(3, usuari.getContrasenya());
+
+            if (usuari.getData_naixament() != null) {
+                ps.setDate(4, java.sql.Date.valueOf(usuari.getData_naixament()));
+            } else {
+                ps.setNull(4, java.sql.Types.DATE);
+            }
+
+            ps.setInt(5, usuari.getPunts());
+
+            if (usuari.getEstat() != null) {
+                ps.setString(6, usuari.getEstat().name());
+            } else {
+                ps.setNull(6, java.sql.Types.VARCHAR);
+            }
+
+            if (usuari.getData_ban() != null) {
+                ps.setTimestamp(7, java.sql.Timestamp.valueOf(usuari.getData_ban()));
+            } else {
+                ps.setNull(7, java.sql.Types.TIMESTAMP);
+            }
+
+            ps.setBoolean(8, usuari.isAdmin());
+
+            ps.setString(9, usuari.getNom_usuari());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Error en fer l'update: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static ArrayList<Usuari> carregarUsuari() {
+
+        ArrayList<Usuari> usuaris = new ArrayList<>();
+
         String sql = "SELECT nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin FROM usuari";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+
                 String nom_usuari = rs.getString("nom_usuari");
                 String nom = rs.getString("nom");
                 String contrasenya = rs.getString("contrasenya");
 
+                LocalDate data_naixement = null;
                 java.sql.Date sqlDate = rs.getDate("data_naixement");
-                LocalDate data_naixement = (sqlDate != null) ? sqlDate.toLocalDate() : null;
+                if (sqlDate != null) {
+                    data_naixement = sqlDate.toLocalDate();
+                }
 
                 int punts = rs.getInt("punts");
 
-                String estatString = rs.getString("estat");
                 Usuari.TipusBan estat = null;
+                String estatString = rs.getString("estat");
                 if (estatString != null) {
                     try {
                         estat = Usuari.TipusBan.valueOf(estatString);
@@ -101,18 +148,25 @@ public class gestioSQL {
                     }
                 }
 
-                java.sql.Timestamp sqlTimestamp = rs.getTimestamp("data_ban");
-                LocalDateTime data_ban = (sqlTimestamp != null) ? sqlTimestamp.toLocalDateTime() : null;
+                LocalDateTime data_ban = null;
+                java.sql.Timestamp ts = rs.getTimestamp("data_ban");
+                if (ts != null) {
+                    data_ban = ts.toLocalDateTime();
+                }
 
                 boolean admin = rs.getBoolean("admin");
-                usuaris.add(new Usuari(nom_usuari, nom, contrasenya, data_naixement, punts, estat, data_ban, admin));
 
-                System.out.println("Usuari carregat: " + nom_usuari);
+                usuaris.add(new Usuari(
+                        nom_usuari, nom, contrasenya,
+                        data_naixement, punts, estat, data_ban, admin
+                ));
             }
 
         } catch (SQLException e) {
             System.err.println("Error de SQL: " + e.getMessage());
         }
+
+        return usuaris;
     }
 
     public static Usuari carregarUsuariPerNom(String nomUsuari) {
@@ -124,7 +178,7 @@ public class gestioSQL {
             ps.setString(1, nomUsuari);
 
             try (ResultSet rs = ps.executeQuery()) {
-             
+
                 if (rs.next()) {
 
                     String nom_usuari = rs.getString("nom_usuari");
@@ -481,9 +535,9 @@ public class gestioSQL {
                     String descripcio = rs.getString("descripcio");
                     int classificacio = rs.getInt("classificacio");
                     byte[] imatge = rs.getBytes("imatge");
-                double preu = rs.getDouble("preu");
-                Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
-                videojocs.add(v);
+                    double preu = rs.getDouble("preu");
+                    Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
+                    videojocs.add(v);
                 }
             }
         } catch (SQLException e) {

@@ -9,7 +9,7 @@ package MODEL;
  * @author Rger Trulls
  */
 public class GenereContingut {
-
+    
     private int idGenere;
     private int idContingut;
 

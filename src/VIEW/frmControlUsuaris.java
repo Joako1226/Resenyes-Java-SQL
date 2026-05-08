@@ -4,27 +4,60 @@
  */
 package VIEW;
 
+import DADES.gestioSQL;
 import static DADES.gestioSQL.carregarUsuari;
 import static DADES.gestioSQL.carregarUsuariPerNom;
+import static DADES.gestioSQL.insertUsuari;
+import static DADES.gestioSQL.modificarUsuari;
 import MODEL.Usuari;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Joaquin
  */
 public class frmControlUsuaris extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmControlUsuaris.class.getName());
+    private static ButtonGroup opcio = new ButtonGroup();
+    DefaultTableModel mModelTaula = new DefaultTableModel();
 
     /**
      * Creates new form frmControlUsuaris
      */
     public frmControlUsuaris() {
         initComponents();
-       
+        opcio.add(btnCrea);
+        opcio.add(btnModifica);
+        btnCrea.setActionCommand("crear");
+        btnModifica.setActionCommand("modificar");
+        mModelTaula.addColumn("Usuari");
+        mModelTaula.addColumn("Nom");
+        tblUsuaris.setModel(mModelTaula);
+        ompleTaula();
     }
-    
-    
+
+    private void ompleTaula() {
+        mModelTaula.setRowCount(0);
+
+        ArrayList<Usuari> usuaris = gestioSQL.carregarUsuari();
+
+        for (Usuari u : usuaris) {
+            Object[] fila = new Object[2];
+            fila[0] = u.getNom_usuari();
+            fila[1] = u.getNom();
+
+            mModelTaula.addRow(fila);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,7 +89,9 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         cmbAdmin = new javax.swing.JComboBox<>();
         btnAplicar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
+        txtAccioActual = new javax.swing.JLabel();
+        btnModifica = new javax.swing.JRadioButton();
+        btnCrea = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,6 +143,11 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         cmbAdmin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "true", "false" }));
 
         btnAplicar.setText("Aplicar");
+        btnAplicar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAplicarActionPerformed(evt);
+            }
+        });
 
         btnBuscar.setText("🔎");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -116,8 +156,23 @@ public class frmControlUsuaris extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel9.setText("CREAR");
+        txtAccioActual.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        txtAccioActual.setText("CREAR");
+
+        btnModifica.setText("Modificar");
+        btnModifica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificaActionPerformed(evt);
+            }
+        });
+
+        btnCrea.setSelected(true);
+        btnCrea.setText("Crear");
+        btnCrea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -163,7 +218,12 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                                 .addGap(268, 268, 268)
                                 .addComponent(cmbAdmin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(91, 91, 91))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtAccioActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnModifica, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCrea, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39))
@@ -174,7 +234,10 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(41, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtAccioActual, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -212,39 +275,113 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCrear)
                             .addComponent(btnModificar)
-                            .addComponent(btnAplicar)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(41, Short.MAX_VALUE))
+                            .addComponent(btnAplicar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCrea)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnModifica)
+                        .addGap(27, 27, 27))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        
+
     }//GEN-LAST:event_btnCrearActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        Usuari u = carregarUsuariPerNom(txtUsername.getText()); 
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Usuari u = carregarUsuariPerNom(txtUsername.getText());
         System.out.println(u.toString());
         txtName.setText(u.getNom());
         txtContrasenya.setText(u.getContrasenya());
-        txtDataNaixament.setText(u.getData_naixament().toString());
+        txtDataNaixament.setText(u.getData_naixament().format(format));
         numPunts.setValue(u.getPunts());
         cmbEstat.setSelectedItem(u.getEstat().toString());
-        if(u.getEstat().toString() != "active"){
+        if (u.getEstat().toString() != "active") {
             txtDataBan.setText(u.getData_ban().toString());
-        }
-        else{
+        } else {
             txtDataBan.setEnabled(false);
         }
-        
+
         cmbAdmin.setSelectedItem(String.valueOf(u.isAdmin()));
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnCreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreaActionPerformed
+        String opcioSeleccionada = evt.getActionCommand();
+        switch (opcioSeleccionada) {
+            case "crear":
+                txtAccioActual.setText("CREAR");
+                break;
+            case "modificar":
+                txtAccioActual.setText("MODIFICAR");
+                break;
+        }
+    }//GEN-LAST:event_btnCreaActionPerformed
+
+    private void btnModificaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificaActionPerformed
+        String opcioSeleccionada = evt.getActionCommand();
+        switch (opcioSeleccionada) {
+            case "crear":
+                txtAccioActual.setText("CREAR");
+                break;
+            case "modificar":
+                txtAccioActual.setText("MODIFICAR");
+                break;
+        }
+    }//GEN-LAST:event_btnModificaActionPerformed
+
+    private void btnAplicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarActionPerformed
+        String opcioSeleccionada = opcio.getSelection().getActionCommand();
+        DateTimeFormatter formatData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        DateTimeFormatter formatDateTime = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        String username = txtUsername.getText();
+        String name = txtName.getText();
+        String contrasenya = txtContrasenya.getText();
+        LocalDate dataNaixement = LocalDate.parse(txtDataNaixament.getText(), formatData);
+
+        int punts = (int) numPunts.getValue();
+        Usuari.TipusBan estat = Usuari.TipusBan.valueOf(cmbEstat.getSelectedItem().toString());
+
+        LocalDateTime dataBan = null;
+
+        boolean admin = Boolean.parseBoolean(cmbAdmin.getSelectedItem().toString());
+
+        Usuari u = new Usuari(username, name, contrasenya, dataNaixement, punts, estat, dataBan, admin);
+
+        switch (opcioSeleccionada) {
+            case "crear":
+                try {
+                    insertUsuari(u);
+                    JOptionPane.showMessageDialog(this, "Creat l'usuari " + u.getNom_usuari());
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Parametres incorrectes o usuari ja existent");
+                    ex.printStackTrace();
+
+                }
+                break;
+            case "modificar":
+                try {
+                    modificarUsuari(u);
+                    JOptionPane.showMessageDialog(this, "Modificat l'usuari " + u.getNom_usuari());
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Parametres incorrectes");
+                    ex.printStackTrace();
+
+                }
+                break;
+        }
+
+    }//GEN-LAST:event_btnAplicarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,10 +408,16 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new frmControlUsuaris().setVisible(true));
     }
 
+    public static void omplirTaula() {
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAplicar;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JRadioButton btnCrea;
     private javax.swing.JButton btnCrear;
+    private javax.swing.JRadioButton btnModifica;
     private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cmbAdmin;
     private javax.swing.JComboBox<String> cmbEstat;
@@ -286,10 +429,10 @@ public class frmControlUsuaris extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner numPunts;
     private javax.swing.JTable tblUsuaris;
+    private javax.swing.JLabel txtAccioActual;
     private javax.swing.JTextField txtContrasenya;
     private javax.swing.JTextField txtDataBan;
     private javax.swing.JTextField txtDataNaixament;
