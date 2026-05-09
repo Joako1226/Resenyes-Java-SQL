@@ -41,6 +41,8 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         btnModifica.setActionCommand("modificar");
         mModelTaula.addColumn("Usuari");
         mModelTaula.addColumn("Nom");
+        mModelTaula.addColumn("Admin");
+        mModelTaula.addColumn("Estat de ban");
         tblUsuaris.setModel(mModelTaula);
         ompleTaula();
     }
@@ -49,13 +51,19 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         mModelTaula.setRowCount(0);
 
         ArrayList<Usuari> usuaris = gestioSQL.carregarUsuari();
+        String filtre = txtUsername.getText().trim();
 
         for (Usuari u : usuaris) {
-            Object[] fila = new Object[2];
-            fila[0] = u.getNom_usuari();
-            fila[1] = u.getNom();
 
-            mModelTaula.addRow(fila);
+            if (filtre.isEmpty() || u.getNom_usuari().contains(filtre)) {
+
+                Object[] fila = new Object[4];
+                fila[0] = u.getNom_usuari();
+                fila[1] = u.getNom();
+                fila[2] = u.isAdmin();
+                fila[3] = u.getEstat();
+                mModelTaula.addRow(fila);
+            }
         }
     }
 
@@ -71,8 +79,6 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         txtUsername = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuaris = new javax.swing.JTable();
-        btnCrear = new javax.swing.JButton();
-        btnModificar = new javax.swing.JButton();
         txtName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -93,8 +99,23 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         txtAccioActual = new javax.swing.JLabel();
         btnModifica = new javax.swing.JRadioButton();
         btnCrea = new javax.swing.JRadioButton();
+        imgLogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
+        txtUsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUsernameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUsernameKeyTyped(evt);
+            }
+        });
 
         tblUsuaris.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,20 +129,6 @@ public class frmControlUsuaris extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(tblUsuaris);
-
-        btnCrear.setText("Crear");
-        btnCrear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearActionPerformed(evt);
-            }
-        });
-
-        btnModificar.setText("Modificar");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Usuari");
 
@@ -175,68 +182,68 @@ public class frmControlUsuaris extends javax.swing.JFrame {
             }
         });
 
+        imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
+        imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAccioActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnCrea, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnModifica, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addGap(143, 143, 143)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(cmbEstat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(numPunts)
-                                        .addComponent(txtContrasenya)
-                                        .addComponent(txtDataNaixament, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnBuscar))))
-                            .addComponent(txtName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtDataBan, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addGap(268, 268, 268)
-                                .addComponent(cmbAdmin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(91, 91, 91))
-                    .addComponent(txtAccioActual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnModifica, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCrea, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(cmbAdmin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel6))
+                                        .addGap(143, 143, 143)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(cmbEstat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(numPunts)
+                                                .addComponent(txtContrasenya)
+                                                .addComponent(txtDataNaixament, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnBuscar))))
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(91, 91, 91)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgLogo))
                 .addGap(39, 39, 39))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(41, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtAccioActual, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -272,45 +279,43 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
-                        .addGap(46, 46, 46)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnCrear)
-                            .addComponent(btnModificar)
-                            .addComponent(btnAplicar))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCrea)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnModifica)
-                        .addGap(27, 27, 27))))
+                            .addComponent(btnCrea)
+                            .addComponent(btnAplicar)))
+                    .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnModifica)
+                    .addComponent(imgLogo))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
-    }//GEN-LAST:event_btnModificarActionPerformed
-
-    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-
-    }//GEN-LAST:event_btnCrearActionPerformed
-
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        Usuari u = carregarUsuariPerNom(txtUsername.getText());
-        System.out.println(u.toString());
-        txtName.setText(u.getNom());
-        txtContrasenya.setText(u.getContrasenya());
-        txtDataNaixament.setText(u.getData_naixament().format(format));
-        numPunts.setValue(u.getPunts());
-        cmbEstat.setSelectedItem(u.getEstat().toString());
-        if (u.getEstat().toString() != "active") {
-            txtDataBan.setText(u.getData_ban().toString());
-        } else {
-            txtDataBan.setEnabled(false);
+        try {
+            Usuari u = carregarUsuariPerNom(txtUsername.getText());
+            System.out.println(u.toString());
+            txtName.setText(u.getNom());
+            txtContrasenya.setText(u.getContrasenya());
+            txtDataNaixament.setText(u.getData_naixament().format(format));
+            numPunts.setValue(u.getPunts());
+            cmbEstat.setSelectedItem(u.getEstat().toString());
+            if (u.getEstat().toString() != "active") {
+                txtDataBan.setText(u.getData_ban().toString());
+            } else {
+                txtDataBan.setEnabled(false);
+            }
+
+            cmbAdmin.setSelectedItem(String.valueOf(u.isAdmin()));
+        } catch (Exception e) {
+            e.printStackTrace();
+             JOptionPane.showMessageDialog(this, "Usuari inexistent, prova a crearel primer");
         }
 
-        cmbAdmin.setSelectedItem(String.valueOf(u.isAdmin()));
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreaActionPerformed
@@ -362,8 +367,8 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 try {
                     insertUsuari(u);
                     JOptionPane.showMessageDialog(this, "Creat l'usuari " + u.getNom_usuari());
-                     EscriureLog("S'ha Creat l'usuari: " + u.getNom_usuari());
-
+                    EscriureLog("S'ha Creat l'usuari: " + u.getNom_usuari());
+                    ompleTaula();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Parametres incorrectes o usuari ja existent");
                     ex.printStackTrace();
@@ -375,7 +380,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                     modificarUsuari(u);
                     JOptionPane.showMessageDialog(this, "Modificat l'usuari " + u.getNom_usuari());
                     EscriureLog("S'ha modificat l'usuari: " + u.getNom_usuari());
-
+                    ompleTaula();
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Parametres incorrectes");
                     ex.printStackTrace();
@@ -385,6 +390,18 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAplicarActionPerformed
+
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+
+    }//GEN-LAST:event_txtUsernameActionPerformed
+
+    private void txtUsernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsernameKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsernameKeyTyped
+
+    private void txtUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsernameKeyReleased
+        ompleTaula();
+    }//GEN-LAST:event_txtUsernameKeyReleased
 
     /**
      * @param args the command line arguments
@@ -419,11 +436,10 @@ public class frmControlUsuaris extends javax.swing.JFrame {
     private javax.swing.JButton btnAplicar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JRadioButton btnCrea;
-    private javax.swing.JButton btnCrear;
     private javax.swing.JRadioButton btnModifica;
-    private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cmbAdmin;
     private javax.swing.JComboBox<String> cmbEstat;
+    private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

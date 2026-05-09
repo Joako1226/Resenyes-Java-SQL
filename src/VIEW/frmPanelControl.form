@@ -26,22 +26,33 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnModificar" min="-2" pref="165" max="-2" attributes="0"/>
-                  <Component id="btnAfegir" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="btnAfegir3" min="-2" pref="165" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnAfegir1" min="-2" pref="165" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnModificar" min="-2" pref="165" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnAfegir3" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="btnAfegir1" min="-2" pref="165" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace pref="594" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="btnAfegir2" min="-2" pref="165" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="E2" min="-2" pref="165" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="E1" min="-2" pref="165" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnAfegir" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnAfegir2" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="E2" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="E1" min="-2" pref="165" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="396" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -49,12 +60,17 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-              <Component id="btnAfegir" min="-2" pref="76" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnAfegir2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
-                  <Component id="E2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
-                  <Component id="E1" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="btnAfegir" min="-2" pref="76" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnAfegir2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                          <Component id="E2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                          <Component id="E1" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnModificar" min="-2" pref="76" max="-2" attributes="0"/>
@@ -124,6 +140,14 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="E2ActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="imgLogo">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/VIEW/logoCriticFy128p.png"/>
+        </Property>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

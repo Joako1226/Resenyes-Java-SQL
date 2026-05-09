@@ -89,26 +89,27 @@
                               <Component id="numCapitols" min="-2" pref="70" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnGuardar" max="32767" attributes="0"/>
-                          <Component id="btnExaminar" min="-2" pref="201" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnGuardar" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnExaminar" alignment="0" pref="201" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="97" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="142" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnModificar" min="-2" pref="110" max="-2" attributes="0"/>
+                          <Component id="btnModificar1" min="-2" pref="110" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -164,14 +165,6 @@
                               </Group>
                               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnExaminar" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="18" max="32767" attributes="0"/>
-                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="cmbClassificacio" min="-2" pref="36" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
@@ -185,6 +178,14 @@
                                       <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                                       <Component id="cmbGenere" min="-2" pref="36" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnExaminar" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="18" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -207,7 +208,15 @@
                   <Group type="102" attributes="0">
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="btnModificar" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnModificar1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -442,6 +451,16 @@
       <Events>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgLogoMousePressed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="btnModificar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Afegir"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="btnModificar1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Modificar"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
