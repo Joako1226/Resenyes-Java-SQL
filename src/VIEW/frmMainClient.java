@@ -9,6 +9,7 @@ import static CONTROLLER.Main.pelicules;
 import static CONTROLLER.Main.series;
 import static CONTROLLER.Main.url;
 import static CONTROLLER.Main.user;
+import static CONTROLLER.Main.usuariActual;
 import static CONTROLLER.Main.videojocs;
 import DADES.Connexio;
 import DADES.gestioSQL;
@@ -52,6 +53,7 @@ public class frmMainClient extends javax.swing.JFrame {
      */
     public frmMainClient() {
         initComponents();
+        txtUsuari.setText("Usuari actual: " + usuariActual.getNom());
         tblContinguts.setVisible(false);
 
         chkOpciocontingut.add(rdoSerie);
@@ -463,6 +465,7 @@ public class frmMainClient extends javax.swing.JFrame {
         tblContinguts = new javax.swing.JTable();
         sldValoracio = new javax.swing.JSlider();
         lblPuntuacio = new javax.swing.JLabel();
+        txtUsuari = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -547,6 +550,7 @@ public class frmMainClient extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblContinguts);
 
         sldValoracio.setMaximum(1000);
+        sldValoracio.setValue(5);
         sldValoracio.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 sldValoracioMouseDragged(evt);
@@ -580,17 +584,18 @@ public class frmMainClient extends javax.swing.JFrame {
                         .addComponent(lblPuntuacio, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
-                        .addComponent(lblRating)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(114, 114, 114)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addComponent(lblRating)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -624,7 +629,9 @@ public class frmMainClient extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(lblRating)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblRating)
+                    .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(57, 57, 57)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(63, Short.MAX_VALUE))
@@ -766,5 +773,6 @@ public class frmMainClient extends javax.swing.JFrame {
     private javax.swing.JTable tblContinguts;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextArea txtComentari;
+    private javax.swing.JLabel txtUsuari;
     // End of variables declaration//GEN-END:variables
 }

@@ -47,6 +47,8 @@ public class Main {
     public static ArrayList<Genere>generes = new ArrayList();
     public static ArrayList<Resenya>resenyes = new ArrayList();    
     
+    public static Usuari usuariActual;
+    
     /**
      * @param args the command line arguments
      */
@@ -81,6 +83,9 @@ public class Main {
         } else {
             System.out.println("Error: connexio null");
         }
+        
+        
+        
     }
         
     

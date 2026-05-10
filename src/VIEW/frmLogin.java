@@ -6,6 +6,7 @@ package VIEW;
 
 import CONTROLLER.Main;
 import static CONTROLLER.Main.mod;
+import static CONTROLLER.Main.usuariActual;
 import DADES.GestioLog;
 import DADES.gestioSQL;
 import static MODEL.Style.temaClar;
@@ -182,6 +183,7 @@ public class frmLogin extends javax.swing.JFrame {
         Usuari u = gestioSQL.login(userText, passText);
 
         if (u != null) {
+            usuariActual = u;
             if (u.isAdmin()) {
                 // És administrador: Obrir panell de control
                 frmContingutPagina fUser = new frmContingutPagina();
@@ -198,7 +200,7 @@ public class frmLogin extends javax.swing.JFrame {
                 frmControlUsuaris fcontrol = new frmControlUsuaris();
                 fcontrol.setVisible(true);
                 GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
-
+                
             }
             this.dispose(); // Tanquem la finestra de login
         } else {

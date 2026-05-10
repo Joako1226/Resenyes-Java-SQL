@@ -51,6 +51,7 @@ public class GestioLog {
     public static void EscriureLog(String s) {
         Escriure(rutaFitxerLog, s);
     }
+    
 
 
 }
