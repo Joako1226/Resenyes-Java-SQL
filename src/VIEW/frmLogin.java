@@ -9,10 +9,14 @@ import static CONTROLLER.Main.mod;
 import static CONTROLLER.Main.usuariActual;
 import DADES.GestioLog;
 import DADES.gestioSQL;
+import static DADES.gestioSQL.modificarUsuari;
 import static MODEL.Style.temaClar;
 import static MODEL.Style.temaFosc;
 import MODEL.Usuari;
+import MODEL.Usuari.TipusBan;
 import com.formdev.flatlaf.FlatDarkLaf;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -22,22 +26,22 @@ import javax.swing.UIManager;
  * @author Joaquin
  */
 public class frmLogin extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmLogin.class.getName());
 
     /**
      * Creates new form frmLogin
      */
     private ButtonGroup btnEstil = new ButtonGroup();
-    
+
     public frmLogin() {
         initComponents();
         btnEstil.add(btnClar);
         btnEstil.add(btnFosc);
-        
+
         /*cambiaImatge();*/
     }
-    
+
     /*private void cambiaImatge() {
         imgLogo.setIcon(new javax.swing.ImageIcon(
         getClass().getResource("logoCriticFy128p_alternative.png")));
@@ -60,6 +64,7 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnClar = new javax.swing.JRadioButton();
         btnFosc = new javax.swing.JRadioButton();
+        btnMostra = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,6 +112,14 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
 
+        btnMostra.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        btnMostra.setText("👁️");
+        btnMostra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,7 +139,9 @@ public class frmLogin extends javax.swing.JFrame {
                     .addComponent(txtContrassenya, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(240, 240, 240))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMostra)
+                .addGap(204, 204, 204))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(imgLogo)
@@ -144,7 +159,9 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtContrassenya, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtContrassenya, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMostra))
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -171,7 +188,7 @@ public class frmLogin extends javax.swing.JFrame {
         frmLogin login = new frmLogin();
         login.setLocationRelativeTo(this);
         login.setFocusable(false);
-        
+
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
@@ -184,29 +201,46 @@ public class frmLogin extends javax.swing.JFrame {
 
         if (u != null) {
             usuariActual = u;
-            if (u.isAdmin()) {
-                // És administrador: Obrir panell de control
-                frmContingutPagina fUser = new frmContingutPagina();
-                fUser.setVisible(true);
-                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
+            if (u.getEstat() == TipusBan.active) {
+                if (u.isAdmin()) {
+                    frmContingutPagina fUser = new frmContingutPagina();
+                    fUser.setVisible(true);
+                    GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
 
+                } else {
+                    frmContingutPagina fUser = new frmContingutPagina();
+                    fUser.setVisible(true);
+
+                    frmMainClient fClient = new frmMainClient();
+                    fClient.setVisible(true);
+
+                    frmControlUsuaris fcontrol = new frmControlUsuaris();
+                    fcontrol.setVisible(true);
+
+                    frmEdicioUsuari fEdicioUsuari = new frmEdicioUsuari();
+                    fEdicioUsuari.setVisible(true);
+
+                    GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
+
+                }
+                this.dispose();
             } else {
-                frmContingutPagina fUser = new frmContingutPagina();
-                fUser.setVisible(true);
-                // És usuari normal: Obrir aplicació estàndard
-                frmMainClient fClient = new frmMainClient();
-                fClient.setVisible(true);
-                
-                frmControlUsuaris fcontrol = new frmControlUsuaris();
-                fcontrol.setVisible(true);
-                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
-                
+                if (u.getData_ban().isAfter(LocalDateTime.now())) {
+                    u.setEstat(TipusBan.active);
+                    u.setData_ban(null);
+                    try {
+                        modificarUsuari(u);
+                    } catch (SQLException ex) {
+                        System.getLogger(frmLogin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No tens acces estas banejat, estat del ban: " + u.getEstat() + ", tindras acces el dia: " + u.getData_ban());
+                }
             }
-            this.dispose(); // Tanquem la finestra de login
         } else {
             JOptionPane.showMessageDialog(this, "Usuari o contrasenya incorrectes");
         }
-        
+
     }//GEN-LAST:event_btnLoginActionPerformed
     //EscriureLog();
     private void txtUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuariActionPerformed
@@ -220,6 +254,14 @@ public class frmLogin extends javax.swing.JFrame {
     private void btnFoscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFoscActionPerformed
         temaFosc(this);
     }//GEN-LAST:event_btnFoscActionPerformed
+
+    private void btnMostraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostraActionPerformed
+        if (txtContrassenya.getEchoChar() == 0) {
+            txtContrassenya.setEchoChar('•');
+        } else {
+            txtContrassenya.setEchoChar((char) 0);
+        }
+    }//GEN-LAST:event_btnMostraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,6 +292,7 @@ public class frmLogin extends javax.swing.JFrame {
     private javax.swing.JRadioButton btnClar;
     private javax.swing.JRadioButton btnFosc;
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnMostra;
     private javax.swing.JButton btnRegister;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel jLabel2;

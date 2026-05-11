@@ -643,7 +643,6 @@ public class frmMainClient extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblContinguts);
 
         sldValoracio.setMaximum(1000);
-        sldValoracio.setValue(5);
         sldValoracio.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 sldValoracioMouseDragged(evt);

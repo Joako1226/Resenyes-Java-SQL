@@ -11,6 +11,7 @@ import static DADES.gestioSQL.carregarUsuariPerNom;
 import static DADES.gestioSQL.insertUsuari;
 import static DADES.gestioSQL.modificarUsuari;
 import MODEL.Usuari;
+import MODEL.Usuari.TipusBan;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -100,6 +101,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         btnModifica = new javax.swing.JRadioButton();
         btnCrea = new javax.swing.JRadioButton();
         imgLogo = new javax.swing.JLabel();
+        btnDataActual = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,9 +144,14 @@ public class frmControlUsuaris extends javax.swing.JFrame {
 
         jLabel6.setText("Estat");
 
-        jLabel7.setText("Data ban (dd/mm/aaaa)");
+        jLabel7.setText("Data ban (dd/mm/aaaa hh:mm)");
 
         cmbEstat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "active", "warned", "soft_ban", "hard_ban" }));
+        cmbEstat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstatActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Admin");
 
@@ -185,6 +192,13 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
         imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        btnDataActual.setText("📅");
+        btnDataActual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDataActualActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -201,16 +215,8 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                                     .addComponent(btnModifica, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtDataBan, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(268, 268, 268)
-                                .addComponent(cmbAdmin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGap(0, 10, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,17 +228,29 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                                             .addComponent(jLabel6))
                                         .addGap(143, 143, 143)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(cmbEstat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(numPunts)
-                                                .addComponent(txtContrasenya)
-                                                .addComponent(txtDataNaixament, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnBuscar))))
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(91, 91, 91)))
+                                                .addComponent(btnBuscar))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(btnDataActual)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(cmbEstat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(numPunts)
+                                                    .addComponent(txtContrasenya)
+                                                    .addComponent(txtDataNaixament, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmbAdmin, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtDataBan, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(31, 31, 31)))))
+                        .addGap(81, 81, 81)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,7 +261,11 @@ public class frmControlUsuaris extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgLogo))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtAccioActual, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -274,20 +296,18 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(txtDataBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtDataBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDataActual))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
-                        .addGap(18, 18, 18)
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCrea)
-                            .addComponent(btnAplicar)))
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnModifica)
-                    .addComponent(imgLogo))
+                            .addComponent(btnAplicar))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnModifica)))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -304,16 +324,19 @@ public class frmControlUsuaris extends javax.swing.JFrame {
             txtDataNaixament.setText(u.getData_naixament().format(format));
             numPunts.setValue(u.getPunts());
             cmbEstat.setSelectedItem(u.getEstat().toString());
-            if (u.getEstat().toString() != "active") {
+            if (u.getEstat() != TipusBan.active) {
                 txtDataBan.setText(u.getData_ban().toString());
+                txtDataBan.setEnabled(true);
+                btnDataActual.setEnabled(true);
             } else {
                 txtDataBan.setEnabled(false);
+                btnDataActual.setEnabled(false);
             }
 
             cmbAdmin.setSelectedItem(String.valueOf(u.isAdmin()));
         } catch (Exception e) {
             e.printStackTrace();
-             JOptionPane.showMessageDialog(this, "Usuari inexistent, prova a crearel primer");
+            JOptionPane.showMessageDialog(this, "Usuari inexistent, prova a crearel primer");
         }
 
     }//GEN-LAST:event_btnBuscarActionPerformed
@@ -355,8 +378,8 @@ public class frmControlUsuaris extends javax.swing.JFrame {
 
         int punts = (int) numPunts.getValue();
         Usuari.TipusBan estat = Usuari.TipusBan.valueOf(cmbEstat.getSelectedItem().toString());
-
-        LocalDateTime dataBan = null;
+        
+        LocalDateTime dataBan = LocalDateTime.parse(txtDataBan.getText(), formatDateTime);
 
         boolean admin = Boolean.parseBoolean(cmbAdmin.getSelectedItem().toString());
 
@@ -377,7 +400,11 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 break;
             case "modificar":
                 try {
+                    if (u.getEstat() != Usuari.TipusBan.active) {
+
+                    }
                     modificarUsuari(u);
+
                     JOptionPane.showMessageDialog(this, "Modificat l'usuari " + u.getNom_usuari());
                     EscriureLog("S'ha modificat l'usuari: " + u.getNom_usuari());
                     ompleTaula();
@@ -402,6 +429,25 @@ public class frmControlUsuaris extends javax.swing.JFrame {
     private void txtUsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsernameKeyReleased
         ompleTaula();
     }//GEN-LAST:event_txtUsernameKeyReleased
+
+    private void btnDataActualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataActualActionPerformed
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime ara = LocalDateTime.now();
+        txtDataBan.setText(ara.format(format));
+    }//GEN-LAST:event_btnDataActualActionPerformed
+
+    private void cmbEstatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstatActionPerformed
+        if(cmbEstat.getSelectedItem() != "active"){
+            txtDataBan.setEnabled(true);
+            btnDataActual.setEnabled(true);
+        }
+        else{
+            txtDataBan.setEnabled(false);
+            btnDataActual.setEnabled(false);
+            txtDataBan.setText("");
+        }
+        
+    }//GEN-LAST:event_cmbEstatActionPerformed
 
     /**
      * @param args the command line arguments
@@ -436,6 +482,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
     private javax.swing.JButton btnAplicar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JRadioButton btnCrea;
+    private javax.swing.JButton btnDataActual;
     private javax.swing.JRadioButton btnModifica;
     private javax.swing.JComboBox<String> cmbAdmin;
     private javax.swing.JComboBox<String> cmbEstat;
