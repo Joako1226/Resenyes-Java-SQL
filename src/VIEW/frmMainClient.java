@@ -75,7 +75,80 @@ public class frmMainClient extends javax.swing.JFrame {
     private void limpiar() {
         for (int i = mModelTaula.getRowCount() - 1; i >= 0; i--) {
             mModelTaula.removeRow(i);
+            mModelTaula.setRowCount(0);
         }
+    }
+
+    public void estrelles() {
+        String full = "/IMAGES/estrellaFull.png";
+        String mitja = "/IMAGES/estrellaMitja.png";
+
+        if (comprovarIcona(imgEstrella5, full) || comprovarIcona(imgEstrella5, mitja)) {
+            imgEstrella4.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        }
+
+        if (comprovarIcona(imgEstrella4, full) || comprovarIcona(imgEstrella4, mitja)) {
+            imgEstrella3.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        }
+
+        if (comprovarIcona(imgEstrella3, full) || comprovarIcona(imgEstrella3, mitja)) {
+            imgEstrella2.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        }
+
+        if (comprovarIcona(imgEstrella2, full) || comprovarIcona(imgEstrella2, mitja)) {
+            imgEstrella1.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        }
+    }
+
+    private boolean comprovarIcona(javax.swing.JLabel label, String rutaRecurs) {
+        if (label.getIcon() == null) {
+            return false;
+        }
+        String iconPath = label.getIcon().toString();
+        return iconPath.contains(rutaRecurs);
+    }
+
+    public void actualitzarEstrelles(double valor) {
+        String full = "/IMAGES/estrellaFull.png";
+        String mitja = "/IMAGES/estrellaMitja.png";
+        String buida = "/IMAGES/estrellaGris.png"; // O com es digui la teva estrella buida
+
+        javax.swing.JLabel[] estrelles = {imgEstrella1, imgEstrella2, imgEstrella3, imgEstrella4, imgEstrella5};
+        for (javax.swing.JLabel s : estrelles) {
+            s.setIcon(new javax.swing.ImageIcon(getClass().getResource(buida)));
+        }
+
+        if (valor >= 20) {
+            imgEstrella1.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        } else if (valor >= 10) {
+            imgEstrella1.setIcon(new javax.swing.ImageIcon(getClass().getResource(mitja)));
+        }
+
+        if (valor >= 40) {
+            imgEstrella2.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        } else if (valor >= 30) {
+            imgEstrella2.setIcon(new javax.swing.ImageIcon(getClass().getResource(mitja)));
+        }
+
+        if (valor >= 60) {
+            imgEstrella3.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        } else if (valor >= 50) {
+            imgEstrella3.setIcon(new javax.swing.ImageIcon(getClass().getResource(mitja)));
+        }
+
+        if (valor >= 80) {
+            imgEstrella4.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        } else if (valor >= 70) {
+            imgEstrella4.setIcon(new javax.swing.ImageIcon(getClass().getResource(mitja)));
+        }
+
+        if (valor >= 100) {
+            imgEstrella5.setIcon(new javax.swing.ImageIcon(getClass().getResource(full)));
+        } else if (valor >= 90) {
+            imgEstrella5.setIcon(new javax.swing.ImageIcon(getClass().getResource(mitja)));
+        }
+
+        estrelles();
     }
 
     private void carregarPelicules() {
@@ -319,30 +392,34 @@ public class frmMainClient extends javax.swing.JFrame {
     }
 
     private JLabel generarLabelImatge(byte[] imatgeBytes) {
+        if (imatgeBytes == null || imatgeBytes.length == 0) {
+            return crearPlaceholder();
+        }
         try {
-            if (imatgeBytes != null && imatgeBytes.length > 0) {
-                InputStream inputStream = new ByteArrayInputStream(imatgeBytes);
-                BufferedImage bufferedImage = ImageIO.read(inputStream);
+            InputStream inputStream = new ByteArrayInputStream(imatgeBytes);
+            BufferedImage bufferedImage = ImageIO.read(inputStream);
 
-                ImageIcon mIcon = new ImageIcon(
-                        bufferedImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)
-                );
+            BufferedImage resizedImg = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);
+            java.awt.Graphics2D g2 = resizedImg.createGraphics();
+            g2.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.drawImage(bufferedImage, 0, 0, 60, 60, null);
+            g2.dispose();
 
-                return new JLabel(mIcon);
-            } else {
-                throw new Exception("Sense dades d'imatge");
-            }
+            return new JLabel(new ImageIcon(resizedImg));
         } catch (Exception e) {
-            JLabel placeholder = new JLabel("");
-            try {
-                placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
-            } catch (Exception ex) {
-                placeholder.setText("No Img");
-            }
-            return placeholder;
+            return crearPlaceholder();
         }
     }
 
+    private JLabel crearPlaceholder() {
+        JLabel placeholder = new JLabel("");
+        try {
+            placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
+        } catch (Exception ex) {
+            placeholder.setText("No Img");
+        }
+        return placeholder;
+    }
     public void omplirComboGeneresContingut() {
         String sql = "SELECT DISTINCT g.nom FROM genere g "
                 + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
@@ -440,6 +517,12 @@ public class frmMainClient extends javax.swing.JFrame {
         }
     }
 
+    public ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImg);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -464,8 +547,13 @@ public class frmMainClient extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblContinguts = new javax.swing.JTable();
         sldValoracio = new javax.swing.JSlider();
-        lblPuntuacio = new javax.swing.JLabel();
         txtUsuari = new javax.swing.JLabel();
+        imgEstrella1 = new javax.swing.JLabel();
+        imgEstrella2 = new javax.swing.JLabel();
+        imgEstrella3 = new javax.swing.JLabel();
+        imgEstrella4 = new javax.swing.JLabel();
+        imgEstrella5 = new javax.swing.JLabel();
+        txtValoracio = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -547,6 +635,11 @@ public class frmMainClient extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblContinguts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblContingutsMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblContinguts);
 
         sldValoracio.setMaximum(1000);
@@ -555,9 +648,78 @@ public class frmMainClient extends javax.swing.JFrame {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 sldValoracioMouseDragged(evt);
             }
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                sldValoracioMouseMoved(evt);
+            }
         });
 
-        lblPuntuacio.setText("0");
+        txtUsuari.setText("Usuari");
+
+        imgEstrella1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
+        imgEstrella1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imgEstrella1.setMaximumSize(new java.awt.Dimension(50, 50));
+        imgEstrella1.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgEstrella1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgEstrella1MousePressed(evt);
+            }
+        });
+
+        imgEstrella2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
+        imgEstrella2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imgEstrella2.setMaximumSize(new java.awt.Dimension(50, 50));
+        imgEstrella2.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgEstrella2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgEstrella2MousePressed(evt);
+            }
+        });
+
+        imgEstrella3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
+        imgEstrella3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imgEstrella3.setMaximumSize(new java.awt.Dimension(50, 50));
+        imgEstrella3.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgEstrella3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgEstrella3MousePressed(evt);
+            }
+        });
+
+        imgEstrella4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
+        imgEstrella4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imgEstrella4.setMaximumSize(new java.awt.Dimension(50, 50));
+        imgEstrella4.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgEstrella4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgEstrella4MousePressed(evt);
+            }
+        });
+
+        imgEstrella5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
+        imgEstrella5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        imgEstrella5.setMaximumSize(new java.awt.Dimension(50, 50));
+        imgEstrella5.setMinimumSize(new java.awt.Dimension(50, 50));
+        imgEstrella5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                imgEstrella5MousePressed(evt);
+            }
+        });
+
+        txtValoracio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                txtValoracioMouseEntered(evt);
+            }
+        });
+        txtValoracio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtValoracioActionPerformed(evt);
+            }
+        });
+        txtValoracio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtValoracioKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -579,19 +741,30 @@ public class frmMainClient extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblComentari)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblPuntuacio, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(imgEstrella1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgEstrella2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgEstrella3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgEstrella4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imgEstrella5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(112, 112, 112)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(114, 114, 114)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(143, 143, 143)
+                        .addGap(137, 137, 137)
                         .addComponent(lblRating)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -620,9 +793,16 @@ public class frmMainClient extends javax.swing.JFrame {
                 .addComponent(rdoVideojocs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPuntuacio, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sldValoracio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imgEstrella1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgEstrella2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgEstrella3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgEstrella4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgEstrella5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblComentari)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -726,10 +906,115 @@ public class frmMainClient extends javax.swing.JFrame {
 
     private void sldValoracioMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldValoracioMouseDragged
         // TODO add your handling code here:
-        int valor = sldValoracio.getValue();
+        double valor = sldValoracio.getValue() /10;
+        actualitzarEstrelles(valor);
+        txtValoracio.setText(String.valueOf(valor));
+        try {
+            if (rdoPelicula.isSelected()) {
+                gestioSQL.BuscarPeliculaPerValoracio(valor);
+                refrescarTaulaPelicules();
+            } else if (rdoSerie.isSelected()) {
+                gestioSQL.BuscarSeriePerValoracio(valor);
+                refrescarTaulaSeries();
+            } else if (rdoVideojocs.isSelected()) {
+                gestioSQL.BuscarVideojocPerValoracio(valor);
+                refrescarTaulaVideojoc();
+            }
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
 
-        lblPuntuacio.setText(String.valueOf(valor/10));
     }//GEN-LAST:event_sldValoracioMouseDragged
+
+    private void imgEstrella1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella1MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgEstrella1MousePressed
+
+    private void imgEstrella2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella2MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgEstrella2MousePressed
+
+    private void imgEstrella3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella3MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgEstrella3MousePressed
+
+    private void imgEstrella4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella4MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgEstrella4MousePressed
+
+    private void imgEstrella5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella5MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgEstrella5MousePressed
+
+    private void sldValoracioMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldValoracioMouseMoved
+        // TODO add your handling code here:
+        double valor = sldValoracio.getValue();
+        actualitzarEstrelles(valor / 10);
+        txtValoracio.setText(String.valueOf(valor / 10));
+        
+
+    }//GEN-LAST:event_sldValoracioMouseMoved
+
+    private void txtValoracioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtValoracioMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtValoracioMouseEntered
+
+    private void txtValoracioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValoracioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtValoracioActionPerformed
+
+    private void txtValoracioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValoracioKeyReleased
+        try {
+            String text = txtValoracio.getText().replace(',', '.');
+            if (text.isEmpty()) {
+                sldValoracio.setValue(0);
+                actualitzarEstrelles(0);
+                return;
+            }
+
+            double valorNota = Double.parseDouble(text);
+
+            if (valorNota >= 0 && valorNota <= 100) {
+                sldValoracio.setValue((int) (valorNota * 10));
+
+                actualitzarEstrelles(valorNota);
+
+                this.repaint();
+            }
+        } catch (NumberFormatException e) {
+        }
+    }//GEN-LAST:event_txtValoracioKeyReleased
+
+    private void tblContingutsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblContingutsMouseClicked
+        // TODO add your handling code here:
+        int fila = tblContinguts.getSelectedRow();
+
+        if (fila != -1) { 
+            Object objecteSeleccionat = null;
+
+            String seleccio = chkOpciocontingut.getSelection().getActionCommand();
+
+            switch (seleccio) {
+                case "PELICULA":
+                    objecteSeleccionat = pelicules.get(fila);
+                    break;
+                case "SERIE":
+                    objecteSeleccionat = series.get(fila);
+                    break;
+                case "VIDEOJOC":
+                    objecteSeleccionat = videojocs.get(fila);
+                    break;
+            }
+
+            if (objecteSeleccionat != null) {
+                frmValoracio finestraValorar = new frmValoracio(objecteSeleccionat);
+                finestraValorar.setVisible(true);
+                finestraValorar.setLocationRelativeTo(null); 
+                frmMainClient fc = new frmMainClient();
+                fc.setVisible(false);
+            }
+        }
+    }//GEN-LAST:event_tblContingutsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -758,13 +1043,17 @@ public class frmMainClient extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cmbGenere;
+    private javax.swing.JLabel imgEstrella1;
+    private javax.swing.JLabel imgEstrella2;
+    private javax.swing.JLabel imgEstrella3;
+    private javax.swing.JLabel imgEstrella4;
+    private javax.swing.JLabel imgEstrella5;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblComentari;
     private javax.swing.JLabel lblGenere;
-    private javax.swing.JLabel lblPuntuacio;
     private javax.swing.JLabel lblRating;
     private javax.swing.JRadioButton rdoPelicula;
     private javax.swing.JRadioButton rdoSerie;
@@ -774,5 +1063,6 @@ public class frmMainClient extends javax.swing.JFrame {
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextArea txtComentari;
     private javax.swing.JLabel txtUsuari;
+    private javax.swing.JTextField txtValoracio;
     // End of variables declaration//GEN-END:variables
 }

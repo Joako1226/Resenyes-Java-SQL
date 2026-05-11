@@ -34,7 +34,7 @@ import javax.swing.UIManager;
 public class Main {
     public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
     public static String user = "root";
-    public static String password = "joaquin100";
+    public static String password = "Roger2007";
     
     public static DateTimeFormatter logs = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     public static String mod = LocalDateTime.now().format(logs);

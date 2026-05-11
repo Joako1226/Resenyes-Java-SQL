@@ -14,8 +14,8 @@ public class Connexio {
     private static Connection con = null;
 
     public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
-    public static String user = "root"; 
-    public static String password = "joaquin100";
+    public static String user = "root";
+    public static String password = "Roger2007";
 
  
     private String SQL_INSERTAR = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";

@@ -545,4 +545,106 @@ public class gestioSQL {
             throw e;
         }
     }
+
+    public static void BuscarVideojocPerValoracio(double puntuacio) throws SQLException {
+        // SQL corregit amb GROUP BY per poder calcular la mitjana de les resenyes
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
+                + "FROM contingut c "
+                + "INNER JOIN videojoc v ON c.id = v.idJoc "
+                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "GROUP BY c.id, v.preu "
+                + "HAVING AVG(r.nota) >= ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, puntuacio);
+            videojocs.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    double preu = rs.getDouble("preu");
+
+                    // Creem l'objecte Videojoc amb el teu ordre de paràmetres
+                    Videojoc v = new Videojoc(preu, id, titol, descripcio, classificacio, imatge);
+                    videojocs.add(v);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Videojoc per Valoració: " + e.getMessage());
+            throw e;
+        }
+    }
+    public static void BuscarPeliculaPerValoracio(double puntuacio) throws SQLException {
+        // Utilitzem GROUP BY per agrupar el contingut i HAVING per filtrar la mitjana de notes
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
+                + "FROM contingut c "
+                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
+                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "GROUP BY c.id, p.director, p.duracio "
+                + "HAVING AVG(r.nota) >= ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, puntuacio);
+            pelicules.clear();
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    String director = rs.getString("director");
+
+                    java.sql.Time sqlTime = rs.getTime("duracio");
+                    java.time.LocalTime duracio = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
+
+                    Pelicula p = new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+                    pelicules.add(p);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Pelicula per Valoració: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void BuscarSeriePerValoracio(double puntuacio) throws SQLException {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporades "
+                + "FROM contingut c "
+                + "INNER JOIN serie s ON c.id = s.idSerie "
+                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "GROUP BY c.id, s.capitols, s.temporades "
+                + "HAVING AVG(r.nota) >= ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, puntuacio);
+            series.clear(); //
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String titol = rs.getString("titol");
+                    String descripcio = rs.getString("descripcio");
+                    int classificacio = rs.getInt("classificacio");
+                    byte[] imatge = rs.getBytes("imatge");
+                    int capitols = rs.getInt("capitols");
+                    int temporades = rs.getInt("temporades");
+
+                    Serie s = new Serie(capitols, temporades, id, titol, descripcio, classificacio, imatge);
+                    series.add(s); //
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error a Buscar Serie per Valoració: " + e.getMessage());
+            throw e;
+        }
+    }
 }
