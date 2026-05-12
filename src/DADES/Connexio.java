@@ -1,10 +1,14 @@
 package DADES;
 
 import MODEL.Contingut;
+import MODEL.Pelicula;
+import MODEL.Serie;
+import MODEL.Videojoc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,7 +19,7 @@ public class Connexio {
 
     public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
     public static String user = "root";
-    public static String password = "Roger2007";
+    public static String password = "joaquin100";
 
  
     private String SQL_INSERTAR = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
@@ -102,5 +106,69 @@ public class Connexio {
         }
 
         return lista;
+    }
+    // Dins de la classe Connexio.java
+
+    public boolean guardarContingut(Contingut c) {
+        // Utilitzem la teva connexió existent
+        Connection conn = connectar();
+        if (conn == null) {
+            return false;
+        }
+
+        try {
+            String sqlBase = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstmt = conn.prepareStatement(sqlBase, Statement.RETURN_GENERATED_KEYS);
+
+            pstmt.setString(1, c.getTitol());
+            pstmt.setString(2, c.getDescripcio());
+            pstmt.setInt(3, c.getClassificacio());
+            pstmt.setBytes(4, c.getImatge());
+
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            int idGenerada = rs.next() ? rs.getInt(1) : 0;
+
+            if (c instanceof Pelicula) {
+                Pelicula p = (Pelicula) c;
+                String sqlPeli = "INSERT INTO pelicula (idPelicula, director, duracio) VALUES (?, ?, ?)";
+                PreparedStatement pstmtPeli = conn.prepareStatement(sqlPeli);
+                pstmtPeli.setInt(1, idGenerada);
+                pstmtPeli.setString(2, p.getDirector());
+
+                if (p.getDuracio() != null) {
+                    pstmtPeli.setTime(3, java.sql.Time.valueOf(p.getDuracio()));
+                } else {
+                    pstmtPeli.setNull(3, java.sql.Types.TIME);
+                }
+                pstmtPeli.executeUpdate();
+
+            } else if (c instanceof Serie) {
+                Serie s = (Serie) c;
+                // He posat 'idSerie' i 'temporada' segons el que veig al teu SELECT de CarregarSeries
+                String sqlSerie = "INSERT INTO serie (idSerie, capitols, temporada) VALUES (?, ?, ?)";
+                PreparedStatement pstmtSerie = conn.prepareStatement(sqlSerie);
+                pstmtSerie.setInt(1, idGenerada);
+                pstmtSerie.setInt(2, s.getCapitols());
+                pstmtSerie.setInt(3, s.getTemporada());
+                pstmtSerie.executeUpdate();
+
+            } else if (c instanceof Videojoc) {
+                Videojoc v = (Videojoc) c;
+                // He posat 'idJoc' segons el teu SELECT de CarregarVideojocs
+                String sqlJoc = "INSERT INTO videojoc (idJoc, preu) VALUES (?, ?)";
+                PreparedStatement pstmtJoc = conn.prepareStatement(sqlJoc);
+                pstmtJoc.setInt(1, idGenerada);
+                pstmtJoc.setDouble(2, v.getPreu());
+                pstmtJoc.executeUpdate();
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Error a guardarContingut: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 }

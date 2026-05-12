@@ -12,7 +12,9 @@ import static CONTROLLER.Main.url;
 import static CONTROLLER.Main.user;
 import static CONTROLLER.Main.usuaris;
 import static CONTROLLER.Main.videojocs;
+import static DADES.Connexio.connectar;
 import MODEL.Pelicula;
+import MODEL.Resenya;
 import MODEL.Serie;
 import MODEL.Usuari;
 import MODEL.Videojoc;
@@ -579,6 +581,7 @@ public class gestioSQL {
             throw e;
         }
     }
+
     public static void BuscarPeliculaPerValoracio(double puntuacio) throws SQLException {
         // Utilitzem GROUP BY per agrupar el contingut i HAVING per filtrar la mitjana de notes
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
@@ -647,4 +650,186 @@ public class gestioSQL {
             throw e;
         }
     }
+
+    public void AgregarVideojoc(Videojoc videojoc) {
+        String sqlContingut = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
+        String sqlVideojoc = "INSERT INTO videojoc (idJoc, preu) VALUES (?,?)";
+
+        try (Connection con = DriverManager.getConnection(url, user, password)) {
+            if (con == null || con.isClosed()) {
+                connectar();
+            }
+
+            con.setAutoCommit(false);
+
+            PreparedStatement psC = con.prepareStatement(sqlContingut, Statement.RETURN_GENERATED_KEYS);
+            psC.setString(1, videojoc.getTitol());
+            psC.setString(2, videojoc.getDescripcio());
+            psC.setInt(3, videojoc.getClassificacio());
+            psC.setBytes(4, videojoc.getImatge());
+            psC.executeUpdate();
+
+            ResultSet rs = psC.getGeneratedKeys();
+            int idGenerat = 0;
+            if (rs.next()) {
+                idGenerat = rs.getInt(1);
+            }
+
+            if (idGenerat > 0) {
+                PreparedStatement psV = con.prepareStatement(sqlVideojoc);
+                psV.setInt(1, idGenerat); // L'ID de contingut
+                psV.setDouble(2, videojoc.getPreu());
+                psV.executeUpdate();
+
+                con.commit();
+                System.out.println("Videojoc insertat correctament amb ID: " + idGenerat);
+            }
+
+        } catch (SQLException ex) {
+            try (Connection con = DriverManager.getConnection(url, user, password)) {
+                con.rollback();
+                System.err.println("Error, fent rollback...");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            ex.printStackTrace();
+        } finally {
+            try (Connection con = DriverManager.getConnection(url, user, password)) {
+                con.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void agregarPelicula(Pelicula pelicula) {
+        String sqlContingut = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
+        String sqlPelicula = "INSERT INTO pelicula (idPelicula, duracio, director) VALUES (?,?,?)";
+
+        Connection con = null;
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            con.setAutoCommit(false); // Iniciem la transacció
+
+            // 1. Insert a la taula genèrica 'contingut'
+            PreparedStatement psC = con.prepareStatement(sqlContingut, Statement.RETURN_GENERATED_KEYS);
+            psC.setString(1, pelicula.getTitol());
+            psC.setString(2, pelicula.getDescripcio());
+            psC.setInt(3, pelicula.getClassificacio());
+            psC.setBytes(4, pelicula.getImatge());
+            psC.executeUpdate();
+
+            // Recuperem l'ID generat automàticament
+            ResultSet rs = psC.getGeneratedKeys();
+            int idGenerat = 0;
+            if (rs.next()) {
+                idGenerat = rs.getInt(1);
+            }
+
+            if (idGenerat > 0) {
+                // 2. Insert a la taula específica 'pelicula'
+                PreparedStatement psP = con.prepareStatement(sqlPelicula);
+                psP.setInt(1, idGenerat);
+                psP.setTime(2, java.sql.Time.valueOf(pelicula.getDuracio())); // LocalTime a SQL Time
+                psP.setString(3, pelicula.getDirector());
+                psP.executeUpdate();
+
+                con.commit(); // Tot correcte, guardem canvis
+                System.out.println("Pel·lícula guardada amb ID: " + idGenerat);
+            }
+        } catch (SQLException ex) {
+            gestionarRollback(con, ex);
+        } finally {
+            tancarConnexio(con);
+        }
+    }
+
+    public void agregarSerie(Serie serie) {
+        String sqlContingut = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
+        String sqlSerie = "INSERT INTO serie (idSerie, capitols, temporada) VALUES (?,?,?)";
+
+        Connection con = null;
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            con.setAutoCommit(false);
+
+            PreparedStatement psC = con.prepareStatement(sqlContingut, Statement.RETURN_GENERATED_KEYS);
+            psC.setString(1, serie.getTitol());
+            psC.setString(2, serie.getDescripcio());
+            psC.setInt(3, serie.getClassificacio());
+            psC.setBytes(4, serie.getImatge());
+            psC.executeUpdate();
+
+            ResultSet rs = psC.getGeneratedKeys();
+            int idGenerat = 0;
+            if (rs.next()) {
+                idGenerat = rs.getInt(1);
+            }
+
+            if (idGenerat > 0) {
+                PreparedStatement psS = con.prepareStatement(sqlSerie);
+                psS.setInt(1, idGenerat);
+                psS.setInt(2, serie.getCapitols());
+                psS.setInt(3, serie.getTemporada());
+                psS.executeUpdate();
+
+                con.commit();
+                System.out.println("Sèrie guardada amb ID: " + idGenerat);
+            }
+        } catch (SQLException ex) {
+            gestionarRollback(con, ex);
+        } finally {
+            tancarConnexio(con);
+        }
+    }
+
+    public static void insertResenya(Resenya resenya) throws SQLException {
+        String sql = "INSERT INTO resenya (id_usuari, id_contingut, descripcio, nota, spoiler, data_resenya) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, resenya.getUsuari());
+            ps.setInt(2, resenya.getIdContingut());
+            ps.setString(3, resenya.getDescripcio());
+            ps.setDouble(4, resenya.getNota());
+            ps.setBoolean(5, resenya.isSpoiler());
+
+            LocalDate dataPerInsertar = (resenya.getDataResenya() != null)
+                    ? resenya.getDataResenya()
+                    : LocalDate.now();
+
+            ps.setDate(6, java.sql.Date.valueOf(dataPerInsertar));
+
+            ps.executeUpdate();
+            System.out.println("Resenya guardada correctament!");
+
+        } catch (SQLException e) {
+            System.err.println("Error en fer l'insert de la resenya: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private void gestionarRollback(Connection con, SQLException ex) {
+        System.err.println("Error en la transacció. Desfent canvis (Rollback)...");
+        try {
+            if (con != null) {
+                con.rollback();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error critic fent rollback: " + e.getMessage());
+        }
+        ex.printStackTrace();
+    }
+
+    private void tancarConnexio(Connection con) {
+        try {
+            if (con != null) {
+                con.setAutoCommit(true);
+                con.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

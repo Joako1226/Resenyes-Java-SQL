@@ -4,13 +4,17 @@
  */
 package VIEW;
 
+import DADES.gestioSQL;
 import MODEL.Pelicula;
+import MODEL.Resenya;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.LocalDate;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,30 +32,36 @@ public class frmValoracio extends javax.swing.JFrame {
         initComponents();
         this.contingut = dades;
 
-        if (dades instanceof Pelicula) {
-            Pelicula p = (Pelicula) dades;
-            lblTitol.setText(p.getTitol());
+        if (dades instanceof MODEL.Contingut) {
+            MODEL.Contingut c = (MODEL.Contingut) dades;
+
+            lblTitol.setText(c.getTitol());
+
             try {
-                byte[] imatgeBytes = p.getImatge();
+                byte[] imatgeBytes = c.getImatge();
 
                 if (imatgeBytes != null && imatgeBytes.length > 0) {
                     InputStream is = new ByteArrayInputStream(imatgeBytes);
                     BufferedImage img = ImageIO.read(is);
 
-                    ImageIcon icona = new ImageIcon(img.getScaledInstance(
-                            lblImg.getWidth(),
-                            lblImg.getHeight(),
-                            Image.SCALE_SMOOTH
-                    ));
+                    if (img != null) {
+                        int ample = lblImg.getWidth() > 0 ? lblImg.getWidth() : 200;
+                        int alt = lblImg.getHeight() > 0 ? lblImg.getHeight() : 250;
 
-                    lblImg.setIcon(icona);
+                        Image escalada = img.getScaledInstance(ample, alt, Image.SCALE_SMOOTH);
+                        lblImg.setIcon(new ImageIcon(escalada));
+                        lblImg.setText("");
+                    } else {
+                        lblImg.setText("Error en format d'imatge");
+                    }
                 } else {
-                    lblImg.setText("Sense imatge");
+                    lblImg.setText("Sense imatge disponible");
                 }
             } catch (Exception e) {
-                System.err.println("Error carregant la imatge: " + e.getMessage());
+                lblImg.setText("Error al carregar");
+                e.printStackTrace();
             }
-        }
+        }        
     }
 
 
@@ -165,6 +175,11 @@ public class frmValoracio extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtComentari);
 
         btnResenya.setText("ENTER");
+        btnResenya.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResenyaActionPerformed(evt);
+            }
+        });
 
         imgEstrella4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
         imgEstrella4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -260,12 +275,6 @@ public class frmValoracio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(129, 129, 129)
@@ -287,7 +296,12 @@ public class frmValoracio extends javax.swing.JFrame {
                                         .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -404,6 +418,41 @@ public class frmValoracio extends javax.swing.JFrame {
         register.setLocationRelativeTo(this);
         register.setFocusable(false);
     }//GEN-LAST:event_imgLogoMousePressed
+
+    private void btnResenyaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResenyaActionPerformed
+        try {
+            String usuariLoguejat = CONTROLLER.Main.usuariActual.getNom_usuari();
+            int idContingut = 0;
+            if (contingut instanceof MODEL.Contingut) {
+                idContingut = ((MODEL.Contingut) contingut).getId();
+            } else if (contingut instanceof MODEL.Pelicula) {
+                idContingut = ((MODEL.Pelicula) contingut).getId();
+            }
+
+            String comentari = txtComentari.getText();
+
+            double nota = Double.parseDouble(txtValoracio.getText());
+
+            // No veig cap CheckBox 'chkSpoiler' a les teves variables, 
+            // així que per defecte posem false o hauries d'afegir un JCheckBox al disseny.
+            boolean esSpoiler = false;
+
+            Resenya novaResenya = new Resenya(usuariLoguejat, idContingut, comentari, nota, esSpoiler, LocalDate.now());
+
+            DADES.gestioSQL.insertResenya(novaResenya);
+
+            JOptionPane.showMessageDialog(this, "Valoració enviada amb èxit!");
+            this.dispose();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error en el format de la nota.");
+        } catch (java.sql.SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error de base de dades: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnResenyaActionPerformed
 
     /**
      * @param args the command line arguments

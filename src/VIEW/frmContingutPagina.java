@@ -8,7 +8,10 @@ import DADES.Connexio;
 import MODEL.Contingut;
 import MODEL.Genere;
 import MODEL.GenereContingut;
+import MODEL.Pelicula;
 import MODEL.RenderImg;
+import MODEL.Serie;
+import MODEL.Videojoc;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -587,24 +590,48 @@ public class frmContingutPagina extends javax.swing.JFrame {
     
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        Contingut mContingut = new Contingut();
-        GenereContingut mGenereContingut = new GenereContingut();
-        if (mConnexio.connectarCon()) {
-            mContingut.setTitol(txtTitol.getText());
-            mContingut.setDescripcio(txtDescripcio.getText());
-            mContingut.setClassificacio(Integer.parseInt(cmbClassificacio.getSelectedItem().toString()));
-            mContingut.setImatge(getImatge(ruta));
-            mConnexio.AgregarImg(mContingut);
-            
-            mGenereContingut.setIdContingut(mContingut.getId());
-            //FALTA AÑADIR EL ID DEL GENERO QUE ES
-            
-            //FALTA AÑADIR LOS OTROS ELEMENTOS
-            //mContingut.setGenere(Integer.parseInt(cmbGenere.getSelectedItem().toString()));
-            limpiar();
-            carregarContinguts();
+        String tipus = btnTipus.getSelection().getActionCommand();
+
+        Contingut mContingut;
+
+        switch (tipus) {
+            case "PELICULA":
+                mContingut = new Pelicula(); 
+                ((Pelicula) mContingut).setDirector(txtDirector.getText());
+                String textDuracio = txtDuracio.getText(); 
+                ((Pelicula) mContingut).setDuracio(java.time.LocalTime.parse(textDuracio));
+                break;
+
+            case "SERIE":
+                mContingut = new Serie();
+                ((Serie) mContingut).setCapitols((int) numCapitols.getValue());
+                ((Serie) mContingut).setTemporada((int) numTemporades.getValue());
+                break;
+
+            case "VIDEOJOC":
+                mContingut = new Videojoc();
+                ((Videojoc) mContingut).setPreu(Double.parseDouble(numPreu.getText()));
+                break;
+
+            default:
+                mContingut = new Contingut();
+                break;
         }
-    }//GEN-LAST:event_btnGuardarActionPerformed
+
+        mContingut.setTitol(txtTitol.getText());
+        mContingut.setDescripcio(txtDescripcio.getText());
+        int classificacioVal = Integer.parseInt(cmbClassificacio.getSelectedItem().toString());
+        mContingut.setClassificacio(classificacioVal);
+        if (!ruta.equals("")) {
+            mContingut.setImatge(getImatge(ruta));
+        }
+
+        if (mConnexio.connectarCon()) {
+            if (mConnexio.guardarContingut(mContingut)) {
+                carregarContinguts();
+            }
+        }
+        }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnExaminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExaminarActionPerformed
         JFileChooser fileChooser = new JFileChooser();
