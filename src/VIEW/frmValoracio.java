@@ -107,6 +107,12 @@ public class frmValoracio extends javax.swing.JFrame {
         return iconPath.contains(rutaRecurs);
     }
 
+    private void actualitzarPerClicEstrella(double valor) {
+        sldValoracio.setValue((int) (valor * 10));
+        txtValoracio.setText(String.valueOf(valor));
+        actualitzarEstrelles(valor);
+    }
+
     public void actualitzarEstrelles(double valor) {
         String full = "/IMAGES/estrellaFull.png";
         String mitja = "/IMAGES/estrellaMitja.png";
@@ -203,6 +209,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella4.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella4.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella4MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella4MousePressed(evt);
             }
@@ -213,6 +222,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella5.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella5.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella5MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella5MousePressed(evt);
             }
@@ -250,6 +262,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella1.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella1.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella1MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella1MousePressed(evt);
             }
@@ -260,6 +275,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella2.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella2.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella2MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella2MousePressed(evt);
             }
@@ -270,6 +288,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella3.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella3.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella3MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella3MousePressed(evt);
             }
@@ -301,7 +322,7 @@ public class frmValoracio extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(imgEstrella1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -460,9 +481,10 @@ public class frmValoracio extends javax.swing.JFrame {
             }
 
             String comentari = txtComentari.getText();
+            String comentariBan = comentari;
 
             // 1. FILTRE I LÒGICA DE BANS
-            if (Diccionari.esInadequat(comentari)) {
+            if (Diccionari.esInadequat(comentariBan)) {
                 int opcio = JOptionPane.showConfirmDialog(this,
                         "S'han detectat paraules inadequades. Vols continuar sota risc de sanció?",
                         "Alerta", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -493,22 +515,31 @@ public class frmValoracio extends javax.swing.JFrame {
                     usuariActual.setEstat(nouEstat);
                     usuariActual.setData_ban(dataFiBan);
 
-                    comentari = "COMENTARI BLOQUEJAT";
+                    // Bloquegem el text del comentari però deixem que la nota passi
+                    comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
                 } else {
-                    return;
+                    return; // L'usuari cancel·la la publicació
                 }
             }
 
-            // 2. VERIFICACIÓ DE SEGURETAT (LocalDateTime)
+// 2. VERIFICACIÓ DE SEGURETAT (Per si l'usuari JA estava banejat d'abans)
             if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban || usuariActual.getEstat() == MODEL.Usuari.TipusBan.hard_ban) {
                 if (usuariActual.getData_ban() != null && usuariActual.getData_ban().isAfter(LocalDateTime.now())) {
-                    JOptionPane.showMessageDialog(this, "No pots publicar fins a: "
-                            + usuariActual.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                    return;
+
+                    if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban) {
+                        // En Soft Ban, forcem l'etiqueta però no fem el "return", així es guarda la nota
+                        txtComentari.setEnabled(false);
+                        comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
+                    } else {
+                        // En Hard Ban, no deixem ni puntuar
+                        JOptionPane.showMessageDialog(this, "No pots publicar fins a: "
+                                + usuariActual.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                        return;
+                    }
                 }
             }
 
-            // 3. INSERCIÓ DE LA RESSENYA
+// 3. INSERCIÓ DE LA RESSENYA (Nota i Comentari filtrat/bloquejat)
             double nota = Double.parseDouble(txtValoracio.getText());
             boolean esSpoiler = chkSpoiler.isSelected();
             Resenya novaResenya = new Resenya(usuariLoguejat, idContingut, comentari, nota, esSpoiler, LocalDate.now());
@@ -517,9 +548,48 @@ public class frmValoracio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Valoració enviada!");
             this.dispose();
 
+            DADES.gestioSQL.insertResenya(novaResenya);
+            JOptionPane.showMessageDialog(this, "Valoració enviada!");
+            this.dispose();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }    }//GEN-LAST:event_btnResenyaActionPerformed
+
+    private void imgEstrella1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella1MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(200);
+        actualitzarPerClicEstrella(20.0);
+
+    }//GEN-LAST:event_imgEstrella1MouseClicked
+
+    private void imgEstrella2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella2MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(400);
+        actualitzarPerClicEstrella(40.0);
+
+    }//GEN-LAST:event_imgEstrella2MouseClicked
+
+    private void imgEstrella3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella3MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(600);
+        actualitzarPerClicEstrella(60.0);
+
+    }//GEN-LAST:event_imgEstrella3MouseClicked
+
+    private void imgEstrella4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella4MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(800);
+        actualitzarPerClicEstrella(80.0);
+
+    }//GEN-LAST:event_imgEstrella4MouseClicked
+
+    private void imgEstrella5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella5MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(1000);
+        actualitzarPerClicEstrella(100.0);
+
+    }//GEN-LAST:event_imgEstrella5MouseClicked
 
     /**
      * @param args the command line arguments

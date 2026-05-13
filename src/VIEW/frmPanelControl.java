@@ -28,63 +28,55 @@ public class frmPanelControl extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnModificar = new javax.swing.JButton();
-        btnAfegir = new javax.swing.JButton();
-        btnAfegir1 = new javax.swing.JButton();
-        btnAfegir2 = new javax.swing.JButton();
-        btnAfegir3 = new javax.swing.JButton();
-        E1 = new javax.swing.JButton();
-        E2 = new javax.swing.JButton();
+        btnFlitrarTaules = new javax.swing.JButton();
+        btnLog = new javax.swing.JButton();
+        btnControlUsuari = new javax.swing.JButton();
+        btnDiccionari = new javax.swing.JButton();
+        btnControlResenyes = new javax.swing.JButton();
+        btnControlContingut = new javax.swing.JButton();
         imgLogo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnModificar.setText("Filtrar taules");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+        btnFlitrarTaules.setText("Filtrar taules");
+        btnFlitrarTaules.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
+                btnFlitrarTaulesActionPerformed(evt);
             }
         });
 
-        btnAfegir.setText("Afegir contingut");
-        btnAfegir.addActionListener(new java.awt.event.ActionListener() {
+        btnLog.setText("Veure log");
+        btnLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAfegirActionPerformed(evt);
+                btnLogActionPerformed(evt);
             }
         });
 
-        btnAfegir1.setText("Veure log");
-        btnAfegir1.addActionListener(new java.awt.event.ActionListener() {
+        btnControlUsuari.setText("Control usuaris");
+        btnControlUsuari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAfegir1ActionPerformed(evt);
+                btnControlUsuariActionPerformed(evt);
             }
         });
 
-        btnAfegir2.setText("Control usuaris");
-        btnAfegir2.addActionListener(new java.awt.event.ActionListener() {
+        btnDiccionari.setText("Diccionari");
+        btnDiccionari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAfegir2ActionPerformed(evt);
+                btnDiccionariActionPerformed(evt);
             }
         });
 
-        btnAfegir3.setText("Diccionari");
-        btnAfegir3.addActionListener(new java.awt.event.ActionListener() {
+        btnControlResenyes.setText("Control resenyes");
+        btnControlResenyes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAfegir3ActionPerformed(evt);
+                btnControlResenyesActionPerformed(evt);
             }
         });
 
-        E1.setText("Control resenyes");
-        E1.addActionListener(new java.awt.event.ActionListener() {
+        btnControlContingut.setText("Control contingut");
+        btnControlContingut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                E1ActionPerformed(evt);
-            }
-        });
-
-        E2.setText("Control contingut");
-        E2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                E2ActionPerformed(evt);
+                btnControlContingutActionPerformed(evt);
             }
         });
 
@@ -100,21 +92,19 @@ public class frmPanelControl extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAfegir3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnFlitrarTaules, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnAfegir1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(594, Short.MAX_VALUE))
+                                .addComponent(btnControlResenyes, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(270, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAfegir, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAfegir2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(E2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(E1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(imgLogo)
                         .addGap(41, 41, 41))))
@@ -125,52 +115,55 @@ public class frmPanelControl extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAfegir, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(94, 94, 94)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAfegir2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(E2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(E1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(imgLogo))
                 .addGap(18, 18, 18)
-                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnFlitrarTaules, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnControlResenyes, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAfegir3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAfegir1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+    private void btnFlitrarTaulesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlitrarTaulesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnModificarActionPerformed
+    }//GEN-LAST:event_btnFlitrarTaulesActionPerformed
 
-    private void btnAfegirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfegirActionPerformed
+    private void btnLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAfegirActionPerformed
+    }//GEN-LAST:event_btnLogActionPerformed
 
-    private void btnAfegir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfegir1ActionPerformed
+    private void btnControlUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlUsuariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAfegir1ActionPerformed
+        frmControlUsuaris fUsuaris = new frmControlUsuaris();
+        fUsuaris.setVisible(true);
+    }//GEN-LAST:event_btnControlUsuariActionPerformed
 
-    private void btnAfegir2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfegir2ActionPerformed
+    private void btnDiccionariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiccionariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAfegir2ActionPerformed
+    }//GEN-LAST:event_btnDiccionariActionPerformed
 
-    private void btnAfegir3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfegir3ActionPerformed
+    private void btnControlResenyesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlResenyesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAfegir3ActionPerformed
+        frmLlistaResenyes resenyes = new frmLlistaResenyes();
+        resenyes.setVisible(true);
+    }//GEN-LAST:event_btnControlResenyesActionPerformed
 
-    private void E1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_E1ActionPerformed
+    private void btnControlContingutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlContingutActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_E1ActionPerformed
+        frmContingutPagina fContingut = new frmContingutPagina();
+        fContingut.setVisible(true);
 
-    private void E2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_E2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_E2ActionPerformed
+    }//GEN-LAST:event_btnControlContingutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,13 +191,12 @@ public class frmPanelControl extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton E1;
-    private javax.swing.JButton E2;
-    private javax.swing.JButton btnAfegir;
-    private javax.swing.JButton btnAfegir1;
-    private javax.swing.JButton btnAfegir2;
-    private javax.swing.JButton btnAfegir3;
-    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnControlContingut;
+    private javax.swing.JButton btnControlResenyes;
+    private javax.swing.JButton btnControlUsuari;
+    private javax.swing.JButton btnDiccionari;
+    private javax.swing.JButton btnFlitrarTaules;
+    private javax.swing.JButton btnLog;
     private javax.swing.JLabel imgLogo;
     // End of variables declaration//GEN-END:variables
 }

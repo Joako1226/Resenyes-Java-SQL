@@ -13,11 +13,17 @@ import static CONTROLLER.Main.usuariActual;
 import static CONTROLLER.Main.videojocs;
 import DADES.Connexio;
 import DADES.gestioSQL;
+import static DADES.gestioSQL.BuscarPeliculaPerValoracio;
+import static DADES.gestioSQL.BuscarSeriePerValoracio;
+import static DADES.gestioSQL.BuscarVideojocPerValoracio;
+import MODEL.BordeRodo;
 import MODEL.Contingut;
 import MODEL.Pelicula;
 import MODEL.RenderImg;
 import MODEL.Serie;
 import MODEL.Videojoc;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -48,13 +54,18 @@ public class frmMainClient extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmMainClient.class.getName());
     private ButtonGroup chkOpciocontingut = new ButtonGroup();
 
+    private static final Color COLOR_FONS = new Color(15, 23, 42);
+    private static final Color COLOR_CARD = new Color(30, 41, 59);
+    private static final Color COLOR_ACCENT = new Color(99, 102, 241);
+    private static final Color COLOR_TEXT = new Color(248, 250, 252);
+    private static final Color COLOR_TEXT2 = new Color(148, 163, 184);
+
     /**
      * Creates new form frmMainClient
      */
     public frmMainClient() {
         initComponents();
         txtUsuari.setText("Usuari actual: " + usuariActual.getNom());
-        tblContinguts.setVisible(false);
 
         chkOpciocontingut.add(rdoSerie);
         chkOpciocontingut.add(rdoPelicula);
@@ -69,13 +80,77 @@ public class frmMainClient extends javax.swing.JFrame {
         rdoVideojocs.addActionListener(e -> actualitzarInterficieSegonsTipus());
 
         actualitzarInterficieSegonsTipus();
+        /*aplicarEstilModern();
+        estilitzarBotons();*/
+        this.setLocationRelativeTo(null);
+
+        this.setTitle("CriticFy - Busqueda");
 
     }
 
+    /* private void aplicarEstilModern() {
+        this.getContentPane().setBackground(COLOR_FONS);
+
+        tblContinguts.setBackground(COLOR_CARD);
+        tblContinguts.setForeground(COLOR_TEXT);
+        tblContinguts.setGridColor(new Color(51, 65, 85));
+        tblContinguts.setSelectionBackground(COLOR_ACCENT);
+        tblContinguts.setSelectionForeground(Color.WHITE);
+        tblContinguts.setRowHeight(80);
+        tblContinguts.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        jScrollPane2.setOpaque(false);
+        jScrollPane2.getViewport().setOpaque(false);
+        jScrollPane2.setBorder(new BordeRodo(new Color(51, 65, 85), 15));
+
+        tblContinguts.getTableHeader().setBackground(COLOR_FONS);
+        tblContinguts.getTableHeader().setForeground(COLOR_ACCENT);
+        tblContinguts.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tblContinguts.getTableHeader().setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+        txtBuscar.setBackground(COLOR_CARD);
+        txtBuscar.setForeground(Color.WHITE);
+        txtBuscar.setCaretColor(Color.WHITE);
+        txtBuscar.setBorder(new javax.swing.border.CompoundBorder(
+                new BordeRodo(COLOR_ACCENT, 20),
+                javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        txtValoracio.setBackground(COLOR_CARD);
+        txtValoracio.setForeground(Color.WHITE);
+        txtValoracio.setCaretColor(Color.WHITE);
+        txtValoracio.setBorder(new javax.swing.border.CompoundBorder(
+                new BordeRodo(COLOR_ACCENT, 20),
+                javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        lblRating.setForeground(COLOR_ACCENT);
+        txtUsuari.setForeground(COLOR_TEXT2);
+        lblBuscar.setForeground(COLOR_TEXT2);
+        lblGenere.setForeground(COLOR_TEXT2);
+
+        rdoPelicula.setForeground(COLOR_TEXT);
+        rdoPelicula.setBackground(COLOR_FONS);
+        rdoPelicula.setFocusPainted(false); 
+
+        rdoSerie.setForeground(COLOR_TEXT);
+        rdoSerie.setBackground(COLOR_FONS);
+        rdoSerie.setFocusPainted(false);
+
+        rdoVideojocs.setForeground(COLOR_TEXT);
+        rdoVideojocs.setBackground(COLOR_FONS);
+        rdoVideojocs.setFocusPainted(false);
+
+    }    
+    private void estilitzarBotons() {
+        rdoPelicula.setFocusPainted(false);
+        rdoPelicula.setContentAreaFilled(false); 
+    }
+     */
     private void limpiar() {
         DefaultTableModel tb = (DefaultTableModel) tblContinguts.getModel();
-        tb.setRowCount(0); 
+        tb.setRowCount(0);
     }
+
     public void estrelles() {
         String full = "/IMAGES/estrellaFull.png";
         String mitja = "/IMAGES/estrellaMitja.png";
@@ -105,6 +180,35 @@ public class frmMainClient extends javax.swing.JFrame {
         return iconPath.contains(rutaRecurs);
     }
 
+    private void actualitzarPerClicEstrella(double valor) throws SQLException {
+        sldValoracio.setValue((int) (valor * 10));
+        txtValoracio.setText(String.valueOf(valor));
+        actualitzarEstrelles(valor);
+
+        filtrarDadesPerNota(valor);
+    }
+    
+    private void filtrarDadesPerNota(double nota) throws SQLException {
+        if (chkOpciocontingut.getSelection() == null) {
+            return;
+        }
+
+        String seleccio = chkOpciocontingut.getSelection().getActionCommand();
+
+        switch (seleccio) {
+            case "VIDEOJOC":
+                gestioSQL.BuscarVideojocPerValoracio(nota); 
+                refrescarTaulaVideojoc(); 
+                break;
+            case "PELICULA":
+                gestioSQL.BuscarPeliculaPerValoracio(nota);
+                refrescarTaulaPelicules();
+                break;
+            case "SERIE":
+                gestioSQL.BuscarSeriePerValoracio(nota);
+                refrescarTaulaSeries();                break;
+        }
+    }
     public void actualitzarEstrelles(double valor) {
         String full = "/IMAGES/estrellaFull.png";
         String mitja = "/IMAGES/estrellaMitja.png";
@@ -389,25 +493,18 @@ public class frmMainClient extends javax.swing.JFrame {
     }
 
     private JLabel generarLabelImatge(byte[] imatgeBytes) {
-        if (imatgeBytes == null || imatgeBytes.length == 0) {
+        if (imatgeBytes == null) {
             return crearPlaceholder();
         }
         try {
-            InputStream inputStream = new ByteArrayInputStream(imatgeBytes);
-            BufferedImage bufferedImage = ImageIO.read(inputStream);
-
-            BufferedImage resizedImg = new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB);
-            java.awt.Graphics2D g2 = resizedImg.createGraphics();
-            g2.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(bufferedImage, 0, 0, 60, 60, null);
-            g2.dispose();
-
-            return new JLabel(new ImageIcon(resizedImg));
+            InputStream is = new ByteArrayInputStream(imatgeBytes);
+            BufferedImage bi = ImageIO.read(is);
+            Image dimg = bi.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+            return new JLabel(new ImageIcon(dimg));
         } catch (Exception e) {
             return crearPlaceholder();
         }
     }
-
     private JLabel crearPlaceholder() {
         JLabel placeholder = new JLabel("");
         try {
@@ -417,6 +514,7 @@ public class frmMainClient extends javax.swing.JFrame {
         }
         return placeholder;
     }
+
     public void omplirComboGeneresContingut() {
         String sql = "SELECT DISTINCT g.nom FROM genere g "
                 + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
@@ -742,7 +840,7 @@ public class frmMainClient extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -847,13 +945,11 @@ public class frmMainClient extends javax.swing.JFrame {
 
     private void rdoPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoPeliculaActionPerformed
         // TODO add your handling code here:
-        tblContinguts.setVisible(false);
         carregarPelicules();
     }//GEN-LAST:event_rdoPeliculaActionPerformed
 
     private void txtBuscarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseEntered
         // TODO add your handling code here:
-        tblContinguts.setVisible(true);
 
     }//GEN-LAST:event_txtBuscarMouseEntered
 
@@ -877,20 +973,18 @@ public class frmMainClient extends javax.swing.JFrame {
 
     private void rdoSerieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoSerieActionPerformed
         // TODO add your handling code here:
-        tblContinguts.setVisible(false);
         carregarSeries();
     }//GEN-LAST:event_rdoSerieActionPerformed
 
     private void rdoVideojocsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoVideojocsActionPerformed
         // TODO add your handling code here:
-        tblContinguts.setVisible(false);
         carregarVideojocs();
 
     }//GEN-LAST:event_rdoVideojocsActionPerformed
 
     private void sldValoracioMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldValoracioMouseDragged
         // TODO add your handling code here:
-        double valor = sldValoracio.getValue() /10;
+        double valor = sldValoracio.getValue() / 10;
         actualitzarEstrelles(valor);
         txtValoracio.setText(String.valueOf(valor));
         try {
@@ -912,22 +1006,58 @@ public class frmMainClient extends javax.swing.JFrame {
 
     private void imgEstrella1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella1MousePressed
         // TODO add your handling code here:
+        sldValoracio.setValue(200);
+        try {
+            actualitzarPerClicEstrella(20.0);
+            
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }//GEN-LAST:event_imgEstrella1MousePressed
 
     private void imgEstrella2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella2MousePressed
         // TODO add your handling code here:
+        sldValoracio.setValue(400);
+        try {
+            actualitzarPerClicEstrella(40.0);
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }//GEN-LAST:event_imgEstrella2MousePressed
 
     private void imgEstrella3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella3MousePressed
         // TODO add your handling code here:
+        sldValoracio.setValue(600);
+        try {
+            actualitzarPerClicEstrella(60.0);
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }//GEN-LAST:event_imgEstrella3MousePressed
 
     private void imgEstrella4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella4MousePressed
         // TODO add your handling code here:
+        sldValoracio.setValue(800);
+        try {
+            actualitzarPerClicEstrella(80.0);
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }//GEN-LAST:event_imgEstrella4MousePressed
 
     private void imgEstrella5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella5MousePressed
         // TODO add your handling code here:
+        sldValoracio.setValue(1000);
+        try {
+            actualitzarPerClicEstrella(100.0);
+        } catch (SQLException ex) {
+            System.getLogger(frmMainClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
     }//GEN-LAST:event_imgEstrella5MousePressed
 
     private void sldValoracioMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sldValoracioMouseMoved
@@ -935,7 +1065,7 @@ public class frmMainClient extends javax.swing.JFrame {
         double valor = sldValoracio.getValue();
         actualitzarEstrelles(valor / 10);
         txtValoracio.setText(String.valueOf(valor / 10));
-        
+
 
     }//GEN-LAST:event_sldValoracioMouseMoved
 
@@ -973,7 +1103,7 @@ public class frmMainClient extends javax.swing.JFrame {
         // TODO add your handling code here:
         int fila = tblContinguts.getSelectedRow();
 
-        if (fila != -1) { 
+        if (fila != -1) {
             Object objecteSeleccionat = null;
 
             String seleccio = chkOpciocontingut.getSelection().getActionCommand();
@@ -993,7 +1123,7 @@ public class frmMainClient extends javax.swing.JFrame {
             if (objecteSeleccionat != null) {
                 frmValoracio finestraValorar = new frmValoracio(objecteSeleccionat);
                 finestraValorar.setVisible(true);
-                finestraValorar.setLocationRelativeTo(null); 
+                finestraValorar.setLocationRelativeTo(null);
                 frmMainClient fc = new frmMainClient();
                 fc.setVisible(false);
             }
