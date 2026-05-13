@@ -719,7 +719,7 @@ public class frmValoracio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Ja tens una resenya o els parametres no son correctes");
             e.printStackTrace();
         }
-    }//GEN-LAST:event_btnResenyaActionPerformed
+    }                                          
 =======
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }    }//GEN-LAST:event_btnResenyaActionPerformed
