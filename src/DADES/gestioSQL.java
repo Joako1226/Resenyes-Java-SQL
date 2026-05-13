@@ -553,10 +553,9 @@ public class gestioSQL {
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
                 + "FROM contingut c "
                 + "INNER JOIN videojoc v ON c.id = v.idJoc "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
                 + "GROUP BY c.id, v.preu "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, puntuacio);
@@ -587,10 +586,9 @@ public class gestioSQL {
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
                 + "FROM contingut c "
                 + "INNER JOIN pelicula p ON c.id = p.idPelicula "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
                 + "GROUP BY c.id, p.director, p.duracio "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, puntuacio);
@@ -619,15 +617,13 @@ public class gestioSQL {
     }
 
     public static void BuscarSeriePerValoracio(double puntuacio) throws SQLException {
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporades "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
                 + "FROM contingut c "
                 + "INNER JOIN serie s ON c.id = s.idSerie "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
-                + "GROUP BY c.id, s.capitols, s.temporades "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
+                + "GROUP BY c.id, s.capitols, s.temporada "
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setDouble(1, puntuacio);
             series.clear(); //
 
@@ -639,7 +635,7 @@ public class gestioSQL {
                     int classificacio = rs.getInt("classificacio");
                     byte[] imatge = rs.getBytes("imatge");
                     int capitols = rs.getInt("capitols");
-                    int temporades = rs.getInt("temporades");
+                    int temporades = rs.getInt("temporada");
 
                     Serie s = new Serie(capitols, temporades, id, titol, descripcio, classificacio, imatge);
                     series.add(s); //
@@ -832,4 +828,29 @@ public class gestioSQL {
         }
     }
 
+    public static int obtenirNumBans(String nomUsuari) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM resenyes WHERE nom_usuari = ? AND comentari = 'COMENTARI BLOQUEJAT'";
+        try (Connection conn = connectar(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nomUsuari);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static void actualitzarEstatUsuari(String usuari, MODEL.Usuari.TipusBan nouEstat, LocalDateTime dataFi) throws SQLException {
+        String sql = "UPDATE usuaris SET estat = ?, data_ban = ? WHERE nom_usuari = ?";
+
+        try (Connection conn = connectar(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nouEstat.name());
+
+            pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(dataFi));
+
+            pstmt.setString(3, usuari);
+            pstmt.executeUpdate();
+        }
+    }
 }
