@@ -4,7 +4,10 @@
  */
 package VIEW;
 
+import static CONTROLLER.Main.mod;
+import static DADES.GestioLog.EscriureLog;
 import DADES.gestioSQL;
+import MODEL.Contingut;
 import MODEL.Pelicula;
 import MODEL.Diccionari;
 import MODEL.Resenya;
@@ -474,10 +477,10 @@ public class frmValoracio extends javax.swing.JFrame {
             String usuariLoguejat = usuariActual.getNom_usuari();
 
             int idContingut = 0;
-            if (contingut instanceof MODEL.Contingut) {
-                idContingut = ((MODEL.Contingut) contingut).getId();
-            } else if (contingut instanceof MODEL.Pelicula) {
-                idContingut = ((MODEL.Pelicula) contingut).getId();
+            if (contingut instanceof Contingut) {
+                idContingut = ((Contingut) contingut).getId();
+            } else if (contingut instanceof Pelicula) {
+                idContingut = ((Pelicula) contingut).getId();
             }
 
             String comentari = txtComentari.getText();
@@ -499,44 +502,44 @@ public class frmValoracio extends javax.swing.JFrame {
                     if (nivellSancio == 1) {
                         nouEstat = MODEL.Usuari.TipusBan.warned;
                         JOptionPane.showMessageDialog(this, "Estat: WARNED.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
                     } else if (nivellSancio >= 2 && nivellSancio <= 4) {
                         nouEstat = MODEL.Usuari.TipusBan.soft_ban;
                         int dies = nivellSancio - 1;
                         dataFiBan = LocalDateTime.now().plusDays(dies);
                         JOptionPane.showMessageDialog(this, "SOFT_BAN: " + dies + " dia/es.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
                     } else {
                         nouEstat = MODEL.Usuari.TipusBan.hard_ban;
                         dataFiBan = LocalDateTime.now().plusDays(15);
                         JOptionPane.showMessageDialog(this, "HARD_BAN: 15 dies.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
+
                     }
 
-                    // Actualitzem la BD i l'objecte local
                     DADES.gestioSQL.actualitzarEstatUsuari(usuariLoguejat, nouEstat, dataFiBan);
                     usuariActual.setEstat(nouEstat);
                     usuariActual.setData_ban(dataFiBan);
 
-                    // Bloquegem el text del comentari però deixem que la nota passi
                     comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
                 } else {
-                    return; // L'usuari cancel·la la publicació
+                    return; 
                 }
             }
 
-// 2. VERIFICACIÓ DE SEGURETAT (Per si l'usuari JA estava banejat d'abans)
             if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban || usuariActual.getEstat() == MODEL.Usuari.TipusBan.hard_ban) {
                 if (usuariActual.getData_ban() != null && usuariActual.getData_ban().isAfter(LocalDateTime.now())) {
 
                     if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban) {
-                        // En Soft Ban, forcem l'etiqueta però no fem el "return", així es guarda la nota
                         txtComentari.setEnabled(false);
                         comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
                     } else {
-                        // En Hard Ban, no deixem ni puntuar
                         JOptionPane.showMessageDialog(this, "No pots publicar fins a: "
                                 + usuariActual.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                         return;
                     }
                 }
+                EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tValoracio del contingut:\t\t" + ((Contingut) contingut).getTitol());
             }
 
 // 3. INSERCIÓ DE LA RESSENYA (Nota i Comentari filtrat/bloquejat)
