@@ -598,14 +598,12 @@ public class gestioSQL {
     }
 
     public static void BuscarVideojocPerValoracio(double puntuacio) throws SQLException {
-        // SQL corregit amb GROUP BY per poder calcular la mitjana de les resenyes
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, v.preu "
                 + "FROM contingut c "
                 + "INNER JOIN videojoc v ON c.id = v.idJoc "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
                 + "GROUP BY c.id, v.preu "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";        
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, puntuacio);
@@ -636,10 +634,9 @@ public class gestioSQL {
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
                 + "FROM contingut c "
                 + "INNER JOIN pelicula p ON c.id = p.idPelicula "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
                 + "GROUP BY c.id, p.director, p.duracio "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, puntuacio);
@@ -668,15 +665,13 @@ public class gestioSQL {
     }
 
     public static void BuscarSeriePerValoracio(double puntuacio) throws SQLException {
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporades "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "
                 + "FROM contingut c "
                 + "INNER JOIN serie s ON c.id = s.idSerie "
-                + "INNER JOIN resenya r ON c.id = r.id_contingut "
-                + "GROUP BY c.id, s.capitols, s.temporades "
-                + "HAVING AVG(r.nota) >= ?";
-
+                + "LEFT JOIN resenya r ON c.id = r.id_contingut "
+                + "GROUP BY c.id, s.capitols, s.temporada "
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setDouble(1, puntuacio);
             series.clear(); //
 
@@ -688,7 +683,7 @@ public class gestioSQL {
                     int classificacio = rs.getInt("classificacio");
                     byte[] imatge = rs.getBytes("imatge");
                     int capitols = rs.getInt("capitols");
-                    int temporades = rs.getInt("temporades");
+                    int temporades = rs.getInt("temporada");
 
                     Serie s = new Serie(capitols, temporades, id, titol, descripcio, classificacio, imatge);
                     series.add(s); //
@@ -881,4 +876,106 @@ public class gestioSQL {
         }
     }
 
+    public static int obtenirNumBans(String nomUsuari) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM resenya WHERE id_usuari = ? AND descripcio LIKE '%[COMENTARI BLOQUEJAT]%'";
+        try (Connection conn = connectar(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nomUsuari);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+    }
+
+    public static void actualitzarEstatUsuari(String usuari, MODEL.Usuari.TipusBan nouEstat, LocalDateTime dataFi) throws SQLException {
+        String sql = "UPDATE usuari SET estat = ?, data_ban = ? WHERE nom_usuari = ?";
+
+        try (Connection conn = connectar(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nouEstat.name());
+
+            pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(dataFi));
+
+            pstmt.setString(3, usuari);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public static ArrayList<Resenya> obtenirTotesLesResenyes() {
+        ArrayList<Resenya> llista = new ArrayList<>();
+
+        String sql = "SELECT r.id_usuari, r.id_contingut, r.descripcio, r.nota, r.spoiler, r.data_resenya, c.titol "
+                + "FROM resenya r "
+                + "INNER JOIN contingut c ON r.id_contingut = c.id "
+                + "ORDER BY r.data_resenya DESC";
+
+        try (java.sql.Connection conn = connectar(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql); java.sql.ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String usuari = rs.getString("id_usuari");
+                int idContingut = rs.getInt("id_contingut");
+                String comentari = rs.getString("descripcio");
+                double nota = rs.getDouble("nota");
+                boolean esSpoiler = rs.getBoolean("spoiler");
+                java.time.LocalDate data = rs.getDate("data_resenya").toLocalDate();
+
+                MODEL.Resenya r = new MODEL.Resenya(usuari, idContingut, comentari, nota, esSpoiler, data);
+
+                r.setTitolContingut(rs.getString("titol"));
+
+                llista.add(r);
+            }
+
+        } catch (java.sql.SQLException ex) {
+            System.err.println("Error en obtenirTotesLesResenyes: " + ex.getMessage());
+        }
+
+        return llista;
+    }   
+    public static boolean eliminarResenya(String usuari, int idContingut) {
+        String sql = "DELETE FROM resenya WHERE id_usuari = ? AND id_contingut = ?";
+        try (java.sql.Connection conn = connectar(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, usuari);
+            pstmt.setInt(2, idContingut);
+            return pstmt.executeUpdate() > 0;
+        } catch (java.sql.SQLException e) {
+            return false;
+        }
+    }
+
+    public static boolean modificarComentari(String usuari, int idContingut, String nouText) {
+        String sql = "UPDATE resenya SET descripcio = ? WHERE id_usuari = ? AND id_contingut = ?";
+        try (java.sql.Connection conn = connectar(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nouText);
+            pstmt.setString(2, usuari);
+            pstmt.setInt(3, idContingut);
+            return pstmt.executeUpdate() > 0;
+        } catch (java.sql.SQLException e) {
+            return false;
+        }
+    }
+    public static String obtenirResumCriminal(String nomUsuari) {
+        StringBuilder resum = new StringBuilder();
+        String sql = "SELECT descripcio FROM resenya WHERE id_usuari = ? AND descripcio LIKE '[COMENTARI BLOQUEJAT]%'";
+
+        try (Connection conn = connectar(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nomUsuari);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                int comptador = 0;
+                resum.append("Historial de ").append(nomUsuari).append(":\n\n");
+                while (rs.next()) {
+                    comptador++;
+                    resum.append("- ").append(rs.getString("descripcio")).append("\n");
+                }
+                if (comptador == 0) {
+                    return "L'usuari no té comentaris bloquejats actualment.";
+                }
+                resum.insert(0, "TOTAL BLOQUEJOS: " + comptador + "\n");
+            }
+        } catch (SQLException e) {
+            return "No s'ha pogut carregar l'historial.";
+        }
+        return resum.toString();
+    }
 }

@@ -34,6 +34,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+<<<<<<< HEAD
                           <Component id="btnResenya" min="-2" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" alignment="0" min="-2" pref="366" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
@@ -61,16 +62,65 @@
                                   <Group type="102" attributes="0">
                                       <Component id="txtValoracio" min="-2" pref="48" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+=======
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="272" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="sldValoracio" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="txtValoracio" min="-2" pref="45" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="imgEstrella1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="imgEstrella2" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="imgEstrella3" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="imgEstrella4" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="imgEstrella5" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
+                                      <Component id="chkSpoiler" min="-2" max="-2" attributes="0"/>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
                                   </Group>
                               </Group>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                              <Component id="lblTitol" min="-2" pref="526" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
+<<<<<<< HEAD
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="411" max="-2" attributes="0"/>
+=======
+                      <EmptySpace min="0" pref="138" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblImg" max="32767" attributes="0"/>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
+<<<<<<< HEAD
+=======
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="357" max="-2" attributes="0"/>
+              <Component id="btnResenya" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="400" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="253" max="-2" attributes="0"/>
+          </Group>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -78,6 +128,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+<<<<<<< HEAD
                       <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -114,6 +165,41 @@
                   <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+=======
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                              <Component id="lblTitol" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblImg" pref="136" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="imgEstrella1" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="imgEstrella2" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="imgEstrella3" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="imgEstrella4" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="imgEstrella5" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="chkSpoiler" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="sldValoracio" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtValoracio" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="98" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnResenya" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
           </Group>
       </Group>
     </DimensionLayout>
@@ -127,7 +213,18 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="66" red="66" type="rgb"/>
         </Property>
+<<<<<<< HEAD
         <Property name="text" type="java.lang.String" value="RESENYES"/>
+=======
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="RATING"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[2000, 999]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[0, 0]"/>
+        </Property>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblImg">
@@ -169,6 +266,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella4MouseClicked"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella4MousePressed"/>
       </Events>
     </Component>
@@ -186,6 +284,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella5MouseClicked"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella5MousePressed"/>
       </Events>
     </Component>
@@ -220,6 +319,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella1MouseClicked"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella1MousePressed"/>
       </Events>
     </Component>
@@ -237,6 +337,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella2MouseClicked"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella2MousePressed"/>
       </Events>
     </Component>
@@ -254,6 +355,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella3MouseClicked"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgEstrella3MousePressed"/>
       </Events>
     </Component>
@@ -274,6 +376,7 @@
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="imgLogoMousePressed"/>
       </Events>
     </Component>
+<<<<<<< HEAD
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -311,5 +414,12 @@
         </Component>
       </SubComponents>
     </Container>
+=======
+    <Component class="javax.swing.JCheckBox" name="chkSpoiler">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Conte Spoilers?"/>
+      </Properties>
+    </Component>
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
   </SubComponents>
 </Form>

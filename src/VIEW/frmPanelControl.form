@@ -28,26 +28,23 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnModificar" min="-2" pref="165" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="btnAfegir3" min="-2" pref="165" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="btnFlitrarTaules" min="-2" pref="165" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnAfegir1" min="-2" pref="165" max="-2" attributes="0"/>
+                              <Component id="btnControlResenyes" min="-2" pref="165" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnDiccionari" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="btnLog" min="-2" pref="165" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="594" max="32767" attributes="0"/>
+                      <EmptySpace pref="270" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnAfegir" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="btnAfegir2" min="-2" pref="165" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="E2" min="-2" pref="165" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="E1" min="-2" pref="165" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="btnControlUsuari" min="-2" pref="165" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="btnControlContingut" min="-2" pref="165" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
@@ -62,22 +59,23 @@
               <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="btnAfegir" min="-2" pref="76" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnAfegir2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
-                          <Component id="E2" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
-                          <Component id="E1" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                          <Component id="btnControlUsuari" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                          <Component id="btnControlContingut" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnModificar" min="-2" pref="76" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnFlitrarTaules" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                  <Component id="btnControlResenyes" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="191" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnAfegir3" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
-                  <Component id="btnAfegir1" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                  <Component id="btnDiccionari" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
+                  <Component id="btnLog" alignment="3" min="-2" pref="76" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
@@ -85,60 +83,52 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btnModificar">
+    <Component class="javax.swing.JButton" name="btnFlitrarTaules">
       <Properties>
         <Property name="text" type="java.lang.String" value="Filtrar taules"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFlitrarTaulesActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnAfegir">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Afegir contingut"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAfegirActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnAfegir1">
+    <Component class="javax.swing.JButton" name="btnLog">
       <Properties>
         <Property name="text" type="java.lang.String" value="Veure log"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAfegir1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnAfegir2">
+    <Component class="javax.swing.JButton" name="btnControlUsuari">
       <Properties>
         <Property name="text" type="java.lang.String" value="Control usuaris"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAfegir2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnControlUsuariActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnAfegir3">
+    <Component class="javax.swing.JButton" name="btnDiccionari">
       <Properties>
         <Property name="text" type="java.lang.String" value="Diccionari"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAfegir3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDiccionariActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="E1">
+    <Component class="javax.swing.JButton" name="btnControlResenyes">
       <Properties>
         <Property name="text" type="java.lang.String" value="Control resenyes"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="E1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnControlResenyesActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="E2">
+    <Component class="javax.swing.JButton" name="btnControlContingut">
       <Properties>
         <Property name="text" type="java.lang.String" value="Control contingut"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="E2ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnControlContingutActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="imgLogo">

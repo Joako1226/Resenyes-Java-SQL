@@ -14,6 +14,7 @@ public class Resenya {
 
     private String usuari;
     private int idContingut;
+    private String titolContingut; 
     private String descripcio;
     private double nota;
     private boolean spoiler;
@@ -74,6 +75,14 @@ public class Resenya {
 
     public void setDataResenya(LocalDate dataResenya) {
         this.dataResenya = dataResenya;
+    }
+
+    public String getTitolContingut() {
+        return titolContingut;
+    }
+
+    public void setTitolContingut(String titolContingut) {
+        this.titolContingut = titolContingut;
     }
 
 }

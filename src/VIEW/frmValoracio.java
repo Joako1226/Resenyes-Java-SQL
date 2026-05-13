@@ -4,15 +4,23 @@
  */
 package VIEW;
 
+import static CONTROLLER.Main.mod;
+import static DADES.GestioLog.EscriureLog;
 import DADES.gestioSQL;
+import MODEL.Contingut;
 import MODEL.Pelicula;
+import MODEL.Diccionari;
 import MODEL.Resenya;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+import java.time.LocalDateTime;
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -51,11 +59,17 @@ public class frmValoracio extends javax.swing.JFrame {
                     BufferedImage img = ImageIO.read(is);
 
                     if (img != null) {
-                        int ample = lblImg.getWidth() > 0 ? lblImg.getWidth() : 200;
-                        int alt = lblImg.getHeight() > 0 ? lblImg.getHeight() : 250;
+                        int maxAmple = 400;
+                        int maxAlt = 300;
 
-                        Image escalada = img.getScaledInstance(ample, alt, Image.SCALE_SMOOTH);
+                        double ratio = Math.min((double) maxAmple / img.getWidth(), (double) maxAlt / img.getHeight());
+                        int nouAmple = (int) (img.getWidth() * ratio);
+                        int nouAlt = (int) (img.getHeight() * ratio);
+
+                        Image escalada = img.getScaledInstance(nouAmple, nouAlt, Image.SCALE_SMOOTH);
                         lblImg.setIcon(new ImageIcon(escalada));
+                        lblImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                        lblImg.setPreferredSize(new java.awt.Dimension(nouAmple, nouAlt));
                         lblImg.setText("");
                     } else {
                         lblImg.setText("Error en format d'imatge");
@@ -64,10 +78,11 @@ public class frmValoracio extends javax.swing.JFrame {
                     lblImg.setText("Sense imatge disponible");
                 }
             } catch (Exception e) {
-                lblImg.setText("Error al carregar");
+                lblImg.setText("Error al carregar imatge");
                 e.printStackTrace();
             }
         }
+<<<<<<< HEAD
     }
 
     public String dividirText(String text, int maxChars) {
@@ -86,6 +101,13 @@ public class frmValoracio extends javax.swing.JFrame {
         }
 
         return resultat.toString();
+=======
+
+        this.revalidate();
+        this.repaint();
+        this.pack();
+        this.setLocationRelativeTo(null);
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
     }
 
     public void estrelles() {
@@ -115,6 +137,12 @@ public class frmValoracio extends javax.swing.JFrame {
         }
         String iconPath = label.getIcon().toString();
         return iconPath.contains(rutaRecurs);
+    }
+
+    private void actualitzarPerClicEstrella(double valor) {
+        sldValoracio.setValue((int) (valor * 10));
+        txtValoracio.setText(String.valueOf(valor));
+        actualitzarEstrelles(valor);
     }
 
     public void actualitzarEstrelles(double valor) {
@@ -219,16 +247,27 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella2 = new javax.swing.JLabel();
         imgEstrella3 = new javax.swing.JLabel();
         imgLogo = new javax.swing.JLabel();
+<<<<<<< HEAD
         jScrollPane2 = new javax.swing.JScrollPane();
         tblResenyes = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtDescripcio = new javax.swing.JTextArea();
+=======
+        chkSpoiler = new javax.swing.JCheckBox();
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitol.setFont(new java.awt.Font("Liberation Serif", 1, 48)); // NOI18N
         lblTitol.setForeground(new java.awt.Color(102, 102, 255));
+<<<<<<< HEAD
         lblTitol.setText("RESENYES");
+=======
+        lblTitol.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitol.setText("RATING");
+        lblTitol.setMaximumSize(new java.awt.Dimension(2000, 999));
+        lblTitol.setMinimumSize(new java.awt.Dimension(0, 0));
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
 
         txtComentari.setColumns(20);
         txtComentari.setRows(5);
@@ -246,6 +285,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella4.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella4.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella4MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella4MousePressed(evt);
             }
@@ -256,6 +298,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella5.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella5.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella5MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella5MousePressed(evt);
             }
@@ -293,6 +338,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella1.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella1.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella1MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella1MousePressed(evt);
             }
@@ -303,6 +351,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella2.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella2.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella2MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella2MousePressed(evt);
             }
@@ -313,6 +364,9 @@ public class frmValoracio extends javax.swing.JFrame {
         imgEstrella3.setMaximumSize(new java.awt.Dimension(50, 50));
         imgEstrella3.setMinimumSize(new java.awt.Dimension(50, 50));
         imgEstrella3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imgEstrella3MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 imgEstrella3MousePressed(evt);
             }
@@ -328,6 +382,7 @@ public class frmValoracio extends javax.swing.JFrame {
             }
         });
 
+<<<<<<< HEAD
         tblResenyes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -345,6 +400,9 @@ public class frmValoracio extends javax.swing.JFrame {
         txtDescripcio.setColumns(20);
         txtDescripcio.setRows(5);
         jScrollPane3.setViewportView(txtDescripcio);
+=======
+        chkSpoiler.setText("Conte Spoilers?");
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -354,6 +412,7 @@ public class frmValoracio extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+<<<<<<< HEAD
                         .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTitol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -387,12 +446,53 @@ public class frmValoracio extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+=======
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(272, 272, 272)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(imgEstrella1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(imgEstrella2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(imgEstrella3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(imgEstrella4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(imgEstrella5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(103, 103, 103)
+                                        .addComponent(chkSpoiler))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(lblTitol, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 138, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(357, 357, 357)
+                .addComponent(btnResenya)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(253, 253, 253))
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+<<<<<<< HEAD
                         .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -405,11 +505,22 @@ public class frmValoracio extends javax.swing.JFrame {
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                             .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+=======
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(lblTitol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblImg, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                        .addGap(27, 27, 27)
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(imgEstrella1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(imgEstrella2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(imgEstrella3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(imgEstrella4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+<<<<<<< HEAD
                             .addComponent(imgEstrella5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -421,6 +532,21 @@ public class frmValoracio extends javax.swing.JFrame {
                         .addComponent(btnResenya))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13))
+=======
+                            .addComponent(imgEstrella5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(chkSpoiler)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sldValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtValoracio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnResenya)
+                .addGap(18, 18, 18))
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
         );
 
         pack();
@@ -506,38 +632,133 @@ public class frmValoracio extends javax.swing.JFrame {
 
     private void btnResenyaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResenyaActionPerformed
         try {
-            String usuariLoguejat = CONTROLLER.Main.usuariActual.getNom_usuari();
+            MODEL.Usuari usuariActual = CONTROLLER.Main.usuariActual;
+            String usuariLoguejat = usuariActual.getNom_usuari();
+
             int idContingut = 0;
-            if (contingut instanceof MODEL.Contingut) {
-                idContingut = ((MODEL.Contingut) contingut).getId();
-            } else if (contingut instanceof MODEL.Pelicula) {
-                idContingut = ((MODEL.Pelicula) contingut).getId();
+            if (contingut instanceof Contingut) {
+                idContingut = ((Contingut) contingut).getId();
+            } else if (contingut instanceof Pelicula) {
+                idContingut = ((Pelicula) contingut).getId();
             }
 
             String comentari = txtComentari.getText();
+            String comentariBan = comentari;
 
+            // 1. FILTRE I LÒGICA DE BANS
+            if (Diccionari.esInadequat(comentariBan)) {
+                int opcio = JOptionPane.showConfirmDialog(this,
+                        "S'han detectat paraules inadequades. Vols continuar sota risc de sanció?",
+                        "Alerta", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (opcio == JOptionPane.YES_OPTION) {
+                    int bansPrevis = DADES.gestioSQL.obtenirNumBans(usuariLoguejat);
+                    int nivellSancio = bansPrevis + 1;
+
+                    MODEL.Usuari.TipusBan nouEstat = MODEL.Usuari.TipusBan.active;
+                    LocalDateTime dataFiBan = LocalDateTime.now();
+
+                    if (nivellSancio == 1) {
+                        nouEstat = MODEL.Usuari.TipusBan.warned;
+                        JOptionPane.showMessageDialog(this, "Estat: WARNED.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
+                    } else if (nivellSancio >= 2 && nivellSancio <= 4) {
+                        nouEstat = MODEL.Usuari.TipusBan.soft_ban;
+                        int dies = nivellSancio - 1;
+                        dataFiBan = LocalDateTime.now().plusDays(dies);
+                        JOptionPane.showMessageDialog(this, "SOFT_BAN: " + dies + " dia/es.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
+                    } else {
+                        nouEstat = MODEL.Usuari.TipusBan.hard_ban;
+                        dataFiBan = LocalDateTime.now().plusDays(15);
+                        JOptionPane.showMessageDialog(this, "HARD_BAN: 15 dies.");
+                        EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tIncompleix les normes de comportament;\t\t Estat del Ban: " + MODEL.Usuari.TipusBan.warned);
+
+                    }
+
+                    DADES.gestioSQL.actualitzarEstatUsuari(usuariLoguejat, nouEstat, dataFiBan);
+                    usuariActual.setEstat(nouEstat);
+                    usuariActual.setData_ban(dataFiBan);
+
+                    comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
+                } else {
+                    return; 
+                }
+            }
+
+            if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban || usuariActual.getEstat() == MODEL.Usuari.TipusBan.hard_ban) {
+                if (usuariActual.getData_ban() != null && usuariActual.getData_ban().isAfter(LocalDateTime.now())) {
+
+                    if (usuariActual.getEstat() == MODEL.Usuari.TipusBan.soft_ban) {
+                        txtComentari.setEnabled(false);
+                        comentari = "[USUARI BANEJAT: no té permís per fer comentaris]";
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No pots publicar fins a: "
+                                + usuariActual.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                        return;
+                    }
+                }
+                EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tValoracio del contingut:\t\t" + ((Contingut) contingut).getTitol());
+            }
+
+// 3. INSERCIÓ DE LA RESSENYA (Nota i Comentari filtrat/bloquejat)
             double nota = Double.parseDouble(txtValoracio.getText());
-
-            // No veig cap CheckBox 'chkSpoiler' a les teves variables, 
-            // així que per defecte posem false o hauries d'afegir un JCheckBox al disseny.
-            boolean esSpoiler = false;
-
+            boolean esSpoiler = chkSpoiler.isSelected();
             Resenya novaResenya = new Resenya(usuariLoguejat, idContingut, comentari, nota, esSpoiler, LocalDate.now());
 
             DADES.gestioSQL.insertResenya(novaResenya);
-
-            JOptionPane.showMessageDialog(this, "Valoració enviada amb èxit!");
+            JOptionPane.showMessageDialog(this, "Valoració enviada!");
             this.dispose();
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Error en el format de la nota.");
-        } catch (java.sql.SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error de base de dades: " + e.getMessage());
+            DADES.gestioSQL.insertResenya(novaResenya);
+            JOptionPane.showMessageDialog(this, "Valoració enviada!");
+            this.dispose();
+
         } catch (Exception e) {
+<<<<<<< HEAD
             JOptionPane.showMessageDialog(this, "Ja tens una resenya o els parametres no son correctes");
             e.printStackTrace();
         }
     }//GEN-LAST:event_btnResenyaActionPerformed
+=======
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }    }//GEN-LAST:event_btnResenyaActionPerformed
+
+    private void imgEstrella1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella1MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(200);
+        actualitzarPerClicEstrella(20.0);
+
+    }//GEN-LAST:event_imgEstrella1MouseClicked
+
+    private void imgEstrella2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella2MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(400);
+        actualitzarPerClicEstrella(40.0);
+
+    }//GEN-LAST:event_imgEstrella2MouseClicked
+
+    private void imgEstrella3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella3MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(600);
+        actualitzarPerClicEstrella(60.0);
+
+    }//GEN-LAST:event_imgEstrella3MouseClicked
+
+    private void imgEstrella4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella4MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(800);
+        actualitzarPerClicEstrella(80.0);
+
+    }//GEN-LAST:event_imgEstrella4MouseClicked
+
+    private void imgEstrella5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imgEstrella5MouseClicked
+        // TODO add your handling code here:
+        sldValoracio.setValue(1000);
+        actualitzarPerClicEstrella(100.0);
+
+    }//GEN-LAST:event_imgEstrella5MouseClicked
+>>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
 
     /**
      * @param args the command line arguments
@@ -566,6 +787,7 @@ public class frmValoracio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnResenya;
+    private javax.swing.JCheckBox chkSpoiler;
     private javax.swing.JLabel imgEstrella1;
     private javax.swing.JLabel imgEstrella2;
     private javax.swing.JLabel imgEstrella3;

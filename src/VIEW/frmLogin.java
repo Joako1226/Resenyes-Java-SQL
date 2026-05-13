@@ -192,57 +192,66 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:String userText = txtUsuari.getText();
-        String passText = txtContrassenya.getText();
+        // TODO add your handling code here:
+        String passText = new String(txtContrassenya.getPassword());
         String userText = txtUsuari.getText();
 
-// Intentem fer login
         Usuari u = gestioSQL.login(userText, passText);
 
         if (u != null) {
             usuariActual = u;
-            if (u.getEstat() == TipusBan.active) {
-                if (u.isAdmin()) {
-                    frmContingutPagina fUser = new frmContingutPagina();
-                    fUser.setVisible(true);
-                    GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
 
-                } else {
-                    frmContingutPagina fUser = new frmContingutPagina();
-                    fUser.setVisible(true);
-
-                    frmMainClient fClient = new frmMainClient();
-                    fClient.setVisible(true);
-
-                    frmControlUsuaris fcontrol = new frmControlUsuaris();
-                    fcontrol.setVisible(true);
-
-                    frmEdicioUsuari fEdicioUsuari = new frmEdicioUsuari();
-                    fEdicioUsuari.setVisible(true);
-
-                    GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
-
-                }
-                this.dispose();
-            } else {
-                if (u.getData_ban().isAfter(LocalDateTime.now())) {
+            // Verificació d'expiració de ban: Si la data ja ha passat, el tornem a fer "active"
+            if (u.getEstat() != TipusBan.active && u.getData_ban() != null) {
+                if (u.getData_ban().isBefore(LocalDateTime.now())) {
                     u.setEstat(TipusBan.active);
                     u.setData_ban(null);
                     try {
-                        modificarUsuari(u);
+                        gestioSQL.modificarUsuari(u);
                     } catch (SQLException ex) {
-                        System.getLogger(frmLogin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                        logger.log(java.util.logging.Level.SEVERE, "Error actualitzant estat post-ban", ex);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(this, "No tens acces estas banejat, estat del ban: " + u.getEstat() + ", tindras acces el dia: " + u.getData_ban());
                 }
             }
+
+            // Control de HARD BAN: Bloqueja l'entrada totalment
+            if (u.getEstat() == TipusBan.hard_ban) {
+                JOptionPane.showMessageDialog(this, "ACCÉS DENEGAT.\nEstàs sota un HARD BAN fins al: "
+                        + u.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                return;
+            }
+
+            // Redirecció segons el rol (Admin o Client)
+            if (u.isAdmin()) {
+                frmPanelControl fAdmin = new frmPanelControl();
+                fAdmin.setVisible(true);
+                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
+            } else {
+                frmMainClient fClient = new frmMainClient();
+                fClient.setVisible(true);
+
+                // Avis per WARNED: Només un avís informatiu
+                if (u.getEstat() == TipusBan.warned) {
+                    JOptionPane.showMessageDialog(fClient, "AVÍS DE COMPORTAMENT: " + u.getNom_usuari()
+                            + "\nHas rebut una advertència per contingut inapropiat. \nSi continues així, el teu compte podria ser bloquejat temporalment.",
+                            "Advertència del Sistema", JOptionPane.WARNING_MESSAGE);
+                }
+
+                // Avis per SOFT BAN: Restricció de funcionalitat
+                if (u.getEstat() == TipusBan.soft_ban) {
+                    JOptionPane.showMessageDialog(fClient, "Tens un SOFT BAN actiu. Podràs navegar però no podràs publicar ressenyes fins al: "
+                            + u.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                }
+
+                GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio client");
+            }
+
+            this.dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "Usuari o contrasenya incorrectes");
         }
-
     }//GEN-LAST:event_btnLoginActionPerformed
-    //EscriureLog();
     private void txtUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuariActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuariActionPerformed
