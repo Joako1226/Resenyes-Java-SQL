@@ -43,12 +43,13 @@ public class frmContingutPagina extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmContingutPagina.class.getName());
     private ButtonGroup btnTipus = new ButtonGroup();
+    private ButtonGroup btnEdicio = new ButtonGroup();
 
     /**
      * Creates new form frmContingutPagina
      */
     public frmContingutPagina() {
-        
+        initComponents();
         mConnexio = new Connexio();
         mModelTaula.addColumn("ID");
         mModelTaula.addColumn("Títol");
@@ -56,7 +57,6 @@ public class frmContingutPagina extends javax.swing.JFrame {
         mModelTaula.addColumn("Classificació");
         mModelTaula.addColumn("Imatge");
         mModelTaula.addColumn("Tipus");
-        initComponents();
         
         btnTipus.add(btnSerie);
         btnTipus.add(btnPelicula);
@@ -64,6 +64,9 @@ public class frmContingutPagina extends javax.swing.JFrame {
         btnPelicula.setActionCommand("PELICULA");
         btnSerie.setActionCommand("SERIE");
         btnVideojoc.setActionCommand("VIDEOJOC");
+        
+        btnEdicio.add(btnAfegir);
+        btnEdicio.add(btnModificar);
         
         carregarContinguts();
         ompleComboGenere();
@@ -230,7 +233,6 @@ public class frmContingutPagina extends javax.swing.JFrame {
         txtTitol = new javax.swing.JTextField();
         btnExaminar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
-        txtDescripcio = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -255,8 +257,10 @@ public class frmContingutPagina extends javax.swing.JFrame {
         numPreu = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         imgLogo = new javax.swing.JLabel();
+        btnAfegir = new javax.swing.JRadioButton();
         btnModificar = new javax.swing.JRadioButton();
-        btnModificar1 = new javax.swing.JRadioButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtDescripcio = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -297,9 +301,6 @@ public class frmContingutPagina extends javax.swing.JFrame {
                 btnGuardarActionPerformed(evt);
             }
         });
-
-        txtDescripcio.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtDescripcio.setBorder(null);
 
         jLabel1.setText("Titol");
 
@@ -412,9 +413,14 @@ public class frmContingutPagina extends javax.swing.JFrame {
             }
         });
 
-        btnModificar.setText("Afegir");
+        btnAfegir.setSelected(true);
+        btnAfegir.setText("Afegir");
 
-        btnModificar1.setText("Modificar");
+        btnModificar.setText("Modificar");
+
+        txtDescripcio.setColumns(20);
+        txtDescripcio.setRows(5);
+        jScrollPane2.setViewportView(txtDescripcio);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -423,7 +429,6 @@ public class frmContingutPagina extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtDescripcio)
                     .addComponent(txtTitol, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -436,7 +441,8 @@ public class frmContingutPagina extends javax.swing.JFrame {
                             .addComponent(btnPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
                             .addComponent(btnSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(142, 142, 142)))
+                        .addGap(145, 145, 145))
+                    .addComponent(jScrollPane2))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(29, 29, 29)
@@ -481,8 +487,8 @@ public class frmContingutPagina extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnModificar1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnAfegir, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -502,16 +508,11 @@ public class frmContingutPagina extends javax.swing.JFrame {
                                 .addComponent(txtTitol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtDescripcio, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel3))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(2, 2, 2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(8, 8, 8)
@@ -523,7 +524,12 @@ public class frmContingutPagina extends javax.swing.JFrame {
                                                     .addComponent(numTemporades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(jLabel5))))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(28, 28, 28)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel3)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(numPreu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -567,9 +573,9 @@ public class frmContingutPagina extends javax.swing.JFrame {
                             .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(32, 32, 32)
-                                .addComponent(btnModificar)
+                                .addComponent(btnAfegir)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnModificar1)))
+                                .addComponent(btnModificar)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -646,7 +652,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExaminarActionPerformed
 
     private void txtTitolKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTitolKeyTyped
-        if (txtTitol.getText().length() >= 20) {
+        if (txtTitol.getText().length() >= 40) {
             evt.consume();
         }
     }//GEN-LAST:event_txtTitolKeyTyped
@@ -738,10 +744,10 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton btnAfegir;
     private javax.swing.JButton btnExaminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JRadioButton btnModificar;
-    private javax.swing.JRadioButton btnModificar1;
     private javax.swing.JCheckBox btnPelicula;
     private javax.swing.JCheckBox btnSerie;
     private javax.swing.JCheckBox btnVideojoc;
@@ -759,6 +765,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lblImg;
@@ -766,7 +773,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
     private javax.swing.JTextField numPreu;
     private javax.swing.JSpinner numTemporades;
     private javax.swing.JTable tblContinguts;
-    private javax.swing.JTextField txtDescripcio;
+    private javax.swing.JTextArea txtDescripcio;
     private javax.swing.JTextField txtDirector;
     private javax.swing.JTextField txtDuracio;
     private javax.swing.JTextField txtTitol;

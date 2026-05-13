@@ -41,7 +41,7 @@ public class frmEdicioUsuari extends javax.swing.JFrame {
     }
 
     private void ompleTaula() {
-        txtName.setText(usuariActual.getNom_usuari());
+        txtName.setText(usuariActual.getNom());
         txtContrasenya.setText(usuariActual.getContrasenya());
         txtDataNaixament.setText(usuariActual.getData_naixament().format(format));
         mModelTaula.setRowCount(0);
@@ -185,7 +185,7 @@ public class frmEdicioUsuari extends javax.swing.JFrame {
         u.setNom(txtName.getText());
         u.setContrasenya(txtContrasenya.getText());
         u.setData_naixament(LocalDate.parse(txtDataNaixament.getText(), formatData));
-
+        System.out.println(u.toString());
         try {
             modificarUsuari(u);
             JOptionPane.showMessageDialog(this, "Modificat l'usuari " + usuariActual.getNom_usuari());

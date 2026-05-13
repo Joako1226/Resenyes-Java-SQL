@@ -26,22 +26,20 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="rdoVideojocs" min="-2" pref="98" max="-2" attributes="0"/>
-                      <Component id="rdoSerie" min="-2" pref="98" max="-2" attributes="0"/>
-                      <Component id="rdoPelicula" alignment="1" min="-2" pref="98" max="-2" attributes="0"/>
-                  </Group>
                   <Component id="imgLogo" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblGenere" min="-2" pref="47" max="-2" attributes="0"/>
-                          <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
+                          <Component id="rdoVideojocs" alignment="0" pref="98" max="32767" attributes="0"/>
+                          <Component id="rdoSerie" alignment="0" pref="98" max="32767" attributes="0"/>
+                          <Component id="rdoPelicula" alignment="0" pref="98" max="32767" attributes="0"/>
+                          <Component id="cmbGenere" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblBuscar" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                          <Component id="txtBuscar" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="txtBuscar" pref="150" max="32767" attributes="0"/>
+                          <Component id="lblBuscar" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -84,25 +82,26 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="imgLogo" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="lblGenere" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="lblBuscar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="txtBuscar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="87" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="lblGenere" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="rdoPelicula" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rdoSerie" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="rdoVideojocs" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="rdoPelicula" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="rdoSerie" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="rdoVideojocs" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="cmbGenere" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imgEstrella1" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="imgEstrella2" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -191,6 +190,7 @@
     </Component>
     <Component class="javax.swing.JRadioButton" name="rdoPelicula">
       <Properties>
+        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="Pelicula"/>
       </Properties>
       <Events>

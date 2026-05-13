@@ -370,6 +370,55 @@ public class gestioSQL {
         }
     }
 
+    public ArrayList<Resenya> carregarResenyes(int id) {
+
+        ArrayList<Resenya> llista = new ArrayList<>();
+
+        String sql = "SELECT r.id_usuari, r.id_contingut, r.descripcio, r.nota, r.spoiler, r.data_resenya "
+                + "FROM resenya r "
+                + "WHERE r.id_contingut = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {
+
+                    String usuari = rs.getString("id_usuari");
+                    int idContingut = rs.getInt("id_contingut");
+                    String descripcio = rs.getString("descripcio");
+                    double nota = rs.getDouble("nota");
+                    boolean spoiler = rs.getBoolean("spoiler");
+
+                    LocalDate dataResenya = null;
+                    java.sql.Date sqlDate = rs.getDate("data_resenya");
+                    if (sqlDate != null) {
+                        dataResenya = sqlDate.toLocalDate();
+                    }
+
+                    Resenya r = new Resenya(
+                            usuari,
+                            idContingut,
+                            descripcio,
+                            nota,
+                            spoiler,
+                            dataResenya
+                    );
+
+                    llista.add(r);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al carregar ressenyes: " + e.getMessage());
+            return new ArrayList<>();
+        }
+
+        return llista;
+    }
+
     public ArrayList<Serie> CarregarSeries() {
         ArrayList<Serie> llista = new ArrayList<>();
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, s.capitols, s.temporada "

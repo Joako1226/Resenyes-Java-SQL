@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS resenyesBD;
 CREATE DATABASE resenyesBD
 DEFAULT CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
+DROP TABLE IF EXISTS contingut;
 
 USE resenyesBD;
 

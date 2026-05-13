@@ -377,9 +377,12 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         LocalDate dataNaixement = LocalDate.parse(txtDataNaixament.getText(), formatData);
 
         int punts = (int) numPunts.getValue();
+        LocalDateTime dataBan = null;
         Usuari.TipusBan estat = Usuari.TipusBan.valueOf(cmbEstat.getSelectedItem().toString());
-        
-        LocalDateTime dataBan = LocalDateTime.parse(txtDataBan.getText(), formatDateTime);
+
+        if (!estat.equals(Usuari.TipusBan.active)) {
+            dataBan = LocalDateTime.parse(txtDataBan.getText(), formatDateTime);
+        }
 
         boolean admin = Boolean.parseBoolean(cmbAdmin.getSelectedItem().toString());
 
@@ -400,8 +403,8 @@ public class frmControlUsuaris extends javax.swing.JFrame {
                 break;
             case "modificar":
                 try {
-                    if (u.getEstat() != Usuari.TipusBan.active) {
-
+                    if (u.getEstat() == Usuari.TipusBan.active) {
+                        u.setData_ban(null);
                     }
                     modificarUsuari(u);
 
@@ -437,16 +440,15 @@ public class frmControlUsuaris extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDataActualActionPerformed
 
     private void cmbEstatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstatActionPerformed
-        if(cmbEstat.getSelectedItem() != "active"){
+        if (!"active".equals(cmbEstat.getSelectedItem().toString())) {
             txtDataBan.setEnabled(true);
             btnDataActual.setEnabled(true);
-        }
-        else{
+        } else {
             txtDataBan.setEnabled(false);
             btnDataActual.setEnabled(false);
             txtDataBan.setText("");
         }
-        
+
     }//GEN-LAST:event_cmbEstatActionPerformed
 
     /**
