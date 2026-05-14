@@ -140,6 +140,8 @@ public class frmPanelControl extends javax.swing.JFrame {
 
     private void btnLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogActionPerformed
         // TODO add your handling code here:
+        frmLog log = new frmLog();
+        log.setVisible(true);
     }//GEN-LAST:event_btnLogActionPerformed
 
     private void btnControlUsuariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlUsuariActionPerformed

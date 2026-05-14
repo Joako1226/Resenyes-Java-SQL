@@ -913,9 +913,9 @@ public class frmMainClient extends javax.swing.JFrame {
         login.setLocationRelativeTo(this);
         login.toFront();
         this.dispose();
-        frmRegister register = new frmRegister();
-        register.setLocationRelativeTo(this);
-        register.setFocusable(false);
+        frmMainClient main = new frmMainClient();
+        main.setLocationRelativeTo(this);
+        main.setFocusable(false);
     }//GEN-LAST:event_imgLogoMousePressed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
