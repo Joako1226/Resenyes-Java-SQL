@@ -40,6 +40,7 @@ public class frmHigherLower extends javax.swing.JFrame {
         score = 0;
         updateScore();
         novaRonda();
+        txtNota2.setVisible(false);
 
     }
 
@@ -105,9 +106,11 @@ public class frmHigherLower extends javax.swing.JFrame {
         score = 0;
         updateScore();
         novaRonda();
+        txtNota2.setVisible(false);
     }
 
     private void gameOver() {
+        txtNota2.setVisible(true);
         int option = JOptionPane.showConfirmDialog(
                 this,
                 "Has perdut 😢\nScore final: " + score + "\nVols tornar a jugar?",
@@ -259,7 +262,7 @@ public class frmHigherLower extends javax.swing.JFrame {
         double nota1 = gestioSql.obtenirNotaContingut(c1);
         double nota2 = gestioSql.obtenirNotaContingut(c2);
 
-        if (nota1 >= nota2) {
+        if (nota1 <= nota2) {
             score++;
             updateScore();
             novaRonda();
@@ -278,7 +281,7 @@ public class frmHigherLower extends javax.swing.JFrame {
         double nota1 = gestioSql.obtenirNotaContingut(c1);
         double nota2 = gestioSql.obtenirNotaContingut(c2);
 
-        if (nota1 <= nota2) {
+        if (nota1 >= nota2) {
             score++;
             updateScore();
             novaRonda();
