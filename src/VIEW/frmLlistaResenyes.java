@@ -247,7 +247,7 @@ public class frmLlistaResenyes extends javax.swing.JFrame {
         lblUsuari = new javax.swing.JLabel();
         imgLogo = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         imgEstrella3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/estrellaGris.PNG"))); // NOI18N
         imgEstrella3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

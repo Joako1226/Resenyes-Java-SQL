@@ -103,7 +103,7 @@ public class frmControlUsuaris extends javax.swing.JFrame {
         imgLogo = new javax.swing.JLabel();
         btnDataActual = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         txtUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

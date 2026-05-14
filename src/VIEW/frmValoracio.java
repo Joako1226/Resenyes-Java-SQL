@@ -226,7 +226,7 @@ public class frmValoracio extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtDescripcio = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitol.setFont(new java.awt.Font("Liberation Serif", 1, 48)); // NOI18N
         lblTitol.setForeground(new java.awt.Color(102, 102, 255));

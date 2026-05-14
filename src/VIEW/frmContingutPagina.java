@@ -265,7 +265,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
         txtDescripcio = new javax.swing.JTextArea();
         btnBorrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tblContinguts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
