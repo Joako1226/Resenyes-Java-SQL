@@ -80,16 +80,15 @@ public class frmMainClient extends javax.swing.JFrame {
         rdoVideojocs.addActionListener(e -> actualitzarInterficieSegonsTipus());
 
         actualitzarInterficieSegonsTipus();
-<<<<<<< HEAD
         carregarPelicules();
-=======
+
         /*aplicarEstilModern();
         estilitzarBotons();*/
         this.setLocationRelativeTo(null);
 
         this.setTitle("CriticFy - Busqueda");
 
->>>>>>> 43ac84a65458238005cc164e7d13a4ebf2165adb
+
     }
 
     /* private void aplicarEstilModern() {
