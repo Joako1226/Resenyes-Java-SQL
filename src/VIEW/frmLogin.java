@@ -227,19 +227,19 @@ public class frmLogin extends javax.swing.JFrame {
                 fAdmin.setVisible(true);
                 GestioLog.EscriureLog(mod + ":\t" + " Usuari " + u.getNom_usuari() + "\t\tInicia sessio admin");
             } else {
-                frmMainClient fClient = new frmMainClient();
-                fClient.setVisible(true);
+                 frmPanelControl fAdmin = new frmPanelControl();
+                fAdmin.setVisible(true);
 
                 // Avis per WARNED: Només un avís informatiu
                 if (u.getEstat() == TipusBan.warned) {
-                    JOptionPane.showMessageDialog(fClient, "AVÍS DE COMPORTAMENT: " + u.getNom_usuari()
+                    JOptionPane.showMessageDialog(fAdmin, "AVÍS DE COMPORTAMENT: " + u.getNom_usuari()
                             + "\nHas rebut una advertència per contingut inapropiat. \nSi continues així, el teu compte podria ser bloquejat temporalment.",
                             "Advertència del Sistema", JOptionPane.WARNING_MESSAGE);
                 }
 
                 // Avis per SOFT BAN: Restricció de funcionalitat
                 if (u.getEstat() == TipusBan.soft_ban) {
-                    JOptionPane.showMessageDialog(fClient, "Tens un SOFT BAN actiu. Podràs navegar però no podràs publicar ressenyes fins al: "
+                    JOptionPane.showMessageDialog(fAdmin, "Tens un SOFT BAN actiu. Podràs navegar però no podràs publicar ressenyes fins al: "
                             + u.getData_ban().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 }
 

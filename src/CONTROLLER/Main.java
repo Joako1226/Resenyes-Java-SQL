@@ -19,6 +19,7 @@ import MODEL.Usuari;
 import MODEL.Videojoc;
 import VIEW.frmLogin;
 import VIEW.frmContingutPagina;
+import VIEW.frmHigherLower;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.sql.Statement;
@@ -64,6 +65,7 @@ public class Main {
        Connexio ccc = new Connexio();
         Connection conn = ccc.connectar();
         GestioLog.CrearLog();
+
         frmLogin Login = new frmLogin();
         Login.setVisible(true);
         

@@ -16,7 +16,6 @@ import DADES.gestioSQL;
 import static DADES.gestioSQL.BuscarPeliculaPerValoracio;
 import static DADES.gestioSQL.BuscarSeriePerValoracio;
 import static DADES.gestioSQL.BuscarVideojocPerValoracio;
-import MODEL.BordeRodo;
 import MODEL.Contingut;
 import MODEL.Pelicula;
 import MODEL.RenderImg;
@@ -898,7 +897,7 @@ public class frmMainClient extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(txtUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
         );

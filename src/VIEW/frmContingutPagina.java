@@ -5,6 +5,7 @@
 package VIEW;
 
 import DADES.Connexio;
+import static DADES.gestioSQL.eliminarContingutPerTitol;
 import MODEL.Contingut;
 import MODEL.Genere;
 import MODEL.GenereContingut;
@@ -86,36 +87,37 @@ public class frmContingutPagina extends javax.swing.JFrame {
             
             Object[] Dades = new Object[6];
             imatges = mConnexio.CarregarImg();
-            
+           
             if (imatges != null) {
                 for (int i = imatges.size() - 1; i >= 0; i--) {
                     
                     mContingut = (Contingut) imatges.get(i);
-                    
-                    Dades[0] = String.valueOf(mContingut.getId());
-                    Dades[1] = mContingut.getTitol();
-                    Dades[2] = mContingut.getDescripcio();
-                    Dades[3] = mContingut.getClassificacio();
-                    
-                    try {
-                        byte[] imatge = mContingut.getImatge();
-                        BufferedImage bufferedImage = null;
-                        InputStream inputStream = new ByteArrayInputStream(imatge);
-                        bufferedImage = ImageIO.read(inputStream);
-                        
-                        ImageIcon mIcon = new ImageIcon(
-                                bufferedImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)
-                        );
-                        
-                        Dades[4] = new JLabel(mIcon);
-                        
-                    } catch (Exception e) {
-                        JLabel placeholder = new JLabel("");
-                        placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
-                        Dades[4] = placeholder;
-                    }
-                    Dades[5] = mContingut.getClass().getSimpleName();
-                    mModelTaula.addRow(Dades);
+                     if (mContingut.getTitol() != null && !mContingut.getTitol().trim().isEmpty()) {
+                        Dades[0] = String.valueOf(mContingut.getId());
+                        Dades[1] = mContingut.getTitol();
+                        Dades[2] = mContingut.getDescripcio();
+                        Dades[3] = mContingut.getClassificacio();
+
+                        try {
+                            byte[] imatge = mContingut.getImatge();
+                            BufferedImage bufferedImage = null;
+                            InputStream inputStream = new ByteArrayInputStream(imatge);
+                            bufferedImage = ImageIO.read(inputStream);
+
+                            ImageIcon mIcon = new ImageIcon(
+                                    bufferedImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)
+                            );
+
+                            Dades[4] = new JLabel(mIcon);
+
+                        } catch (Exception e) {
+                            JLabel placeholder = new JLabel("");
+                            placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
+                            Dades[4] = placeholder;
+                        }
+                        Dades[5] = mContingut.getClass().getSimpleName();
+                        mModelTaula.addRow(Dades);
+                     }
                 }
                 
                 tblContinguts.setModel(mModelTaula);
@@ -261,6 +263,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
         btnModificar = new javax.swing.JRadioButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDescripcio = new javax.swing.JTextArea();
+        btnBorrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -422,6 +425,13 @@ public class frmContingutPagina extends javax.swing.JFrame {
         txtDescripcio.setRows(5);
         jScrollPane2.setViewportView(txtDescripcio);
 
+        btnBorrar.setText("Borrar");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -482,7 +492,8 @@ public class frmContingutPagina extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnExaminar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
+                            .addComponent(btnExaminar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                            .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 142, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -551,11 +562,13 @@ public class frmContingutPagina extends javax.swing.JFrame {
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnExaminar)
-                                        .addGap(18, 18, 18)
+                                        .addGap(12, 12, 12)
                                         .addComponent(btnGuardar)
-                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addGap(12, 12, 12)
+                                        .addComponent(btnBorrar)
+                                        .addContainerGap(12, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -718,6 +731,11 @@ public class frmContingutPagina extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbClassificacioActionPerformed
 
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+ 
+    eliminarContingutPerTitol(txtTitol.getText());
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -745,6 +763,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton btnAfegir;
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnExaminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JRadioButton btnModificar;

@@ -13,6 +13,7 @@ import static CONTROLLER.Main.user;
 import static CONTROLLER.Main.usuaris;
 import static CONTROLLER.Main.videojocs;
 import static DADES.Connexio.connectar;
+import MODEL.Contingut;
 import MODEL.Pelicula;
 import MODEL.Resenya;
 import MODEL.Serie;
@@ -299,6 +300,38 @@ public class gestioSQL {
             return null;
         }
         return llista;
+    }
+
+    public Pelicula carregarPeliculaAleatoria() {
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, "
+                + "p.director, p.duracio "
+                + "FROM contingut c "
+                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
+                + "ORDER BY RAND() "
+                + "LIMIT 1";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String titol = rs.getString("titol");
+                String descripcio = rs.getString("descripcio");
+                int classificacio = rs.getInt("classificacio");
+                byte[] imatge = rs.getBytes("imatge");
+                String director = rs.getString("director");
+
+                java.sql.Time sqlTime = rs.getTime("duracio");
+                java.time.LocalTime duracio
+                        = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
+
+                return new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al obtenir pel·lícula aleatòria: " + e.getMessage());
+        }
+
+        return null;
     }
 
     public static void BuscarPelicules(String cadena) throws SQLException {
@@ -603,7 +636,7 @@ public class gestioSQL {
                 + "INNER JOIN videojoc v ON c.id = v.idJoc "
                 + "LEFT JOIN resenya r ON c.id = r.id_contingut "
                 + "GROUP BY c.id, v.preu "
-                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";        
+                + "HAVING IFNULL(AVG(r.nota), 0) >= ?";
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setDouble(1, puntuacio);
@@ -693,6 +726,30 @@ public class gestioSQL {
             System.err.println("Error a Buscar Serie per Valoració: " + e.getMessage());
             throw e;
         }
+    }
+
+    public double obtenirNotaContingut(Contingut c) {
+
+        String sql = "SELECT IFNULL(AVG(r.nota), 0) AS mitjana "
+                + "FROM resenya r "
+                + "WHERE r.id_contingut = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, c.getId());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("mitjana");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error obtenint nota mitjana: " + e.getMessage());
+
+        }
+
+        return 0.0;
     }
 
     public void AgregarVideojoc(Videojoc videojoc) {
@@ -901,7 +958,7 @@ public class gestioSQL {
             pstmt.executeUpdate();
         }
     }
-    
+
     public static ArrayList<Resenya> obtenirTotesLesResenyes() {
         ArrayList<Resenya> llista = new ArrayList<>();
 
@@ -932,7 +989,8 @@ public class gestioSQL {
         }
 
         return llista;
-    }   
+    }
+
     public static boolean eliminarResenya(String usuari, int idContingut) {
         String sql = "DELETE FROM resenya WHERE id_usuari = ? AND id_contingut = ?";
         try (java.sql.Connection conn = connectar(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -955,6 +1013,7 @@ public class gestioSQL {
             return false;
         }
     }
+
     public static String obtenirResumCriminal(String nomUsuari) {
         StringBuilder resum = new StringBuilder();
         String sql = "SELECT descripcio FROM resenya WHERE id_usuari = ? AND descripcio LIKE '[COMENTARI BLOQUEJAT]%'";
@@ -978,4 +1037,21 @@ public class gestioSQL {
         }
         return resum.toString();
     }
+
+    public static void eliminarContingutPerTitol(String titol){
+
+        String sql = "DELETE FROM contingut WHERE titol = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, titol);
+
+            int filesAfectades = ps.executeUpdate();
+
+
+        } catch (SQLException e) {
+            System.err.println("Error eliminant contingut per títol: " + e.getMessage());
+        }
+    }
+
 }

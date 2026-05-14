@@ -7,7 +7,9 @@ package VIEW;
 import static CONTROLLER.Main.pelicules;
 import static CONTROLLER.Main.series;
 import static CONTROLLER.Main.videojocs;
+import DADES.gestioSQL;
 import MODEL.Contingut;
+import MODEL.Pelicula;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -22,12 +24,61 @@ import javax.swing.ImageIcon;
 public class frmHigherLower extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmHigherLower.class.getName());
-
+    private static gestioSQL gestioSql = new gestioSQL();
     /**
      * Creates new form frmHigherLower
      */
     public frmHigherLower() {
         initComponents();
+
+       
+        Contingut c = gestioSql.carregarPeliculaAleatoria();
+        carregarPeliculaEnImg1(c);
+        
+    }
+
+    public void carregarPeliculaEnImg1(Contingut c) {
+        if (c == null) {
+            return;
+        }
+
+        // ---- TÍTOL ----
+        txtImage.setText(c.getTitol());
+        txtNota.setText(String.valueOf(gestioSql.obtenirNotaContingut(c)));
+
+        try {
+            byte[] imgBytes = c.getImatge();
+
+            if (imgBytes == null || imgBytes.length == 0) {
+                img1.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
+                return;
+            }
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(imgBytes);
+            BufferedImage bImage = ImageIO.read(bis);
+
+            if (bImage == null) {
+                img1.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")
+                ));
+                return;
+            }
+
+            // ---- ESCALAT FIX (COM LA TAULA) ----
+            Image scaledImage = bImage.getScaledInstance(
+                    245,
+                    239,
+                    Image.SCALE_SMOOTH
+            );
+
+            img1.setIcon(new ImageIcon(scaledImage));
+
+        } catch (Exception e) {
+            System.out.println("Error carregant imatge: " + e.getMessage());
+
+            img1.setIcon(new ImageIcon(
+                    getClass().getResource("/VIEW/logoCriticFy128p.png")
+            ));
+        }
     }
 
     /**
@@ -42,6 +93,8 @@ public class frmHigherLower extends javax.swing.JFrame {
         img2 = new javax.swing.JLabel();
         img1 = new javax.swing.JLabel();
         txtNom1 = new javax.swing.JLabel();
+        txtNota = new javax.swing.JLabel();
+        txtImage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,6 +104,12 @@ public class frmHigherLower extends javax.swing.JFrame {
         img1.setAlignmentY(0.0F);
         img1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        txtNota.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        txtNota.setText("jLabel1");
+
+        txtImage.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        txtImage.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -59,10 +118,15 @@ public class frmHigherLower extends javax.swing.JFrame {
                 .addGap(56, 56, 56)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(txtNom1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                         .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(57, 57, 57))))
@@ -72,11 +136,16 @@ public class frmHigherLower extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(txtNom1)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -107,12 +176,12 @@ public class frmHigherLower extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new frmHigherLower().setVisible(true));
     }
 
-   
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel img1;
     private javax.swing.JLabel img2;
+    private javax.swing.JLabel txtImage;
     private javax.swing.JLabel txtNom1;
+    private javax.swing.JLabel txtNota;
     // End of variables declaration//GEN-END:variables
 }
