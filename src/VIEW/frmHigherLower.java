@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,32 +26,48 @@ public class frmHigherLower extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmHigherLower.class.getName());
     private static gestioSQL gestioSql = new gestioSQL();
+
     /**
      * Creates new form frmHigherLower
      */
+    private static Contingut c1;
+    private static Contingut c2;
+    private static int score = 0;
+
     public frmHigherLower() {
         initComponents();
 
-       
-        Contingut c = gestioSql.carregarPeliculaAleatoria();
-        carregarPeliculaEnImg1(c);
-        
+        score = 0;
+        updateScore();
+        novaRonda();
+
     }
 
-    public void carregarPeliculaEnImg1(Contingut c) {
+    private void novaRonda() {
+        c1 = gestioSql.carregarPeliculaAleatoria();
+        c2 = gestioSql.carregarPeliculaAleatoria();
+
+        carregarPeliculaEnImg(c1, img1, txtImage, txtNota);
+        carregarPeliculaEnImg(c2, img2, txtImage2, txtNota2);
+    }
+
+    public void carregarPeliculaEnImg(
+            Contingut c, javax.swing.JLabel labelImg, javax.swing.JLabel labelTitol, javax.swing.JLabel labelNota) {
         if (c == null) {
+            labelTitol.setText("No disponible");
+            labelNota.setText("0.00");
+            labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
             return;
         }
 
-        // ---- TÍTOL ----
-        txtImage.setText(c.getTitol());
-        txtNota.setText(String.valueOf(gestioSql.obtenirNotaContingut(c)));
+        labelTitol.setText(c.getTitol());
+        labelNota.setText("Nota: " + String.format("%.2f", gestioSql.obtenirNotaContingut(c)));
 
         try {
             byte[] imgBytes = c.getImatge();
 
             if (imgBytes == null || imgBytes.length == 0) {
-                img1.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
+                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
                 return;
             }
 
@@ -58,26 +75,50 @@ public class frmHigherLower extends javax.swing.JFrame {
             BufferedImage bImage = ImageIO.read(bis);
 
             if (bImage == null) {
-                img1.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")
-                ));
+                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
                 return;
             }
 
-            // ---- ESCALAT FIX (COM LA TAULA) ----
             Image scaledImage = bImage.getScaledInstance(
-                    245,
-                    239,
+                    labelImg.getWidth() > 0 ? labelImg.getWidth() : 245,
+                    labelImg.getHeight() > 0 ? labelImg.getHeight() : 239,
                     Image.SCALE_SMOOTH
             );
 
-            img1.setIcon(new ImageIcon(scaledImage));
+            labelImg.setIcon(new ImageIcon(scaledImage));
 
         } catch (Exception e) {
             System.out.println("Error carregant imatge: " + e.getMessage());
 
-            img1.setIcon(new ImageIcon(
+            labelImg.setIcon(new ImageIcon(
                     getClass().getResource("/VIEW/logoCriticFy128p.png")
             ));
+        }
+
+    }
+
+    private void updateScore() {
+        txtPoints.setText("Score: " + score);
+    }
+
+    private void restartGame() {
+        score = 0;
+        updateScore();
+        novaRonda();
+    }
+
+    private void gameOver() {
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                "Has perdut 😢\nScore final: " + score + "\nVols tornar a jugar?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (option == JOptionPane.YES_OPTION) {
+            restartGame();
+        } else {
+            this.dispose();
         }
     }
 
@@ -95,6 +136,11 @@ public class frmHigherLower extends javax.swing.JFrame {
         txtNom1 = new javax.swing.JLabel();
         txtNota = new javax.swing.JLabel();
         txtImage = new javax.swing.JLabel();
+        txtImage2 = new javax.swing.JLabel();
+        txtNota2 = new javax.swing.JLabel();
+        btnHigher = new javax.swing.JButton();
+        btnLower = new javax.swing.JButton();
+        txtPoints = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,10 +151,39 @@ public class frmHigherLower extends javax.swing.JFrame {
         img1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         txtNota.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        txtNota.setText("jLabel1");
+        txtNota.setText("0.00");
+        txtNota.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        txtImage.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        txtImage.setText("jLabel1");
+        txtImage.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        txtImage.setText("No ha carregat");
+
+        txtImage2.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        txtImage2.setText("No ha carregat");
+
+        txtNota2.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        txtNota2.setText("0.00");
+        txtNota2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        btnHigher.setBackground(new java.awt.Color(160, 63, 65));
+        btnHigher.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        btnHigher.setText("⬆️");
+        btnHigher.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHigherActionPerformed(evt);
+            }
+        });
+
+        btnLower.setBackground(new java.awt.Color(60, 163, 165));
+        btnLower.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        btnLower.setText("⬇️");
+        btnLower.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLowerActionPerformed(evt);
+            }
+        });
+
+        txtPoints.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txtPoints.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,38 +193,100 @@ public class frmHigherLower extends javax.swing.JFrame {
                 .addGap(56, 56, 56)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(txtNom1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtNota, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(img1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                            .addComponent(txtImage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
-                        .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57))))
+                            .addComponent(btnHigher, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLower, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(58, 58, 58))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtImage2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                                    .addComponent(txtNota2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(txtPoints, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(img2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(img2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(img1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnHigher, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtImage2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLower, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNota2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(67, 67, 67)
+                .addComponent(txtPoints)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtNom1)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnHigherActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHigherActionPerformed
+        if (c1 == null || c2 == null) {
+            return;
+        }
+
+        double nota1 = gestioSql.obtenirNotaContingut(c1);
+        double nota2 = gestioSql.obtenirNotaContingut(c2);
+
+        if (nota1 >= nota2) {
+            score++;
+            updateScore();
+            novaRonda();
+        } else {
+            gameOver();
+        }
+
+    }//GEN-LAST:event_btnHigherActionPerformed
+
+    private void btnLowerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLowerActionPerformed
+
+        if (c1 == null || c2 == null) {
+            return;
+        }
+
+        double nota1 = gestioSql.obtenirNotaContingut(c1);
+        double nota2 = gestioSql.obtenirNotaContingut(c2);
+
+        if (nota1 <= nota2) {
+            score++;
+            updateScore();
+            novaRonda();
+        } else {
+            gameOver();
+        }
+
+    }//GEN-LAST:event_btnLowerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,10 +315,15 @@ public class frmHigherLower extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHigher;
+    private javax.swing.JButton btnLower;
     private javax.swing.JLabel img1;
     private javax.swing.JLabel img2;
     private javax.swing.JLabel txtImage;
+    private javax.swing.JLabel txtImage2;
     private javax.swing.JLabel txtNom1;
     private javax.swing.JLabel txtNota;
+    private javax.swing.JLabel txtNota2;
+    private javax.swing.JLabel txtPoints;
     // End of variables declaration//GEN-END:variables
 }

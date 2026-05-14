@@ -19,6 +19,8 @@ import MODEL.Resenya;
 import MODEL.Serie;
 import MODEL.Usuari;
 import MODEL.Videojoc;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +36,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -303,16 +306,19 @@ public class gestioSQL {
     }
 
     public Pelicula carregarPeliculaAleatoria() {
+
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, "
                 + "p.director, p.duracio "
                 + "FROM contingut c "
                 + "INNER JOIN pelicula p ON c.id = p.idPelicula "
-                + "ORDER BY RAND() "
-                + "LIMIT 1";
+                + "WHERE c.imatge IS NOT NULL "
+                + "AND LENGTH(c.imatge) > 0 "
+                + "ORDER BY RAND()";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
-            if (rs.next()) {
+            while (rs.next()) {
+
                 int id = rs.getInt("id");
                 String titol = rs.getString("titol");
                 String descripcio = rs.getString("descripcio");
@@ -321,10 +327,39 @@ public class gestioSQL {
                 String director = rs.getString("director");
 
                 java.sql.Time sqlTime = rs.getTime("duracio");
-                java.time.LocalTime duracio
-                        = (sqlTime != null) ? sqlTime.toLocalTime() : java.time.LocalTime.of(0, 0);
 
-                return new Pelicula(duracio, director, id, titol, descripcio, classificacio, imatge);
+                java.time.LocalTime duracio
+                        = (sqlTime != null)
+                                ? sqlTime.toLocalTime()
+                                : java.time.LocalTime.of(0, 0);
+
+                Pelicula pelicula = new Pelicula(
+                        duracio,
+                        director,
+                        id,
+                        titol,
+                        descripcio,
+                        classificacio,
+                        imatge
+                );
+
+                double nota = obtenirNotaContingut(pelicula);
+
+                if (nota > 0) {
+
+                    try {
+
+                        ByteArrayInputStream bis = new ByteArrayInputStream(imatge);
+                        BufferedImage bufferedImage = ImageIO.read(bis);
+
+                        if (bufferedImage != null) {
+                            return pelicula;
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Imatge corrupta: " + e.getMessage());
+                    }
+                }
             }
 
         } catch (SQLException e) {
@@ -1038,7 +1073,7 @@ public class gestioSQL {
         return resum.toString();
     }
 
-    public static void eliminarContingutPerTitol(String titol){
+    public static void eliminarContingutPerTitol(String titol) {
 
         String sql = "DELETE FROM contingut WHERE titol = ?";
 
@@ -1047,7 +1082,6 @@ public class gestioSQL {
             ps.setString(1, titol);
 
             int filesAfectades = ps.executeUpdate();
-
 
         } catch (SQLException e) {
             System.err.println("Error eliminant contingut per títol: " + e.getMessage());
