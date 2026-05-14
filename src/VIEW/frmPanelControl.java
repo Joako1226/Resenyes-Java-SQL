@@ -152,6 +152,8 @@ public class frmPanelControl extends javax.swing.JFrame {
 
     private void btnDiccionariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiccionariActionPerformed
         // TODO add your handling code here:
+        frmDiccionari diccionari = new frmDiccionari();
+        diccionari.setVisible(true);
     }//GEN-LAST:event_btnDiccionariActionPerformed
 
     private void btnControlResenyesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnControlResenyesActionPerformed
