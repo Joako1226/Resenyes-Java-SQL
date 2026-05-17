@@ -45,14 +45,14 @@ public class frmHigherLower extends javax.swing.JFrame {
     }
 
     private void novaRonda() {
-        c1 = gestioSql.carregarPeliculaAleatoria();
-        c2 = gestioSql.carregarPeliculaAleatoria();
+        c1 = gestioSql.obtenirContingutAleatori();
+        c2 = gestioSql.obtenirContingutAleatori();
 
-        carregarPeliculaEnImg(c1, img1, txtImage, txtNota);
-        carregarPeliculaEnImg(c2, img2, txtImage2, txtNota2);
+        carregarContingutEnImg(c1, img1, txtImage, txtNota);
+        carregarContingutEnImg(c2, img2, txtImage2, txtNota2);
     }
 
-    public void carregarPeliculaEnImg(
+    public void carregarContingutEnImg(
             Contingut c, javax.swing.JLabel labelImg, javax.swing.JLabel labelTitol, javax.swing.JLabel labelNota) {
         if (c == null) {
             labelTitol.setText("No disponible");

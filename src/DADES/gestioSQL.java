@@ -305,12 +305,10 @@ public class gestioSQL {
         return llista;
     }
 
-    public Pelicula carregarPeliculaAleatoria() {
+    public Contingut obtenirContingutAleatori() {
 
         String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, "
-                + "p.director, p.duracio "
                 + "FROM contingut c "
-                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
                 + "WHERE c.imatge IS NOT NULL "
                 + "AND LENGTH(c.imatge) > 0 "
                 + "ORDER BY RAND()";
@@ -324,18 +322,8 @@ public class gestioSQL {
                 String descripcio = rs.getString("descripcio");
                 int classificacio = rs.getInt("classificacio");
                 byte[] imatge = rs.getBytes("imatge");
-                String director = rs.getString("director");
 
-                java.sql.Time sqlTime = rs.getTime("duracio");
-
-                java.time.LocalTime duracio
-                        = (sqlTime != null)
-                                ? sqlTime.toLocalTime()
-                                : java.time.LocalTime.of(0, 0);
-
-                Pelicula pelicula = new Pelicula(
-                        duracio,
-                        director,
+                Contingut contingut = new Contingut(
                         id,
                         titol,
                         descripcio,
@@ -343,7 +331,7 @@ public class gestioSQL {
                         imatge
                 );
 
-                double nota = obtenirNotaContingut(pelicula);
+                double nota = obtenirNotaContingut(contingut);
 
                 if (nota > 0) {
 
@@ -353,7 +341,7 @@ public class gestioSQL {
                         BufferedImage bufferedImage = ImageIO.read(bis);
 
                         if (bufferedImage != null) {
-                            return pelicula;
+                            return contingut;
                         }
 
                     } catch (Exception e) {
@@ -370,10 +358,11 @@ public class gestioSQL {
     }
 
     public static void BuscarPelicules(String cadena) throws SQLException {
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, p.director, p.duracio "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge "
                 + "FROM contingut c "
-                + "INNER JOIN pelicula p ON c.id = p.idPelicula "
-                + "WHERE c.titol LIKE ?";
+                + "WHERE c.imatge IS NOT NULL "
+                + "AND LENGTH(c.imatge) > 0 "
+                + "ORDER BY RAND()";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement ps = conn.prepareStatement(sql)) {
 
