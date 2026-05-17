@@ -307,51 +307,50 @@ public class gestioSQL {
 
     public Contingut obtenirContingutAleatori() {
 
-        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge, "
+        String sql = "SELECT c.id, c.titol, c.descripcio, c.classificacio, c.imatge "
                 + "FROM contingut c "
                 + "WHERE c.imatge IS NOT NULL "
                 + "AND LENGTH(c.imatge) > 0 "
                 + "ORDER BY RAND()";
 
-        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+        try (
+                Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
 
-                int id = rs.getInt("id");
-                String titol = rs.getString("titol");
-                String descripcio = rs.getString("descripcio");
-                int classificacio = rs.getInt("classificacio");
                 byte[] imatge = rs.getBytes("imatge");
 
-                Contingut contingut = new Contingut(
-                        id,
-                        titol,
-                        descripcio,
-                        classificacio,
-                        imatge
-                );
+     
+                if (imatge == null || imatge.length == 0) {
+                    continue;
+                }
 
-                double nota = obtenirNotaContingut(contingut);
+                try {
 
-                if (nota > 0) {
+                   
+                    ByteArrayInputStream bis = new ByteArrayInputStream(imatge);
+                    BufferedImage bufferedImage = ImageIO.read(bis);
 
-                    try {
-
-                        ByteArrayInputStream bis = new ByteArrayInputStream(imatge);
-                        BufferedImage bufferedImage = ImageIO.read(bis);
-
-                        if (bufferedImage != null) {
-                            return contingut;
-                        }
-
-                    } catch (Exception e) {
-                        System.out.println("Imatge corrupta: " + e.getMessage());
+                    if (bufferedImage == null) {
+                        continue;
                     }
+
+               
+                    return new Contingut(
+                            rs.getInt("id"),
+                            rs.getString("titol"),
+                            rs.getString("descripcio"),
+                            rs.getInt("classificacio"),
+                            imatge
+                    );
+
+                } catch (Exception e) {
+                    System.out.println("Imagen corrupta: " + e.getMessage());
                 }
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al obtenir pel·lícula aleatòria: " + e.getMessage());
+            System.out.println("Error SQL: " + e.getMessage());
         }
 
         return null;

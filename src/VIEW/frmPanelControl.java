@@ -5,25 +5,86 @@
 package VIEW;
 
 import static CONTROLLER.Main.usuariActual;
+import DADES.gestioSQL;
+import MODEL.Contingut;
+import java.awt.Image;
+import java.awt.Window;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author Joaquin
  */
 public class frmPanelControl extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmPanelControl.class.getName());
+    private static gestioSQL gestioSql = new gestioSQL();
+    private static Contingut c;
 
     /**
      * Creates new form frmPanelControl
      */
     public frmPanelControl() {
         initComponents();
-        txtNom.setText("Usuari: " + usuariActual.getNom_usuari());
-        if(!usuariActual.isAdmin()){
+        txtNom.setText("Benvolgut  " + usuariActual.getNom_usuari() + "!");
+        if (!usuariActual.isAdmin()) {
             panAdmin.show(false);
             panAdmin.disable();
-            
+            revalidate();
+            repaint();
+        }
+        c = gestioSql.obtenirContingutAleatori();
+        carregarContingutEnImg(c, img1, txtImage, txtNota);
+    }
+
+    public void carregarContingutEnImg(
+            Contingut c,
+            javax.swing.JLabel labelImg,
+            javax.swing.JLabel labelTitol,
+            javax.swing.JLabel labelNota) {
+
+        if (c == null) {
+            labelTitol.setText("No disponible");
+            labelNota.setText("0.00");
+            labelImg.setIcon(null);
+            return;
+        }
+
+        labelTitol.setText(c.getTitol());
+        labelNota.setText("Nota: " + String.format("%.2f", gestioSql.obtenirNotaContingut(c)));
+
+        try {
+
+            byte[] imgBytes = c.getImatge();
+
+            if (imgBytes == null || imgBytes.length == 0) {
+                labelImg.setIcon(null);
+                return;
+            }
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(imgBytes);
+            BufferedImage bImage = ImageIO.read(bis);
+
+            if (bImage == null) {
+                labelImg.setIcon(null);
+                return;
+            }
+
+            Image scaledImage = bImage.getScaledInstance(
+                    labelImg.getWidth() > 0 ? labelImg.getWidth() : 245,
+                    labelImg.getHeight() > 0 ? labelImg.getHeight() : 239,
+                    Image.SCALE_SMOOTH
+            );
+
+            labelImg.setIcon(new ImageIcon(scaledImage));
+
+        } catch (Exception e) {
+
+            System.out.println("Error carregant imatge: " + e.getMessage());
+            labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
         }
     }
 
@@ -36,64 +97,32 @@ public class frmPanelControl extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        imgLogo = new javax.swing.JLabel();
-        btnModificarUsuari = new javax.swing.JButton();
-        btnAfegirResenya = new javax.swing.JButton();
-        btnModificarUsuari1 = new javax.swing.JButton();
         panAdmin = new javax.swing.JPanel();
         btnControlResenyes = new javax.swing.JButton();
-        btnFlitrarTaules = new javax.swing.JButton();
         btnControlContingut = new javax.swing.JButton();
         btnControlUsuari = new javax.swing.JButton();
-        btnLog = new javax.swing.JButton();
         btnDiccionari = new javax.swing.JButton();
+        btnLog = new javax.swing.JButton();
+        btnLogOut = new javax.swing.JButton();
+        btnModificarUsuari = new javax.swing.JButton();
+        btnModificarUsuari1 = new javax.swing.JButton();
+        btnAfegirResenya = new javax.swing.JButton();
+        imgLogo = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        img1 = new javax.swing.JLabel();
+        txtImage = new javax.swing.JLabel();
+        txtNota = new javax.swing.JLabel();
         txtNom = new javax.swing.JLabel();
+        lblRating1 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
-        imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        btnModificarUsuari.setBackground(new java.awt.Color(60, 63, 165));
-        btnModificarUsuari.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnModificarUsuari.setText("Higher or Lower ⬆️⬇️");
-        btnModificarUsuari.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarUsuariActionPerformed(evt);
-            }
-        });
-
-        btnAfegirResenya.setBackground(new java.awt.Color(235, 189, 52));
-        btnAfegirResenya.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnAfegirResenya.setText("Resenyes 🌟");
-        btnAfegirResenya.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAfegirResenyaActionPerformed(evt);
-            }
-        });
-
-        btnModificarUsuari1.setBackground(new java.awt.Color(160, 63, 65));
-        btnModificarUsuari1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        btnModificarUsuari1.setText("Editar Usuari ⚙️");
-        btnModificarUsuari1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarUsuari1ActionPerformed(evt);
-            }
-        });
 
         btnControlResenyes.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         btnControlResenyes.setText("Control resenyes");
         btnControlResenyes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnControlResenyesActionPerformed(evt);
-            }
-        });
-
-        btnFlitrarTaules.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        btnFlitrarTaules.setText("Filtrar taules");
-        btnFlitrarTaules.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFlitrarTaulesActionPerformed(evt);
             }
         });
 
@@ -113,13 +142,6 @@ public class frmPanelControl extends javax.swing.JFrame {
             }
         });
 
-        btnLog.setText("Veure log 📘");
-        btnLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogActionPerformed(evt);
-            }
-        });
-
         btnDiccionari.setText("Diccionari 📚");
         btnDiccionari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,94 +149,184 @@ public class frmPanelControl extends javax.swing.JFrame {
             }
         });
 
-        txtNom.setText("jLabel1");
+        btnLog.setText("Veure log 📘");
+        btnLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panAdminLayout = new javax.swing.GroupLayout(panAdmin);
         panAdmin.setLayout(panAdminLayout);
         panAdminLayout.setHorizontalGroup(
             panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panAdminLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addContainerGap()
                 .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFlitrarTaules, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnControlResenyes, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panAdminLayout.createSequentialGroup()
+                            .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnControlResenyes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panAdminLayout.createSequentialGroup()
+                        .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panAdminLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtNom, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
         );
         panAdminLayout.setVerticalGroup(
             panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panAdminLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(11, 11, 11)
+                .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFlitrarTaules, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnControlUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnControlResenyes, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnControlResenyes, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnControlContingut, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(panAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNom, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnDiccionari, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLog, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(61, 61, 61))
         );
+
+        btnLogOut.setText("Tanca Sessió");
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
+
+        btnModificarUsuari.setBackground(new java.awt.Color(60, 63, 165));
+        btnModificarUsuari.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnModificarUsuari.setText("Higher or Lower ⬆️⬇️");
+        btnModificarUsuari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarUsuariActionPerformed(evt);
+            }
+        });
+
+        btnModificarUsuari1.setBackground(new java.awt.Color(160, 63, 65));
+        btnModificarUsuari1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnModificarUsuari1.setText("Editar Usuari ⚙️");
+        btnModificarUsuari1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarUsuari1ActionPerformed(evt);
+            }
+        });
+
+        btnAfegirResenya.setBackground(new java.awt.Color(235, 189, 52));
+        btnAfegirResenya.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btnAfegirResenya.setText("Resenyes 🌟");
+        btnAfegirResenya.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAfegirResenyaActionPerformed(evt);
+            }
+        });
+
+        imgLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
+        imgLogo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        img1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/logoCriticFy128p.png"))); // NOI18N
+        img1.setAlignmentY(0.0F);
+        img1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        txtImage.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        txtImage.setText("No ha carregat");
+
+        txtNota.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        txtNota.setText("0.00");
+        txtNota.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        txtNom.setFont(new java.awt.Font("Liberation Serif", 1, 48)); // NOI18N
+        txtNom.setForeground(new java.awt.Color(102, 102, 255));
+        txtNom.setText("BENVOLGUT NOM!");
+        txtNom.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        lblRating1.setFont(new java.awt.Font("Liberation Serif", 1, 48)); // NOI18N
+        lblRating1.setForeground(new java.awt.Color(102, 102, 255));
+        lblRating1.setText("RECOMENEM");
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jSeparator1)
+                                .addGap(58, 58, 58))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAfegirResenya, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnModificarUsuari1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnModificarUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(img1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblRating1, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE))
+                            .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(423, 423, 423))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
                         .addComponent(imgLogo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(panAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(btnAfegirResenya, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
-                .addComponent(btnModificarUsuari1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
-                .addComponent(btnModificarUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(14, 14, 14)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imgLogo)
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAfegirResenya, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificarUsuari1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificarUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(panAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(imgLogo)
+                        .addGap(96, 96, 96))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62)
+                        .addComponent(txtNom)
+                        .addGap(62, 62, 62)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblRating1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(img1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtImage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAfegirResenya, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificarUsuari1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificarUsuari, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnFlitrarTaulesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlitrarTaulesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFlitrarTaulesActionPerformed
 
     private void btnLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogActionPerformed
         // TODO add your handling code here:
@@ -253,14 +365,22 @@ public class frmPanelControl extends javax.swing.JFrame {
     }//GEN-LAST:event_btnModificarUsuariActionPerformed
 
     private void btnAfegirResenyaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAfegirResenyaActionPerformed
-       frmMainClient fMain = new frmMainClient();
+        frmMainClient fMain = new frmMainClient();
         fMain.setVisible(true);
     }//GEN-LAST:event_btnAfegirResenyaActionPerformed
 
     private void btnModificarUsuari1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuari1ActionPerformed
-       frmEdicioUsuari fEdicioUsuari = new frmEdicioUsuari();
+        frmEdicioUsuari fEdicioUsuari = new frmEdicioUsuari();
         fEdicioUsuari.setVisible(true);
     }//GEN-LAST:event_btnModificarUsuari1ActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        for (Window w : Window.getWindows()) {
+            w.dispose();
+        }
+        frmLogin flogin = new frmLogin();
+        flogin.setVisible(true);
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,12 +413,18 @@ public class frmPanelControl extends javax.swing.JFrame {
     private javax.swing.JButton btnControlResenyes;
     private javax.swing.JButton btnControlUsuari;
     private javax.swing.JButton btnDiccionari;
-    private javax.swing.JButton btnFlitrarTaules;
     private javax.swing.JButton btnLog;
+    private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnModificarUsuari;
     private javax.swing.JButton btnModificarUsuari1;
+    private javax.swing.JLabel img1;
     private javax.swing.JLabel imgLogo;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblRating1;
     private javax.swing.JPanel panAdmin;
+    private javax.swing.JLabel txtImage;
     private javax.swing.JLabel txtNom;
+    private javax.swing.JLabel txtNota;
     // End of variables declaration//GEN-END:variables
 }

@@ -57,7 +57,7 @@ public class frmHigherLower extends javax.swing.JFrame {
         if (c == null) {
             labelTitol.setText("No disponible");
             labelNota.setText("0.00");
-            labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
+            labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
             return;
         }
 
@@ -68,7 +68,7 @@ public class frmHigherLower extends javax.swing.JFrame {
             byte[] imgBytes = c.getImatge();
 
             if (imgBytes == null || imgBytes.length == 0) {
-                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
+                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
                 return;
             }
 
@@ -76,7 +76,7 @@ public class frmHigherLower extends javax.swing.JFrame {
             BufferedImage bImage = ImageIO.read(bis);
 
             if (bImage == null) {
-                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.png")));
+                labelImg.setIcon(new ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
                 return;
             }
 
@@ -92,7 +92,7 @@ public class frmHigherLower extends javax.swing.JFrame {
             System.out.println("Error carregant imatge: " + e.getMessage());
 
             labelImg.setIcon(new ImageIcon(
-                    getClass().getResource("/VIEW/logoCriticFy128p.png")
+                    getClass().getResource("/VIEW/placeHolderImg.jpg")
             ));
         }
 
