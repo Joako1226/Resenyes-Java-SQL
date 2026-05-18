@@ -19,13 +19,15 @@ public class Connexio {
 
     public static String url = "jdbc:mysql://localhost:3306/resenyesBD";
     public static String user = "root";
-    public static String password = "joaquin100";
+    public static String password = "Roger2007";
 
- 
     private String SQL_INSERTAR = "INSERT INTO contingut (titol, descripcio, classificacio, imatge) VALUES (?,?,?,?)";
 
-    private String SQL_CONSULTA = "SELECT * FROM contingut";
-
+    public String SQL_CONSULTA = "SELECT c.*, p.director, p.duracio, s.temporada, s.capitols, v.preu "
+            + "FROM Contingut c "
+            + "LEFT JOIN Pelicula p ON c.id = p.idPelicula "
+            + "LEFT JOIN Serie s ON c.id = s.idSerie "
+            + "LEFT JOIN Videojoc v ON c.id = v.idJoc";
 
     public static Connection connectar() {
         try {
@@ -37,10 +39,10 @@ public class Connexio {
         }
         return con;
     }
-    
+
     public boolean connectarCon() {
         try {
-           
+
             con = DriverManager.getConnection(url, user, password);
             System.out.println("Connexió OK");
             return con != null;
@@ -51,11 +53,12 @@ public class Connexio {
         return false;
     }
 
-   
     public void AgregarImg(Contingut contingut) {
 
         try {
-            if (con == null) connectar();
+            if (con == null) {
+                connectar();
+            }
 
             PreparedStatement ps = con.prepareStatement(SQL_INSERTAR);
 
@@ -75,19 +78,47 @@ public class Connexio {
         }
     }
 
-   
     public ArrayList<Contingut> CarregarImg() {
 
         ArrayList<Contingut> lista = new ArrayList<>();
 
         try {
-            if (con == null) connectar();
+            if (con == null) {
+                connectar();
+            }
 
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL_CONSULTA);
 
             while (rs.next()) {
-                Contingut c = new Contingut();
+                Contingut c;
+
+                if (rs.getString("director") != null) {
+                    Pelicula peli = new Pelicula();
+                    peli.setDirector(rs.getString("director"));
+
+                    java.sql.Time sqlTime = rs.getTime("duracio");
+                    if (sqlTime != null) {
+                        peli.setDuracio(sqlTime.toLocalTime());
+                    } else {
+                        peli.setDuracio(null);
+                    }
+                    c = peli; 
+
+                } else if (rs.getObject("temporada") != null) { 
+                    Serie serie = new Serie();
+                    serie.setTemporada(rs.getInt("temporada"));
+                    serie.setCapitols(rs.getInt("capitols"));
+                    c = serie; 
+
+                } else if (rs.getObject("preu") != null) {
+                    Videojoc joc = new Videojoc();
+                    joc.setPreu(rs.getDouble("preu"));
+                    c = joc; 
+
+                } else {
+                    c = new Contingut();
+                }
 
                 c.setId(rs.getInt("id"));
                 c.setTitol(rs.getString("titol"));
@@ -106,11 +137,9 @@ public class Connexio {
         }
 
         return lista;
-    }
-    // Dins de la classe Connexio.java
+    }    
 
     public boolean guardarContingut(Contingut c) {
-        // Utilitzem la teva connexió existent
         Connection conn = connectar();
         if (conn == null) {
             return false;
@@ -146,7 +175,6 @@ public class Connexio {
 
             } else if (c instanceof Serie) {
                 Serie s = (Serie) c;
-                // He posat 'idSerie' i 'temporada' segons el que veig al teu SELECT de CarregarSeries
                 String sqlSerie = "INSERT INTO serie (idSerie, capitols, temporada) VALUES (?, ?, ?)";
                 PreparedStatement pstmtSerie = conn.prepareStatement(sqlSerie);
                 pstmtSerie.setInt(1, idGenerada);
@@ -156,7 +184,6 @@ public class Connexio {
 
             } else if (c instanceof Videojoc) {
                 Videojoc v = (Videojoc) c;
-                // He posat 'idJoc' segons el teu SELECT de CarregarVideojocs
                 String sqlJoc = "INSERT INTO videojoc (idJoc, preu) VALUES (?, ?)";
                 PreparedStatement pstmtJoc = conn.prepareStatement(sqlJoc);
                 pstmtJoc.setInt(1, idGenerada);

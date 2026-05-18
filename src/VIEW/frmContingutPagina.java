@@ -4,7 +4,10 @@
  */
 package VIEW;
 
+import static CONTROLLER.Main.continguts;
 import DADES.Connexio;
+import static DADES.Connexio.connectar;
+import DADES.gestioSQL;
 import static DADES.gestioSQL.eliminarContingutPerTitol;
 import MODEL.Contingut;
 import MODEL.Genere;
@@ -37,11 +40,11 @@ import javax.swing.table.DefaultTableModel;
  * @author Joaquin
  */
 public class frmContingutPagina extends javax.swing.JFrame {
-    
+
     Connexio mConnexio;
     DefaultTableModel mModelTaula = new DefaultTableModel();
     String ruta = "";
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(frmContingutPagina.class.getName());
     private ButtonGroup btnTipus = new ButtonGroup();
     private ButtonGroup btnEdicio = new ButtonGroup();
@@ -58,100 +61,176 @@ public class frmContingutPagina extends javax.swing.JFrame {
         mModelTaula.addColumn("Classificació");
         mModelTaula.addColumn("Imatge");
         mModelTaula.addColumn("Tipus");
-        
+
         btnTipus.add(btnSerie);
         btnTipus.add(btnPelicula);
         btnTipus.add(btnVideojoc);
         btnPelicula.setActionCommand("PELICULA");
         btnSerie.setActionCommand("SERIE");
         btnVideojoc.setActionCommand("VIDEOJOC");
-        
+
         btnEdicio.add(btnAfegir);
         btnEdicio.add(btnModificar);
-        
+
         carregarContinguts();
         ompleComboGenere();
-        
+
     }
-    
-    private void carregarContinguts() {
-        limpiar();
-        tblContinguts.setDefaultRenderer(Object.class, new RenderImg());
-        
-        ArrayList imatges;
-        Contingut mContingut;
-        
-        if (mConnexio.connectarCon()) {
-            
-            mModelTaula.setRowCount(0);
-            
-            Object[] Dades = new Object[6];
-            imatges = mConnexio.CarregarImg();
-           
-            if (imatges != null) {
-                for (int i = imatges.size() - 1; i >= 0; i--) {
-                    
-                    mContingut = (Contingut) imatges.get(i);
-                     if (mContingut.getTitol() != null && !mContingut.getTitol().trim().isEmpty()) {
-                        Dades[0] = String.valueOf(mContingut.getId());
-                        Dades[1] = mContingut.getTitol();
-                        Dades[2] = mContingut.getDescripcio();
-                        Dades[3] = mContingut.getClassificacio();
 
-                        try {
-                            byte[] imatge = mContingut.getImatge();
-                            BufferedImage bufferedImage = null;
+private void carregarContinguts() {
+    limpiar();
+    continguts.clear(); // Buidem la llista global per evitar acumulacions
+
+    tblContinguts.setDefaultRenderer(Object.class, new RenderImg());
+
+    ArrayList<Contingut> imatges;
+    Contingut mContingut;
+
+    if (mConnexio.connectarCon()) {
+        mModelTaula.setRowCount(0);
+        Object[] Dades = new Object[6];
+        
+        imatges = mConnexio.CarregarImg();
+
+        if (imatges != null) {
+            for (int i = imatges.size() - 1; i >= 0; i--) {
+                mContingut = imatges.get(i);
+
+                if (mContingut.getTitol() != null && !mContingut.getTitol().trim().isEmpty()) {
+
+                    continguts.add(mContingut);
+
+                    Dades[0] = String.valueOf(mContingut.getId());
+                    Dades[1] = mContingut.getTitol();
+                    Dades[2] = mContingut.getDescripcio();
+                    Dades[3] = mContingut.getClassificacio();
+
+                    try {
+                        byte[] imatge = mContingut.getImatge();
+                        if (imatge != null && imatge.length > 0) {
                             InputStream inputStream = new ByteArrayInputStream(imatge);
-                            bufferedImage = ImageIO.read(inputStream);
-
+                            BufferedImage bufferedImage = ImageIO.read(inputStream);
                             ImageIcon mIcon = new ImageIcon(
                                     bufferedImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)
                             );
-
                             Dades[4] = new JLabel(mIcon);
-
-                        } catch (Exception e) {
-                            JLabel placeholder = new JLabel("");
-                            placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
-                            Dades[4] = placeholder;
+                        } else {
+                            throw new Exception("Imatge buida");
                         }
-                        Dades[5] = mContingut.getClass().getSimpleName();
-                        mModelTaula.addRow(Dades);
-                     }
+                    } catch (Exception e) {
+                        JLabel placeholder = new JLabel("");
+                        placeholder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/VIEW/placeHolderImg.jpg")));
+                        Dades[4] = placeholder;
+                    }
+
+                    String tipusReal = "Contingut";
+                    if (mContingut instanceof Pelicula) {
+                        tipusReal = "Pelicula";
+                    } else if (mContingut instanceof Serie) {
+                        tipusReal = "Serie";
+                    } else if (mContingut instanceof Videojoc) {
+                        tipusReal = "Videojoc";
+                    }
+
+                    Dades[5] = tipusReal; 
+                    mModelTaula.addRow(Dades);
                 }
-                
-                tblContinguts.setModel(mModelTaula);
-                tblContinguts.setRowHeight(60);
-                
-                tblContinguts.getColumnModel().getColumn(0).setPreferredWidth(40);
-                tblContinguts.getColumnModel().getColumn(1).setPreferredWidth(120);
-                tblContinguts.getColumnModel().getColumn(2).setPreferredWidth(200);
-                tblContinguts.getColumnModel().getColumn(3).setPreferredWidth(80);
-                tblContinguts.getColumnModel().getColumn(4).setPreferredWidth(80);
-                tblContinguts.getColumnModel().getColumn(5).setPreferredWidth(100);
             }
+
+            tblContinguts.setModel(mModelTaula);
+            tblContinguts.setRowHeight(60);
+
+            tblContinguts.getColumnModel().getColumn(0).setPreferredWidth(40);
+            tblContinguts.getColumnModel().getColumn(1).setPreferredWidth(120);
+            tblContinguts.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblContinguts.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tblContinguts.getColumnModel().getColumn(4).setPreferredWidth(80);
+            tblContinguts.getColumnModel().getColumn(5).setPreferredWidth(100);
         }
     }
-    
+}
     private void limpiar() {
         for (int i = mModelTaula.getRowCount() - 1; i >= 0; i--) {
             mModelTaula.removeRow(i);
         }
     }
-    
+
+    public ArrayList<Contingut> CarregarImg() {
+
+        ArrayList<Contingut> lista = new ArrayList<>();
+
+        try {
+            Connection con = mConnexio.connectar();
+
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(mConnexio.SQL_CONSULTA);
+
+            while (rs.next()) {
+                Contingut c;
+
+                if (rs.getString("director") != null) {
+                    Pelicula peli = new Pelicula();
+                    peli.setDirector(rs.getString("director"));
+
+                    java.sql.Time sqlTime = rs.getTime("duracio");
+                    if (sqlTime != null) {
+                        peli.setDuracio(sqlTime.toLocalTime());
+                    } else {
+                        peli.setDuracio(null);
+                    }
+
+                    c = peli;
+                } else if (rs.getObject("temporades") != null) {
+                    // Ús de getObject per comprovar correctament si el camp int és NULL a la BD
+                    Serie serie = new Serie();
+                    serie.setTemporada(rs.getInt("temporades"));
+                    serie.setCapitols(rs.getInt("capitols"));
+                    c = serie;
+
+                } else if (rs.getObject("preu") != null) {
+                    Videojoc joc = new Videojoc();
+                    joc.setPreu(rs.getDouble("preu"));
+                    c = joc;
+
+                } else {
+                    // Per si de cas hi hagués algun contingut base sense categoria a la BD
+                    c = new Contingut();
+                }
+
+                // 2. Omplim els camps comuns de la taula pare 'Contingut'
+                c.setId(rs.getInt("id"));
+                c.setTitol(rs.getString("titol"));
+                c.setDescripcio(rs.getString("descripcio"));
+                c.setClassificacio(rs.getInt("classificacio"));
+                c.setImatge(rs.getBytes("imatge"));
+
+                // 3. L'afegim a la llista (com que Pelicula/Serie/Videojoc hereden de Contingut, ho accepta perfectament)
+                lista.add(c);
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
     private void ompleComboGenere() {
         cmbGenere.removeAllItems();
         mConnexio = new Connexio();
         ArrayList<Genere> arrayGeneres = new ArrayList<Genere>();
         if (mConnexio != null) {
             try {
-                
+
                 mConnexio = new Connexio();
                 Connection conn = mConnexio.connectar();
                 Statement stmt = conn.createStatement();
                 String sql;
                 String tipus = btnTipus.getSelection().getActionCommand();
-                
+
                 ResultSet rs = stmt.executeQuery(tipusSeleccionat());
                 while (rs.next()) {
                     Genere genere = new Genere(
@@ -160,7 +239,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
                     );
                     arrayGeneres.add(genere);
                 }
-                
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -170,17 +249,17 @@ public class frmContingutPagina extends javax.swing.JFrame {
         for (Genere g : arrayGeneres) {
             cmbGenere.addItem(g.getNom());
         }
-        
+
     }
-    
+
     private String tipusSeleccionat() {
-        
+
         if (btnTipus.getSelection() == null) {
             return "SELECT id, nom FROM genere ORDER BY nom ASC";
         }
-        
+
         String seleccio = btnTipus.getSelection().getActionCommand();
-        
+
         switch (seleccio) {
             case "PELICULA":
                 numCapitols.setEnabled(false);
@@ -192,7 +271,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
                         + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
                         + "INNER JOIN serie s ON gc.idContingut = s.idSerie "
                         + "ORDER BY g.nom ASC";
-            
+
             case "SERIE":
                 numCapitols.setEnabled(true);
                 numTemporades.setEnabled(true);
@@ -203,7 +282,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
                         + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
                         + "INNER JOIN serie s ON gc.idContingut = s.idSerie "
                         + "ORDER BY g.nom ASC";
-            
+
             case "VIDEOJOC":
                 numCapitols.setEnabled(false);
                 numTemporades.setEnabled(false);
@@ -214,12 +293,11 @@ public class frmContingutPagina extends javax.swing.JFrame {
                         + "INNER JOIN genere_contingut gc ON g.id = gc.idGenere "
                         + "INNER JOIN videojoc v ON gc.idContingut = v.idJoc "
                         + "ORDER BY g.nom ASC";
-            
+
             default:
                 return "SELECT id, nom FROM genere ORDER BY nom ASC";
         }
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -278,6 +356,11 @@ public class frmContingutPagina extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblContinguts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblContingutsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblContinguts);
 
         txtTitol.addActionListener(new java.awt.event.ActionListener() {
@@ -568,7 +651,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
                                         .addComponent(btnGuardar)
                                         .addGap(12, 12, 12)
                                         .addComponent(btnBorrar)
-                                        .addContainerGap(12, Short.MAX_VALUE))))
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -606,49 +689,46 @@ public class frmContingutPagina extends javax.swing.JFrame {
             return null;
         }
     }
-    
+
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        String titol = txtTitol.getText().trim();
+        String descripcio = txtDescripcio.getText();
+        int classificacio = Integer.parseInt(cmbClassificacio.getSelectedItem().toString());
         String tipus = btnTipus.getSelection().getActionCommand();
 
-        Contingut mContingut;
-
-        switch (tipus) {
-            case "PELICULA":
-                mContingut = new Pelicula(); 
-                ((Pelicula) mContingut).setDirector(txtDirector.getText());
-                String textDuracio = txtDuracio.getText(); 
-                ((Pelicula) mContingut).setDuracio(java.time.LocalTime.parse(textDuracio));
-                break;
-
-            case "SERIE":
-                mContingut = new Serie();
-                ((Serie) mContingut).setCapitols((int) numCapitols.getValue());
-                ((Serie) mContingut).setTemporada((int) numTemporades.getValue());
-                break;
-
-            case "VIDEOJOC":
-                mContingut = new Videojoc();
-                ((Videojoc) mContingut).setPreu(Double.parseDouble(numPreu.getText()));
-                break;
-
-            default:
-                mContingut = new Contingut();
-                break;
+        if (titol.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El títol no pot estar buit.");
+            return;
         }
 
-        mContingut.setTitol(txtTitol.getText());
-        mContingut.setDescripcio(txtDescripcio.getText());
-        int classificacioVal = Integer.parseInt(cmbClassificacio.getSelectedItem().toString());
-        mContingut.setClassificacio(classificacioVal);
-        if (!ruta.equals("")) {
-            mContingut.setImatge(getImatge(ruta));
-        }
+        gestioSQL gestion = new gestioSQL();
 
-        if (mConnexio.connectarCon()) {
-            if (mConnexio.guardarContingut(mContingut)) {
-                carregarContinguts();
+        if (btnAfegir.isSelected()) {
+
+        } else if (btnModificar.isSelected()) {
+            int filaSeleccionada = tblContinguts.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Selecciona un contingut de la taula per modificar.");
+                return;
             }
+
+            int id = Integer.parseInt(tblContinguts.getValueAt(filaSeleccionada, 0).toString());
+
+            boolean editatOk = false;
+
+            if (tipus.equals("PELICULA")) {
+                String director = txtDirector.getText();
+                String duracio = txtDuracio.getText();
+            } else if (tipus.equals("SERIE")) {
+                int capitols = (int) numCapitols.getValue();
+                int temporades = (int) numTemporades.getValue();
+            } else if (tipus.equals("VIDEOJOC")) {
+                double preu = Double.parseDouble(numPreu.getText());
+            }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Contingut modificat correctament.");
+            carregarContinguts();
         }
         }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -679,7 +759,7 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPeliculaActionPerformed
 
     private void cmbGenereActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbGenereActionPerformed
-        
+
 
     }//GEN-LAST:event_cmbGenereActionPerformed
 
@@ -732,9 +812,57 @@ public class frmContingutPagina extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbClassificacioActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
- 
-    eliminarContingutPerTitol(txtTitol.getText());
+
+        eliminarContingutPerTitol(txtTitol.getText());
     }//GEN-LAST:event_btnBorrarActionPerformed
+
+    private void tblContingutsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblContingutsMouseClicked
+        // TODO add your handling code here:
+        int fila = tblContinguts.getSelectedRow();
+        if (fila != -1) {
+            btnModificar.setSelected(true);
+
+            txtTitol.setText(tblContinguts.getValueAt(fila, 1).toString());
+            txtDescripcio.setText(tblContinguts.getValueAt(fila, 2).toString());
+            cmbClassificacio.setSelectedItem(tblContinguts.getValueAt(fila, 3).toString());
+
+            int idCercat = Integer.parseInt(tblContinguts.getValueAt(fila, 0).toString());
+
+            for (Contingut c : continguts) {
+                if (c.getId() == idCercat) {
+
+                    if (c instanceof Pelicula) {
+                        btnPelicula.setSelected(true);
+                        tipusSeleccionat();
+                        txtDirector.setText(((Pelicula) c).getDirector());
+                        txtDuracio.setText(((Pelicula) c).getDuracio() != null ? ((Pelicula) c).getDuracio().toString() : "");
+                    } else if (c instanceof Serie) {
+                        btnSerie.setSelected(true);
+                        tipusSeleccionat();
+                        numCapitols.setValue(((Serie) c).getCapitols());
+                        numTemporades.setValue(((Serie) c).getTemporada());
+                    } else if (c instanceof Videojoc) {
+                        btnVideojoc.setSelected(true);
+                        tipusSeleccionat();
+                        numPreu.setText(String.valueOf(((Videojoc) c).getPreu()));
+                    }
+
+                    if (c.getImatge() != null) {
+                        try {
+                            ImageIcon icon = new ImageIcon(ImageIO.read(new ByteArrayInputStream(c.getImatge())));
+                            Image img = icon.getImage().getScaledInstance(lblImg.getWidth(), lblImg.getHeight(), Image.SCALE_SMOOTH);
+                            lblImg.setIcon(new ImageIcon(img));
+                        } catch (Exception ex) {
+                            lblImg.setIcon(null);
+                        }
+                    } else {
+                        lblImg.setIcon(null);
+                    }
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_tblContingutsMouseClicked
 
     /**
      * @param args the command line arguments
