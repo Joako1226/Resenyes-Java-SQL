@@ -154,7 +154,7 @@ public class frmValoracio extends javax.swing.JFrame {
     public void actualitzarEstrelles(double valor) {
         String full = "/IMAGES/estrellaFull.png";
         String mitja = "/IMAGES/estrellaMitja.png";
-        String buida = "/IMAGES/estrellaGris.png"; // O com es digui la teva estrella buida
+        String buida = "/IMAGES/estrellaGris.png";
 
         javax.swing.JLabel[] estrelles = {imgEstrella1, imgEstrella2, imgEstrella3, imgEstrella4, imgEstrella5};
         for (javax.swing.JLabel s : estrelles) {
@@ -480,7 +480,7 @@ public class frmValoracio extends javax.swing.JFrame {
             double valorNota = Double.parseDouble(text);
 
             if (valorNota >= 0 && valorNota <= 100) {
-                sldValoracio.setValue((int) (valorNota * 10)); // L'slider es mou bé (x10)
+                sldValoracio.setValue((int) (valorNota * 10));
 
                 actualitzarEstrelles(valorNota);
 
@@ -545,7 +545,6 @@ public class frmValoracio extends javax.swing.JFrame {
             String comentari = txtComentari.getText();
             String comentariBan = comentari;
 
-            // 1. FILTRE I LÒGICA DE BANS
             if (Diccionari.esInadequat(comentariBan)) {
                 int opcio = JOptionPane.showConfirmDialog(this,
                         "S'han detectat paraules inadequades. Vols continuar sota risc de sanció?",
@@ -601,7 +600,6 @@ public class frmValoracio extends javax.swing.JFrame {
                 EscriureLog(mod + ":\t" + " Usuari " + usuariActual.getNom_usuari() + "\t\tValoracio del contingut:\t\t" + ((Contingut) contingut).getTitol());
             }
 
-// 3. INSERCIÓ DE LA RESSENYA (Nota i Comentari filtrat/bloquejat)
             double nota = Double.parseDouble(txtValoracio.getText());
             boolean esSpoiler = chkSpoiler.isSelected();
             Resenya novaResenya = new Resenya(usuariLoguejat, idContingut, comentari, nota, esSpoiler, LocalDate.now());

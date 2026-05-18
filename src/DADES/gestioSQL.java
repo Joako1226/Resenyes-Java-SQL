@@ -320,14 +320,12 @@ public class gestioSQL {
 
                 byte[] imatge = rs.getBytes("imatge");
 
-     
                 if (imatge == null || imatge.length == 0) {
                     continue;
                 }
 
                 try {
 
-                   
                     ByteArrayInputStream bis = new ByteArrayInputStream(imatge);
                     BufferedImage bufferedImage = ImageIO.read(bis);
 
@@ -335,7 +333,6 @@ public class gestioSQL {
                         continue;
                     }
 
-               
                     return new Contingut(
                             rs.getInt("id"),
                             rs.getString("titol"),
@@ -835,7 +832,6 @@ public class gestioSQL {
             con = DriverManager.getConnection(url, user, password);
             con.setAutoCommit(false); // Iniciem la transacció
 
-            // 1. Insert a la taula genèrica 'contingut'
             PreparedStatement psC = con.prepareStatement(sqlContingut, Statement.RETURN_GENERATED_KEYS);
             psC.setString(1, pelicula.getTitol());
             psC.setString(2, pelicula.getDescripcio());
@@ -843,7 +839,6 @@ public class gestioSQL {
             psC.setBytes(4, pelicula.getImatge());
             psC.executeUpdate();
 
-            // Recuperem l'ID generat automàticament
             ResultSet rs = psC.getGeneratedKeys();
             int idGenerat = 0;
             if (rs.next()) {
@@ -851,14 +846,13 @@ public class gestioSQL {
             }
 
             if (idGenerat > 0) {
-                // 2. Insert a la taula específica 'pelicula'
                 PreparedStatement psP = con.prepareStatement(sqlPelicula);
                 psP.setInt(1, idGenerat);
-                psP.setTime(2, java.sql.Time.valueOf(pelicula.getDuracio())); // LocalTime a SQL Time
+                psP.setTime(2, java.sql.Time.valueOf(pelicula.getDuracio()));
                 psP.setString(3, pelicula.getDirector());
                 psP.executeUpdate();
 
-                con.commit(); // Tot correcte, guardem canvis
+                con.commit();
                 System.out.println("Pel·lícula guardada amb ID: " + idGenerat);
             }
         } catch (SQLException ex) {
